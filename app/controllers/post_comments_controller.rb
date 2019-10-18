@@ -35,6 +35,7 @@ class PostCommentsController < ApplicationController
         # (params[:色々id])は、ただの”数字”。idのすり合わせにも使えるし、redirect先のid指定にも使える（前のアクションでしっかりとパラメータが渡っていれば）
     end
 
+
     private
     def post_comment_params
         params.require(:post_comment).permit(:comment)
