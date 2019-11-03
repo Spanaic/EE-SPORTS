@@ -9,29 +9,21 @@
 
             <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
               <%= render "devise/shared/error_messages", resource: resource %>
-
-              <%# <div class="registration-form-tiny-box"> %>
                 <div class="session-input-part">
                     <div class="field">
-                      <%# <%= f.label :email %>
                       <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "Eメールアドレス" %>
                     </div>
                 </div>
-              <%# </div> %>
 
-              <%# <div class="registration-form-tiny-box"> %>
                 <div class="sessiton-input-part">
                   <div class="field">
-                    <%# <%= f.label :パスワード %>
                     <%= f.password_field :password, autocomplete: "current-password", placeholder: "パスワード" %>
                   </div>
                 </div>
 
-              <%# <div class="registration-submit-box"> %>
                 <div class="registration-submit-small-box">
                   <%= f.submit "ログイン", style: "margin-top: 10px;" %>
                 </div>
-              <%# </div> %>
             <% end %>
 
             <div style="margin-top: 15px;">

@@ -4,12 +4,8 @@
     <div class="row">
         <div class="col-md-2"></div>
         <div class="col-md-2">
-            <%# <img src=<%= @user.profile_image_id %>
-            <%# facebook認証と同時にプロフィール画像をURLで取得できたけど、
-                条件分岐でattachment_image_tagと切り替えられないと実装できない %>
             <div class="user-profile-image-box">
                 <%= attachment_image_tag @user, :profile_image, :fill, 150, 150, fallback: "no_image.jpg", size:'150x150', class: "profile-image-style" %>
-                <%# ひとまず安牌で↑にしておく。 %>
             </div>
         </div>
         <div class="col-md-8">
@@ -19,15 +15,12 @@
 
                     <% if current_user != @user %>
                         <% if @user.followed_by?(current_user) %>
-                        <%# @userがcurrent_userにフォローされているか確かめる記述。 %>
-                        <%# メソッド内で引数を渡すように定義されいてるので、きちんと渡す。 %>
                             <button type="button" class="btn btn-primary follow-button-box"><%= link_to "フォローをやめる", user_relationships_path(@user.profile_name), class: "follow-button", method: :delete %></button>
                         <% else %>
                             <button type="button" class="btn btn-primary follow-button-box"><%= link_to "フォローする", user_relationships_path(@user.profile_name), class: "follow-button", method: :post %></button>
                         <% end %>
                     <% else %>
                         <button type="button" class="btn btn-default follow-button-box"><%= link_to "プロフィールを編集", edit_user_path(params[:profile_name]), class: "profile-edit-button" %></button>
-                        <%# 後でボタンの色を変える %>
                     <% end %>
                 </div>
                 <div class="user-profile-bottom-box">
@@ -40,16 +33,8 @@
     </div>
 
     <div class="profile-border-line"></div>
-    <%# 本当はこの下にbootstrapで作成したタブを導入したい %>
 
     <div class="row">
-            <%# 下は投稿画面 %>
-            <%# bootstrapのテーブルとtabを使って切り替える機能を実装予定
-                保存したshow/post_imagesを集めて呼び出す機能も実装 %>
-            <%# <h2>投稿</h2> %>
-        <%# 他のindexページと同じ表示にしたいならこちら↓↓↓ %>
-        <%# <%= render "post_images/list", post_images: @post_images %>
-        <%# <div class="col-md-1"></div> %>
         <div class="col-md-12">
             <div class="user-post-image-box">
                 <% @post_images.each do |post_image| %>
@@ -61,7 +46,6 @@
                 <% end %>
             </div>
         </div>
-        <%# <div class="col-md-1"></div> %>
     </div>
     <div style="text-align: center;">
         <%= paginate @post_images, class: "paginate" %>

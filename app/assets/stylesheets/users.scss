@@ -9,9 +9,7 @@
     padding-top: 15%;
 }
 .user-detail-profile-box {
-    // width: 60%;
     display: inline-box;
-    // padding-top: 50px;
 }
 .user-profile-top-box {
     display: inline-flexbox;
@@ -35,17 +33,10 @@
 .follow-button-box {
     margin-left: 50px;
 }
-// .follow-button-box-2 {
-//     margin-bottom: 40px;
-// }
 .follow-button {
     font-size: 22px;
     color: white;
 }
-// .follow-button-2 {
-//     font-size: 16px;
-//     color: white;
-// }
 .profile-edit-button {
     font-size: 22px;
     color: black;
@@ -55,7 +46,6 @@
 // 投稿画面
 
 .profile-border-line {
-    // height: 1px;
     width: 100%;
     border-bottom: solid 1px rgba($color: #000000, $alpha: 0.2);
     margin-top: 20px;
@@ -102,7 +92,6 @@
     background-color: #ffffff;
     width: 70%;
     display: inline-block;
-    // display: flex;
 }
 .index-users-small-box {
     display: flex;
@@ -113,7 +102,6 @@
 .index-users-item {
     width: 25%;
     height: 80px;
-    // margin-left: 20px;
 }
 .index-users-item:nth-child(2),
 .index-users-item:nth-child(3),
@@ -135,9 +123,6 @@
 
 // registration
 
-.registration-left-box {
-    // border: solid 1p rgba(0,0,0,0.1);
-}
 .registration-image-box {
     width: 454px;
     height: 618px;
@@ -145,9 +130,7 @@
     margin-top: 50px;
 }
 .registration-right-box {
-    // border: solid 1px rgba(0,0,0,0.1);
     width: 350px;
-    // display: flex;
 }
 .registration-form-box {
     border: solid 1px rgba(0,0,0,0.1);
@@ -197,16 +180,10 @@
 }
 .app-image:first-child {
     background-image: url(app_store.png);
-    // background-size: cover;
-    // width: 112px;
-    // height: 32px;
     margin-right: 5px;
 }
 .app-image:last-child {
     background-image: url(google_play.png);
-    // background-size: cover;
-    // width: 112px;
-    // height: 32px;
     margin-left: 5px;
 }
 .session-input-part {

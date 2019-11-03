@@ -12,7 +12,6 @@
                     <div class="user-profile-top-box">
                         <div class="edit-user-profile-image-box">
                             <div><%= attachment_image_tag @user, :profile_image, :fill, 50, 50, fallback: "no_image.jpg", size:'50x50', class: "profile-image-style" %></div>
-                            <%# ひとまず安牌で↑にしておく。 %>
                             <p style="margin: 0 auto;"><%= @user.profile_name %></p>
                         </div>
                     </div>
@@ -30,44 +29,36 @@
                 <%= render "users/error_messages", user: @user %>
 
                     <div class="registration-input-part">
-                    <div class="field">
-                        <%= f.label :profile_image %><br />
-                        <%= f.attachment_field :profile_image, style: "margin: 0 auto;" %>
-                    </div>
+                        <div class="field">
+                            <%= f.label :profile_image %><br />
+                            <%= f.attachment_field :profile_image, style: "margin: 0 auto;" %>
+                        </div>
                     </div>
 
-                <%# <div class="registration-form-tiny-box"> %>
                     <div class="registration-input-part">
-                    <div class="field">
-                        <%= f.label :名前 %><br />
-                        <%= f.text_field :name, autofocus: true, autocomplete: "name" %>
+                        <div class="field">
+                            <%= f.label :名前 %><br />
+                            <%= f.text_field :name, autofocus: true, autocomplete: "name" %>
+                        </div>
                     </div>
-                    </div>
-                <%# </div> %>
 
-                <%# <div class="registration-form-tiny-box"> %>
                     <div class="registration-input-part">
-                    <div class="field">
-                        <%= f.label :ユーザー名 %><br />
-                        <%= f.text_field :profile_name, autofocus: true, autocomplete: "profile_name", placeholder: "半角英数のみ" %>
+                        <div class="field">
+                            <%= f.label :ユーザー名 %><br />
+                            <%= f.text_field :profile_name, autofocus: true, autocomplete: "profile_name", placeholder: "半角英数のみ" %>
+                        </div>
                     </div>
-                    </div>
-                <%# </div> %>
 
-                <%# <div class="registration-form-tiny-box"> %>
                     <div class="registration-input-part">
                         <div class="field">
                         <%= f.label :introduction %><br />
                         <%= f.text_area :introduction, autofocus: true, autocomplete: "introduction" %>
                         </div>
                     </div>
-                <%# </div> %>
 
-                <%# <div class="registration-submit-box"> %>
                     <div class="registration-submit-small-box">
                     <%= f.submit "送信する", style: "margin-top: 10px;" %>
                     </div>
-                <%# </div> %>
                 <% end %>
             </div>
             </div>

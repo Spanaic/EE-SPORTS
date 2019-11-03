@@ -8,16 +8,8 @@
     <%= paginate @users, class: "paginate" %>
     <p style="padding-top: 20px;"><%= link_to "すべて見る", users_path, class: "recommend-all-users" %></p>
 </div>
-<%# ローカル変数をcollectionで渡さない。パーシャル内に記述しているローカル変数に渡してあげる。%>
 
 <div class="row">
-        <%# 下は投稿画面 %>
-        <%# bootstrapのテーブルとtabを使って切り替える機能を実装予定
-            保存したshow/post_imagesを集めて呼び出す機能も実装 %>
-        <%# <h2>投稿</h2> %>
-    <%# 他のindexページと同じ表示にしたいならこちら↓↓↓ %>
-    <%# <%= render "post_images/list", post_images: @post_images %>
-    <%# <div class="col-md-1"></div> %>
     <div class="col-md-12">
         <div class="user-post-image-box">
             <% @randoms.each do |random| %>
@@ -30,5 +22,4 @@
             <p><%= paginate @randoms, class: "paginate" %></p>
         </div>
     </div>
-    <%# <div class="col-md-1"></div> %>
 </div>

@@ -5,21 +5,17 @@ class ApplicationController < ActionController::Base
 
     def set_search
         @search = User.ransack(params[:q])
-        # @search = User.page(params[:page]).per(20).reverse_order
         @search_users = @search.result
-        # .page(params[:page]).per(20).reverse_order
     end
 
     def after_sign_out_path_for(resource)
         new_user_session_path
-        # new_user_session_path(resource)引数を足すとURL'.'userが表示されてしまう。
-        # 余計なIDを渡した時にバグるやつ
     end
 
     def after_sign_in_path_for(resource)
         root_path
     end
-    # after_sign_out_path_for(resource)はメソッドとしてアプリケーションコントローラ内にきちんと定義する
+
     def after_sign_up_path_for(resource)
         root_path
     end

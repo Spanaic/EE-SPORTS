@@ -1,7 +1,6 @@
 <div class="row">
     <%= form_for [post_image, new_post_comment] do |f| %>
         <% if post_comment.errors.any? %>
-            <%# form_forメソッドでもfではなく,formが入力される変数を指定してあげる %>
             <%= "#{post_comment.errors.count}件のエラーがあります。" %>
             <% post_comment.errors.full_messages.each do |message| %>
                 <%= message %>

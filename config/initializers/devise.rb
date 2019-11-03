@@ -300,6 +300,4 @@ Devise.setup do |config|
   Devise.setup do |config|
     config.omniauth :facebook, '2409449402424092', '1d182a84d548ebee312635c3a3554405'
   end
-  # setupでFB for Dで取得したApp IDとsecret keyを入力する
-  # setupの記述はそもそも書き足しておく
 end

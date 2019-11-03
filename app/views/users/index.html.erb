@@ -3,7 +3,6 @@
         <div class="col-md-12 index-users-main-box">
             <p style="font-weight: bold; padding-top: 10px;">おすすめ</p>
             <div class="index-users-big-box">
-                <%# <p class="recommend-users-title">おすすめユーザー</%#> %>
                 <% @users.each do |user| %>
                     <div class="index-users-small-box">
                         <div class="index-users-item">
@@ -29,9 +28,6 @@
                 　　</div>
                     <div class="index-users-border-line"></div>
                 <% end %>
-                <%# <%= paginate randoms, class: "paginate" %>
-                <%# order("RAND()").limit()の時はpaginateしなくても表示件数を制御できる %>
-                <%# link_toはinline要素のため(a), doとendで囲むときはブロック要素であるdivタグなどの中に入れなければ、ブロック要素に指定したスタイルが適用されない %>
             </div>
         </div>
     </div>

@@ -1,11 +1,8 @@
 <div class="container">
   <div class="row" style="padding: 50px;">
-    <%# <div class="col-md-1"></div> %>
-
     <div class="col-md-6" style="marign-top: 50px;">
       <div class="registration-left-box">
         <div class="registration-image-box">
-          <%# <img src="images/instagram.png" alt=""> %>
         </div>
       </div>
     </div>
@@ -37,35 +34,27 @@
 
             <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
               <%= render "devise/shared/error_messages", resource: resource %>
-
-              <%# <div class="registration-form-tiny-box"> %>
                 <div class="registration-input-part">
                   <div class="field">
                     <%= f.label :名前 %><br />
                     <%= f.text_field :name, autofocus: true, autocomplete: "name" %>
                   </div>
                 </div>
-              <%# </div> %>
 
-              <%# <div class="registration-form-tiny-box"> %>
                 <div class="registration-input-part">
-                   <div class="field">
+                  <div class="field">
                     <%= f.label :ユーザー名 %><br />
                     <%= f.text_field :profile_name, autofocus: true, autocomplete: "profile_name", placeholder: "半角英数のみ" %>
                   </div>
                 </div>
-              <%# </div> %>
 
-              <%# <div class="registration-form-tiny-box"> %>
                 <div class="registration-input-part">
                     <div class="field">
                       <%= f.label :email %><br />
                       <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
                     </div>
                 </div>
-              <%# </div> %>
 
-              <%# <div class="registration-form-tiny-box"> %>
                 <div class="registration-input-part">
                   <div class="field">
                     <%= f.label :パスワード %>
@@ -77,17 +66,15 @@
                 </div>
 
                 <div class="registration-input-part">
-                   <div class="field">
+                  <div class="field">
                     <%= f.label :パスワード（確認用） %><br />
                     <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
                   </div>
                 </div>
 
-              <%# <div class="registration-submit-box"> %>
                 <div class="registration-submit-small-box">
                   <%= f.submit "Sign up", style: "margin-top: 10px;" %>
                 </div>
-              <%# </div> %>
             <% end %>
 
             <p class="registration-policy-box">
@@ -113,7 +100,5 @@
         </div>
       </div>
     </div>
-
-    <%# <div class="col-md-1"></div> %>
   </div>
 </div>
