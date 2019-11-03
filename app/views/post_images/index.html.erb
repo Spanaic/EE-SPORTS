@@ -6,15 +6,17 @@
         </div>
 
         <div class="col-md-5">
-            <div class="user-profile-box">
-                <div class="profile-image-box">
-                    <%= attachment_image_tag current_user, :profile_image, :fill, 50,50, format: 'jpeg', class: 'profile-image-style', fallback: 'no_image.jpg', size: '50x50' %>
+            <% if user_signed_in? %>
+                <div class="user-profile-box">
+                    <div class="profile-image-box">
+                        <%= attachment_image_tag current_user, :profile_image, :fill, 50,50, format: 'jpeg', class: 'profile-image-style', fallback: 'no_image.jpg', size: '50x50' %>
+                    </div>
+                    <ul class="profile-name-box">
+                        <li class="user-profile-name"><%= link_to "#{current_user.profile_name}", user_path(current_user.profile_name) %></li>
+                        <li class="user-name"><%= link_to "#{current_user.name}", user_path(current_user.profile_name) %></li>
+                    </ul>
                 </div>
-                <ul class="profile-name-box">
-                    <li class="user-profile-name"><%= link_to "#{current_user.profile_name}", user_path(current_user.profile_name) %></li>
-                    <li class="user-name"><%= link_to "#{current_user.name}", user_path(current_user.profile_name) %></li>
-                </ul>
-            </div>
+            <% end %>
             <div class="recommend-users-box">
                 <p class="recommend-users-title">おすすめユーザー</p>
                 <% @randoms.each do |random| %>
@@ -23,10 +25,12 @@
                             <li class="list-style">
                                 <span><%= attachment_image_tag random, :profile_image, :fill, 40, 40, format: 'jpeg', size: '40x40', fallback: 'no_image.jpg', class: "profile-image-style" %></span>
                                 <span><%= random.profile_name %></span>
-                                <% if random.followed_by?(current_user) %>
-                                    <span><%= link_to "フォローをやめる", user_relationships_path(random.profile_name), method: :delete %></span>
-                                <% else %>
-                                    <span class="float-right"><%= link_to "フォローする", user_relationships_path(random.profile_name), method: :post %></span>
+                                <% if user_signed_in? %>
+                                    <% if random.followed_by?(current_user) %>
+                                        <span><%= link_to "フォローをやめる", user_relationships_path(random.profile_name), method: :delete %></span>
+                                    <% else %>
+                                        <span class="float-right"><%= link_to "フォローする", user_relationships_path(random.profile_name), method: :post %></span>
+                                    <% end %>
                                 <% end %>
                             </li>
                         </ul>

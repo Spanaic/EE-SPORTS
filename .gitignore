@@ -32,3 +32,6 @@
 
 # Ignore SSL
 /config/certs/*
+
+db/.DS_Store
+.DS_Store
