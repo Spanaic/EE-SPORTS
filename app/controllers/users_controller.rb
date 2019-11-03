@@ -1,58 +1,62 @@
 class UsersController < ApplicationController
     def index
         @users = User.page(params[:page]).per(20).reverse_order
-        # 試しに入れてる記述↓↓↓
-        # @post_images = @users.post_images.id.last
-        # @notifications = Notification.all
-        # @randoms = PostImage.order("RANDOM()").limit(9)
+        render :json => @users
     end
 
     def show
         @user = User.find_by(profile_name: params[:profile_name])
-        # params[:id]などの該当する記述（User）を[:name]に書き換える。
-        # @reply_user = User.find_by(profile_name: params[:profile_name])
         @post_images = @user.post_images.page(params[:page]).per(9).reverse_order
-        # 元々allで変数に代入していたので、kaminari風に変数に値を代入してあげれば、指定した数の表示件数にになる。
+        respond_to do |format|
+            format.json {render :json =>{:user => @user,:post_images => @post_images} }
+        end
     end
 
     def edit
         @user = User.find_by(profile_name: params[:profile_name])
-        # .findメソッドはID検索。id以外をキーにレコードを引っ張る時は.find_byメソッドを使う。
+        render :json => @user
     end
 
     def update
         @user = User.find_by(profile_name: params[:profile_name])
         @user = current_user
         if @user.update(user_params)
-            redirect_to user_path(@user.profile_name)
+            # redirect_to user_path(@user.profile_name)
+            render :json => {status: 'SUCCESS', data: @user}
         else
-            render :edit
+            # render :edit
+            render :json => {status: 'ERROR', data: @user}
         end
     end
 
     def follows
         @user = User.find_by(profile_name: params[:profile_name])
         @follows = @user.followings.all
+        respond_to do |format|
+            format.json { render :json => {:user => @user, :follows => @follows }}
+        end
     end
-    # ＠userにフォローされている人を集めたページ
-    # followingsはUserモデルで定義した擬似クラス
-    # through:activeに＠userから受け取った外部キーを入れて、アソシエーションされたfollowerをすべて取得する。
 
     def followers
         @user = User.find_by(profile_name: params[:profile_name])
         @followers = @user.followers.all
+        respond_to do |format|
+            format.json { render :json => { :user => @user, :followers => @followers } }
+        end
     end
-
-    # 上の逆。
 
     def reply_user
         @user = User.find_by(profile_name: params[:profile_name])
-        redirect_to user_path(params[:profile_name])
+        # redirect_to user_path(params[:profile_name])
+        render :json => @user
     end
 
     def explore
         @users = User.page(params[:page]).per(5).reverse_order
         @randoms = PostImage.order("RANDOM()").page(params[:page]).per(9).reverse_order
+        respond_to do |format|
+            format.json { render :json => { :user => @users, :post_images => @randoms }}
+        end
     end
 
     private

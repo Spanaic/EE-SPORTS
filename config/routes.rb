@@ -2,6 +2,10 @@ Rails.application.routes.draw do
   devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
   root "post_images#index"
   get '/post/hashtag/:name', to: "post_images#hashtag"
+  get '/users/:profile_name' + '.json', to: "users#show" ,as: 'user_json'
+  post '/users/:profile_name' + '.json', to: "users#update"
+  get '/users/:profile_name/follows' + '.json', to: "users#follows", as: 'follows_user_json'
+  get '/users/:profile_name/explore' + '.json', to: "users#explore", as: 'explore_users_json'
 
   resources :post_images do
     resources :post_comments, only: [:create, :destroy]
