@@ -87,6 +87,10 @@ export default {
   components: {
     Logo,
     VuetifyLogo
+  },
+  async asyncData({ app }) {
+  const response = await app.$axios.$get('https://httpbin.org/get');
+  return { host: response.headers.Host };
   }
 }
 </script>

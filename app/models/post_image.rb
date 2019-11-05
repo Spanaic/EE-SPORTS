@@ -5,9 +5,9 @@ class PostImage < ApplicationRecord
     has_and_belongs_to_many :hashtags
     has_many :notifications, dependent: :destroy
 
-    attachment :post_image
+    # attachment :post_image
 
-    validates :post_image, presence: true
+    # validates :post_image, presence: true
     validates :caption, presence: true, length: {maximum: 140}
 
     def favorited_by?(current_user)
@@ -22,7 +22,6 @@ class PostImage < ApplicationRecord
             post_image.hashtags << tag
         end
     end
-
     before_update do
         post_image = PostImage.find_by(id: self.id)
         post_image.hashtags.clear

@@ -53,3 +53,55 @@
 * 最初はバージョンごとにインストールされているgemを参照する
 * プロジェクトごとにローカルでgemを管理する場合は`--path vendor/bundle`でvendor直下にgemをインストールされるように心掛ける。
 * リポジトリを一つにするために、createしたnuxtディレクトリはrails直下に移動する
+
+---
+
+
+## axiosでbaseURLを設定して、各ページでそれを呼び出す運用方法
+
+[Nuxt公式ドキュメント(axios)](https://ja.nuxtjs.org/api/configuration-env/)
+
+1. configにbaseURLを記載する.
+2. plugin直下にaxios.jsを作成する.
+3. 各コンポーネントでimportする（axios.js）
+
+---
+
+## axiosの.thenで取ってくる方法
+
+```
+mounted() {
+  axios.get("http://localhost:3001//post_images.json")
+  .then(response => {this.post_images = response.data.post_images})
+  .error
+}
+```
+
+## axiosのasyncで取ってくる
+
+```
+  mounted: async function() {
+    const response = await axios.get(url)
+    // console.log(response.data.post_images);
+    this.post_images = response.data.post_images;
+  }
+    // let that = this
+    // const response = await axios.get(`/post_images`, {
+    //   this.post_images = response.post_images;
+  }
+```
+
+最初にdataが取れなかったのはthisのスコープが原因か、response.data.post_images;のように"data"を噛ましてなかったため。
+
+## axiosでmthodsの@clickイベントからgetで値を取ってくる方法
+
+```
+  methods: {
+  async handleSubmit () {
+    const url = "http://localhost:3001//post_images.json"
+    const { data } = await axios.get(url)
+    this.post_images = data.post_images
+  }
+}
+```
+template内に<form>や<button>を設けて@clickイベントを設ける必要がある。

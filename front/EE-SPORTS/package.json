@@ -13,9 +13,13 @@
     "test": "jest"
   },
   "dependencies": {
+    "@nuxtjs/axios": "^5.8.0",
+    "@nuxtjs/dotenv": "^1.4.1",
+    "@nuxtjs/pwa": "^3.0.0-0",
+    "dependencies": "0.0.1",
+    "firebase": "^7.2.3",
     "nuxt": "^2.0.0",
-    "@nuxtjs/axios": "^5.3.6",
-    "@nuxtjs/pwa": "^3.0.0-0"
+    "peer": "^0.2.10"
   },
   "devDependencies": {
     "@nuxtjs/vuetify": "^1.0.0",

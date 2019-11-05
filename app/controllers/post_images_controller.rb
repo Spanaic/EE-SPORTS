@@ -1,16 +1,18 @@
 class PostImagesController < ApplicationController
-    before_action :authenticate_user!, except: [:index, :show]
+    # before_action :authenticate_user!, except: [:index, :show]
+    # protect_from_forgery with: :null_session
+    protect_from_forgery :except => [:create]
+
 
     def index
-        # @post_images = PostImage.all
-        @post_images = PostImage.page(params[:page]).per(6).reverse_order
-        # kaminariでアクションごとに表示ページ数を変える場合は.per(好きな数字)をparam[:page]の後に指定する。
+        # @post_images = PostImage.page(params[:page]).per(6).reverse_order
+        @post_images = PostImage.page(params[:page]).reverse_order
         @notifications = Notification.all
         @randoms = User.order("RANDOM()").limit(20)
-        # .order("RAND()")でデータを取得する場合、今のデータベースの件数と、表示する件数の整合性に気をつける
-        # 3件しか登録されていないのに20件ランダムに取得するような記述をするとエラーとなるagument error
-        # .order("RAND()")メソッドはRAND()内の引数の数字だけランダムにレコードを取得する。()に数字が入ってなければ全件取得・・・かな？
-        # .limit()メソッドは()内の引数の数字ずつ変数へと代入する
+        @user = current_user
+        respond_to do |format|
+            format.json { render :json => { :post_images => @post_images, :notifications => @notifications, :randoms => @randoms, :current_user => @user } }
+        end
     end
 
     def new
@@ -25,11 +27,25 @@ class PostImagesController < ApplicationController
     end
 
     def create
+
+        uploaded_file =  params[:post_image][:image]
+        # binding.pry
+
+          output_path = Rails.root.join('public', uploaded_file.original_filename)
+
+    	  File.open(output_path, 'w+b') do |fp|
+              fp.write  uploaded_file.read
+         end
+
         @post_image = PostImage.new(post_image_params)
-        @post_image.user_id = current_user.id
+        # binding.pry
+        @user = User.first
+        @post_image.user_id = @user.id
+        @post_image.caption = uploaded_file.original_filename
         if @post_image.save
             redirect_to post_image_path(@post_image.id)
         else
+            puts @post_image.errors.full_messages
             render :new
         end
     end
@@ -70,6 +86,6 @@ class PostImagesController < ApplicationController
 
     private
     def post_image_params
-        params.require(:post_image).permit(:post_image, :caption)
+        params.require(:post_image).permit(:caption)
     end
 end
