@@ -1,28 +1,43 @@
-
 import firebase from "firebase"
+// import store from "~/store";
 
 
-
-
-// var firebaseConfig = {
-//     apiKey: process.env.API_KEY,
-//     authDomain: process.env.AUTH_DOMAIN,
-//     databaseURL: process.env.DATABASE_URL,
-//     projectId: process.env.PROJECT_ID,
-//     storageBucket: process.env.STORAGE_BUCKET,
-//     messagingSenderId: process.env.MESSAGING_SENDER_ID,
-//     appId: process.env.APP_ID
-// };
 var firebaseConfig = {
-    apiKey: "AIzaSyAkveW6kT9EbZVBB8kyZObPvgbkX0Nj14g",
-    authDomain: "ee-sports.firebaseapp.com",
-    databaseURL: "https://ee-sports.firebaseio.com",
-    projectId: "ee-sports",
-    storageBucket: "ee-sports.appspot.com",
-    messagingSenderId: "636627745511",
-    appId: "1:636627745511:web:86d8560ba4d67b4f890042"
+    apiKey: process.env.API_KEY,
+    authDomain: process.env.AUTH_DOMAIN,
+    databaseURL: process.env.DATABASE_URL,
+    projectId: process.env.PROJECT_ID,
+    storageBucket: process.env.STORAGE_BUCKET,
+    messagingSenderId: process.env.MESSAGING_SENDER_ID,
+    appId: process.env.APP_ID
 };
+
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+// firebase.initializeApp(firebaseConfig);
+
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig)
+}
 
 export default firebase
+
+// export default {
+//     init() {
+//         firebase.initializeApp(config);
+//         firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION);
+//     },
+//     login() {
+//         const provider = new firebase.auth.GoogleAuthProvider();
+//         firebase.auth().signInWithPopup(provider)
+//     },
+//     logout() {
+//         firebase.auth().signOut()
+//     },
+//     onAuth() {
+//         firebase.auth().onAuthStateChanged(user => {
+//             user = user ? user : {};
+//             store.commit('onAuthStateChanged', user);
+//             store.commit('onUserStateChanged', user.uid ? true : false);
+//         });
+//     }
+// };

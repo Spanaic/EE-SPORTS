@@ -1,10 +1,26 @@
 import colors from 'vuetify/es5/util/colors'
 
+require('dotenv').config();
+const { API_KEY } = process.env;
+const { AUTH_DOMAIN } = process.env;
+const { DATABASE_URL } = process.env;
+const { PROJECT_ID } = process.env;
+const { STORAGE_BUCKET } = process.env;
+const { MESSAGING_SENDER_ID } = process.env;
+const { APP_ID } = process.env;
+
 export default {
   mode: 'universal',
-  // env: {
-  //   baseUrl: process.env.BASE_URL || 'http://localhost:3001'
-  // },
+  env: {
+    // baseUrl: process.env.BASE_URL || 'http://localhost:3001'
+    API_KEY,
+    AUTH_DOMAIN,
+    DATABASE_URL,
+    PROJECT_ID,
+    STORAGE_BUCKET,
+    MESSAGING_SENDER_ID,
+    APP_ID
+  },
   /*
   ** Headers of the page
   */
@@ -33,6 +49,7 @@ export default {
   ** Plugins to load before mounting the App
   */
   plugins: [
+    '@/plugins/authCheck'
   ],
   /*
   ** Nuxt.js dev-modules
@@ -40,7 +57,8 @@ export default {
   buildModules: [
     // Doc: https://github.com/nuxt-community/eslint-module
     // '@nuxtjs/eslint-module',
-    '@nuxtjs/vuetify'
+    '@nuxtjs/vuetify',
+
   ],
   /*
   ** Nuxt.js modules
@@ -49,7 +67,6 @@ export default {
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     '@nuxtjs/pwa',
-    '@nuxtjs/dotenv'
   ],
   /*
   ** Axios module configuration

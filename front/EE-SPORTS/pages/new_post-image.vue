@@ -36,6 +36,7 @@ export default {
       TableName: "Faces"
     };
   },
+  //   fetch() {},
   methods: {
     onFileChange(e) {
       console.log(e);
