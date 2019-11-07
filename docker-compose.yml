@@ -1,0 +1,29 @@
+version: '3'
+services:
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: root
+    ports:
+      - "3306:3306"
+  api:
+    build: .
+    command: rails s -p 3001 -b '0.0.0.0'
+    volumes:
+      - .:/myapi
+    ports:
+      - "3001:3001"
+    depends_on:
+      - db
+    tty: true
+  front:
+    container_name: nuxt
+    build: .
+    command: npm run dev
+    volumes:
+      - ./front/EE-SPORTS:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    tty: true
