@@ -18,13 +18,13 @@ services:
     depends_on:
       - db
     tty: true
-  front:
-    container_name: nuxt
-    build: ./front/EE-SPORTS
-    command: npm run dev
-    volumes:
-      - ./front/EE-SPORTS:/app
-      - /app/node_modules/
-    ports:
-      - "3000:3000"
-    tty: true
+  # front:
+  #   container_name: nuxt
+  #   build: ./front/EE-SPORTS
+  #   command: npm run dev
+  #   volumes:
+  #     - ./front/EE-SPORTS:/app
+  #     - /app/node_modules/
+  #   ports:
+  #     - "3000:3000"
+  #   tty: true

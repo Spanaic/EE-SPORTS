@@ -1,0 +1,6 @@
+exit
+User.all
+EndUser.first
+EndUser.all
+EndUser.first
+exit

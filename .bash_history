@@ -7,3 +7,5 @@ mv /myapi/tmp/pids/server.pid ~/
 rails s -p 3001 -b 0.0.0.0
 pwd
 ls
+rails c
+exit

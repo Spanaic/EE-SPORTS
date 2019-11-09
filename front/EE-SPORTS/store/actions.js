@@ -1,5 +1,8 @@
 
 import firebase from "@/plugins/firebase"
+// import { executionAsyncId } from "async_hooks";
+import axios from '~/plugins/axios'
+
 const actions = {
     // init() {
     //     firebase.initializeApp(config);
@@ -9,7 +12,7 @@ const actions = {
         const provider = new firebase.auth.GoogleAuthProvider();
         firebase.auth().signInWithPopup(provider)
             .then(user => {
-                commit("onAuthStateChanged", user)
+                commit("setUser", user)
             })
     },
     logIn({ commit }, payload) {
@@ -17,15 +20,15 @@ const actions = {
             .auth()
             .createUserWithEmailAndPassword(payload[0], payload[1])
             .then(user => {
-                commit("onAuthStateChanged", user);
-                console.log(payload);
+                commit("setUser", user);
+                console.log(user.user.email);
                 // axios.post("http://localhost:3001/users", {
                 //     email: this.email
                 // });
                 this.email = "";
                 this.password = "";
                 console.log("Sign-in successful.");
-                this.$router.push("/");
+                // this.$router.push("/");
             })
             .catch(err => {
                 this.error = err.message;
@@ -39,12 +42,33 @@ const actions = {
             .signOut()
             .then(user => {
                 console.log(user);
-                commit("onAuthStateChanged", user)
+                commit("setUser", user)
+                console.log('logout success!')
             })
             .catch(function (error) {
                 console.log("An error happened.");
             });
     },
+    signUp({ commit }, payload) {
+        firebase
+            .auth()
+            .createUserWithEmailAndPassword(
+                payload[0],
+                payload[1],
+            )
+            .then(user => {
+                commit('setUser', user)
+                const end_user = {
+                    email: user.user.email,
+                    name: payload[2],
+                    profile_name: payload[3]
+                }
+                axios.post("/end_users", { end_user })
+                console.log(payload)
+                console.log('sign up success')
+                // this.$router.push({name: postImages, params: index })
+            });
+    }
     // onAuth() {
     //     firebase.auth().onAuthStateChanged(user => {
     //         user = user ? user : {};

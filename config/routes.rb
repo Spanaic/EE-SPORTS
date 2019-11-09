@@ -13,7 +13,15 @@ Rails.application.routes.draw do
     get :reply, on: :member
   end
 
-  resources :users, param: :profile_name, only: [:edit, :index, :update, :show, :index] do
+  # FIXME:usersモデルは削除予定
+  # resources :users, param: :profile_name, only: [:edit, :index, :update, :show, :index] do
+  #   resource :relationships, param: :profile_name, only: [:create, :destroy]
+  #   get :follows, on: :member
+  #   get :followers, on: :member
+  #   get :explore, on: :collection
+  # end
+
+  resources :end_users, param: :profile_name do
     resource :relationships, param: :profile_name, only: [:create, :destroy]
     get :follows, on: :member
     get :followers, on: :member
@@ -21,5 +29,4 @@ Rails.application.routes.draw do
   end
 
   resources :notifications, only: [:index]
-
 end

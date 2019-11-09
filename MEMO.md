@@ -249,7 +249,7 @@ sessionを終了させる(ログアウトさせる)
     onAuth() {
         firebase.auth().onAuthStateChanged(user => {
             user = user ? user : {};
-            store.commit('onAuthStateChanged', user);
+            store.commit('serUser', user);
             store.commit('onUserStateChanged', user.uid ? true : false);
         });
     }
@@ -325,7 +325,7 @@ statusはログイン状態を真偽値で管理するための記述。
 
 ```
 const mutations = {
-    onAuthStateChanged(state, payload) {
+    setUser(state, payload) {
         state.user = payload;
     },
     onUserStatusChanged(state, payload) {
@@ -360,7 +360,7 @@ const actions = {
         const provider = new firebase.auth.GoogleAuthProvider();
         firebase.auth().signInWithPopup(provider)
             .then(user => {
-                commit("onAuthStateChanged", user)
+                commit("setUser", user)
             })
     },
     <!-- .thenでpromiseオブジェクトが返ってきた場合にmutations.jsで定義した関数を呼び出してstateの値を変更したいので、commit(mutations内の関数名,　今回の場合は値の入った引数)を実行する -->
@@ -372,7 +372,7 @@ const actions = {
     onAuth() {
         firebase.auth().onAuthStateChanged(user => {
             user = user ? user : {};
-            store.commit('onAuthStateChanged', user);
+            store.commit('setUser', user);
             store.commit('onUserStateChanged', user.uid ? true : false);
         });
         <!-- ログイン状態を保持したいが、この記述のままだとリロードされた瞬間にstateがemptyになってしまうのでリロードされた時の状態保持の処理をpluginsかmiddlewareに記述する -->
@@ -395,7 +395,7 @@ pluginsとmiddlewareはbeforeCreateよりも前に最初に読み込まれるフ
             .auth()
             .createUserWithEmailAndPassword(email, password)
             .then(user => {
-                commit("onAuthStateChanged", user);
+                commit("setUser", user);
                 console.log(payload);
 ```
 このタイミングで学んだことが2つ
@@ -412,3 +412,408 @@ pluginsとmiddlewareはbeforeCreateよりも前に最初に読み込まれるフ
 
 【良記事の匂い】[ハイパーテキストキャンディ](https://www.hypertextcandy.com/cookie-auth-and-cors-on-universal-nuxt-app-with-web-api)
 
+---
+
+## docker-compose.yml
+
+```
+version: '3'
+services:
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: root
+    ports:
+      - "3306:3306"
+  api:
+    build: .
+    command: bash -c "rm -f tmp/pids/server.pid && rails s -p 3001 -b '0.0.0.0'"
+    <!-- server.pidをrmする記述がなければ localとcontainerでポートを共有して使用してしまうため、composeを走らせる度にrmするコマンドを記述しておく -->
+    <!-- bashはターミナルの言語  -->
+    volumes:
+      - .:/myapi
+      - /myapi/temp/
+    ports:
+      - "3001:3001"
+    depends_on:
+      - db
+    tty: true
+  front:
+  <!-- 基本的にymlファイルからみた相対パスを記述する -->
+    container_name: nuxt
+    build: ./front/EE-SPORTS
+    command: npm run dev
+    volumes:
+      - ./front/EE-SPORTS:/app
+      - /app/node_modules/
+    ports:
+      - "3000:3000"
+    tty: true
+```
+
+1. server.pidをrmする記述がなければ localとcontainerでポートを共有して使用してしまうため、composeを走らせる度にrmするコマンドを記述しておく
+2. bashはターミナルの言語
+3. 基本的にymlファイルからみた相対パスを記述する
+4. volumesの書き方は気をつける（相対パス）
+
+## databas.yml
+
+```
+development:
+  <<: *default
+  database: api
+
+# Warning: The database defined as "test" will be erased and
+# re-generated from your development database when you run "rake".
+# Do not set this db to the same as development or production.
+test:
+  <<: *default
+  database: api_test
+
+production:
+  <<: *default
+  database: api
+```
+
+1. database:の部分はpathで指定されているとデフォルトでsqlite3になっている。
+2. pathを記述するのではなく、わかりやすいデータベース名を書く。
+3. ちなみにpathで書くというルールはないのでデータベース名を自由に記述している。
+4. デプロイの時にデータベース名をymlを参照して記述する。
+
+---
+
+## firebaseの導入方法
+
+### firebaseのアカウント作成
+
+1. firebaseでアカウントを作成
+2. firebaseを-gインストール
+3. package.jsonにmoduleを追加する
+
+```
+npm -i firebase --save
+```
+`--save`コマンドでpackage.jsonに追加
+
+### dotenvで環境変数を隠す
+
+1. dotenvをインストールする。
+
+```
+npm -i dotenv
+```
+
+2. ディレクトリ直下に[.env]ファイルを作成する。
+3. firebaseのプロジェクトのコンフィグからアプリケーションを選択　＝> CDNで出てきたAPI_KEYなどなどをコピー
+4. [.env]の中に記述する
+
+```.env
+任意の名前="値"
+
+API_KEY="***"
+AUTH_DOMAIN="***"
+DATABASE_URL="https://***.firebaseio.com"
+PROJECT_ID="***"
+STORAGE_BUCKET="***.appspot.com"
+MESSAGING_SENDER_ID="****"
+APP_ID="1:***:web:***"
+```
+
+5. Nuxtは記述済みだが,念の為.gitignoreをチェック！なければ[.env]を追記する
+6. `[nuxt.config.js]に環境変数を記述する`
+
+```
+require('dotenv').config();
+const { API_KEY } = process.env;
+const { AUTH_DOMAIN } = process.env;
+const { DATABASE_URL } = process.env;
+const { PROJECT_ID } = process.env;
+const { STORAGE_BUCKET } = process.env;
+const { MESSAGING_SENDER_ID } = process.env;
+const { APP_ID } = process.env;
+
+export default {
+  mode: 'universal',
+  env: {
+    API_KEY,
+    AUTH_DOMAIN,
+    DATABASE_URL,
+    PROJECT_ID,
+    STORAGE_BUCKET,
+    MESSAGING_SENDER_ID,
+    APP_ID
+  },
+  ```
+
+  ### firebase.js
+
+  1. [.plugins/firebase.js]を作成
+  2. [.env]で作成した記述を元に中身を編集する。
+
+```
+  import firebase from "firebase"
+
+
+var firebaseConfig = {
+    apiKey: process.env.API_KEY,
+    authDomain: process.env.AUTH_DOMAIN,
+    databaseURL: process.env.DATABASE_URL,
+    projectId: process.env.PROJECT_ID,
+    storageBucket: process.env.STORAGE_BUCKET,
+    messagingSenderId: process.env.MESSAGING_SENDER_ID,
+    appId: process.env.APP_ID
+};
+
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig)
+}
+
+export default firebase
+```
+
+### Vuexの準備（ログインの認証管理）
+
+1. [state.js]の作成
+
+`userに空の値、statusにfalseを設定しておく`
+
+```
+const state = {
+    user: {
+    },
+    status: false
+}
+
+export default state;
+```
+
+2. [mutations.js]の作成
+
+`commitされたときの引数を[state.js]のどこに渡すかを記述する`
+
+```
+const mutations = {
+    setUser(state, payload) {
+        state.user = payload;
+    },
+    onUserStatusChanged(state, payload) {
+        state.status = payload;
+    }
+};
+
+export default mutations;
+```
+
+3. [actions.js]の作成
+
+`firebaseで認証成功 => commitでstate変更 => axios.postでapiサーバーのdbに追加`
+
+```
+import firebase from "@/plugins/firebase"
+
+const actions = {
+  logInGoogle({ commit }) {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      firebase.auth().signInWithPopup(provider)
+          .then(user => {
+              commit("setUser", user)
+          })
+  },
+  logIn({ commit }, payload) {
+      firebase
+          .auth()
+          .createUserWithEmailAndPassword(payload[0], payload[1])
+          .then(user => {
+              commit("setUser", user);
+                axios.post("http://localhost:3001/users", {
+                    email: this.email
+                    埋めたいカラム名: バインドされてきた値（this.hogehoge）
+                });
+              this.email = "";
+              this.password = "";
+              console.log("Sign-in successful.");
+              this.$router.push("/");
+          })
+          .catch(err => {
+              this.error = err.message;
+              this.error_checker = true;
+              console.log(this.error_checker);
+          });
+  },
+  logOut({ commit }) {
+      firebase
+        .auth()
+        .signOut()
+        .then(user => {
+            console.log(user);
+            commit("setUser", user)
+        })
+        .catch(function (error) {
+            console.log("An error happened.");
+        });
+    },
+}
+
+export default actions
+```
+
+4. [./plugins/authCheck.js]を作成
+
+`plugins配下に作成することでリロードされてもライフサイクルが始まる前に読み込ませる事ができる（リロードされても認証を維持できる）`
+
+```
+import firebase from '@/plugins/firebase';
+import axios from 'axios';
+
+export default (context) => {
+    const {
+        store
+    } = context
+    firebase.auth().onAuthStateChanged(async user => {
+        if (user) {
+             const { data } =
+             await axios.get("http://localhost:3001/users/",{
+                 params:{
+                     email: user.email
+                 }
+             })
+            store.commit('setUser', user)
+        }
+    })
+}
+```
+
+`paramsでemailを渡すことで、rails側のコントローラに「@user = User.where(email: [:params][:email])」のようなカタチでUserを引っ張ってこれる。@userをcurrent_user代わりにして、コントローラ側で処理を行い、jsonでそれを返す。`
+
+---
+
+## firebaseへの新規登録とmodelへのpostを同時に行う方法（User新規登録編）
+
+### .vue側の記述
+
+1. actions.jsに渡すpayload内の配列をdispatchの第2引数に記述する。
+2. actions.js内で処理を完了させたい場合は、dispatchを呼び出すだけにする（axiosの記述も全てactions.jsに記述する）
+
+```
+ hundleSubmit() {
+      this.$store.dispatch("signUp", [
+        this.email,
+        this.password,
+        this.name,
+        this.profile_name
+      ]);
+      //   .then(() => {
+      //   const end_user = {
+      //       email: this.email,
+      //       name: this.name,
+      //       profile_name: this.profile_name
+      //   };
+      //   axios.post("/end_users", {
+      //       end_user
+      //     //   email: end_user.email,
+      //     //   name: end_user.name,
+      //     //   profile_name: end_user.profile_name
+      //   });
+      this.email = "";
+      this.password = "";
+      this.name = "";
+      this.profile_name = "";
+      //   });
+    },
+```
+
+3. `state変更とモデルへの.save処理が終了したら、data内のプロパティを空にすること！`
+
+### actions.js側の記述
+
+```
+signUp({ commit }, payload) {
+    firebase
+        .auth()
+        .createUserWithEmailAndPassword(
+            payload[0],
+            payload[1],
+        )
+        .then(user => {
+            commit('setUser', user)
+            const end_user = {
+                email: user.user.email,
+                name: payload[2],
+                profile_name: payload[3]
+            }
+            axios.post("/end_users", { end_user })
+            console.log(payload)
+            console.log('sign up success')
+        });
+}
+```
+1. `関数内に定義した引数（payload）は関数内ならどこでも参照できる`
+2. firebaseの処理が終わったら、.thenで繋げる
+3. `定数[end_user]にオブジェクトを代入することで(params[:end_user][:email])のようにパラメータをapi側に送る事ができる`
+4. axios.post()の第2引数にオブジェクトとして入れ込む事もできるが、それだと二重にパラメータが送られることになるので良くない。
+
+### end_users.controller.rbの記述
+
+```
+    def create
+        user = EndUser.new(end_user_params)
+        if user.save
+        else
+        puts user.errors.full_messages
+        end
+        render :json => user
+    end
+
+    private
+    def end_user_params
+        params.require(:end_user).permit(:email, :name, :profile_name)
+    end
+```
+
+1. 基本的にインスタンス変数は使う必要がない。
+
+```
+        @user.email = params[:end_user][:email]
+        @user.name = params[:end_user][:name]
+        @user.profile_name = params[:end_user][:profile_name]
+```
+2. `paramsをカラムに代入するのはストロングパラメータの記述一行で済む`
+
+```
+    private
+    def end_user_params
+        params.require(:end_user).permit(:email, :name, :profile_name)
+    end
+    <!-- 上記の3行と同じ役割を果たす -->
+```
+3. デバックする時はエラーメッセージをrollbackに仕込んでおく
+
+```
+        if user.save
+        else
+        puts user.errors.full_messages
+        end
+        render :json => user
+```
+
+4. モデルへの記述は気をつける（deviseから移行してきた時）
+
+```
+  devise :database_authenticatable, :registerable,
+        :recoverable, :rememberable, :validatable, :omniauthable
+```
+
+`deviseの記述なので怒られるよ！削除するのを忘れずに！`
+
+5. route.rbへの記述を行いaxiosでurlを叩けるようにしておく
+
+```
+  resources :end_users, param: :profile_name do
+    resource :relationships, param: :profile_name, only: [:create, :destroy]
+    get :follows, on: :member
+    get :followers, on: :member
+    get :explore, on: :collection
+  end
+```
+---

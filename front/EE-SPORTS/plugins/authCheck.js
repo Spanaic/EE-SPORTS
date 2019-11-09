@@ -1,5 +1,5 @@
 import firebase from '@/plugins/firebase';
-import axios from 'axios';
+import axios from '@/plugins/axios';
 
 export default (context) => {
     const {
@@ -7,14 +7,14 @@ export default (context) => {
     } = context
     firebase.auth().onAuthStateChanged(async user => {
         if (user) {
-            // const { data } =
-
-            // await axios.get("http://localhost:3001/users/",{
-            //     params:{
-            //         email: user.email
-            //     }
-            // })
-            store.commit('onAuthStateChanged', user)
+            const { data } =
+                await axios.get("/end_users/", {
+                    params: {
+                        email: user.email
+                    }
+                })
+            store.commit('setUser', user)
+            axios.post("/end_users/")
         }
     })
 }

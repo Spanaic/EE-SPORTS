@@ -1,5 +1,5 @@
 const mutations = {
-    onAuthStateChanged(state, payload) {
+    setUser(state, payload) {
         state.user = payload;
     },
     onUserStatusChanged(state, payload) {
