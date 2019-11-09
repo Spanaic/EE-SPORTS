@@ -1,40 +1,62 @@
 
 import firebase from "@/plugins/firebase"
 // import { executionAsyncId } from "async_hooks";
-import axios from '~/plugins/axios'
+import axios from '@/plugins/axios'
 
 const actions = {
     // init() {
     //     firebase.initializeApp(config);
     //     firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION);
     // },
-    logInGoogle({ commit }) {
+    logInGoogle({ commit }, payload) {
         const provider = new firebase.auth.GoogleAuthProvider();
         firebase.auth().signInWithPopup(provider)
             .then(user => {
                 commit("setUser", user)
+                const end_user = {
+                    email: payload[0],
+                    name: payload[1],
+                }
+                axios.post("/end_users", { end_user })
+                console.log(payload)
+                console.log('sign up success')
+                this.$router.push("/")
             })
     },
     logIn({ commit }, payload) {
-        firebase
-            .auth()
-            .createUserWithEmailAndPassword(payload[0], payload[1])
+        firebase.auth()
+            .signInWithEmailAndPassword(payload[0], payload[1])
             .then(user => {
                 commit("setUser", user);
-                console.log(user.user.email);
-                // axios.post("http://localhost:3001/users", {
-                //     email: this.email
-                // });
-                this.email = "";
-                this.password = "";
-                console.log("Sign-in successful.");
-                // this.$router.push("/");
+                console.log('login success!')
+                this.$router.push("/");
             })
-            .catch(err => {
-                this.error = err.message;
-                this.error_checker = true;
-                console.log(this.error_checker);
+            .catch(function (error) {
+                // Handle Errors here.
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                // ...
             });
+
+        // firebase
+        //     .auth()
+        //     .createUserWithEmailAndPassword(payload[0], payload[1])
+        //     .then(user => {
+        //         commit("setUser", user);
+        //         console.log(user.user.email);
+        //         // axios.post("http://localhost:3001/users", {
+        //         //     email: this.email
+        //         // });
+        //         this.email = "";
+        //         this.password = "";
+        //         console.log("Sign-in successful.");
+        //         // this.$router.push("/");
+        //     })
+        //     .catch(err => {
+        //         this.error = err.message;
+        //         this.error_checker = true;
+        //         console.log(this.error_checker);
+        //     });
     },
     logOut({ commit }) {
         firebase
@@ -66,7 +88,7 @@ const actions = {
                 axios.post("/end_users", { end_user })
                 console.log(payload)
                 console.log('sign up success')
-                // this.$router.push({name: postImages, params: index })
+                this.$router.push("/")
             });
     }
     // onAuth() {
@@ -78,4 +100,4 @@ const actions = {
     // }
 }
 
-export default actions
+export default actions;

@@ -9,3 +9,9 @@ pwd
 ls
 rails c
 exit
+EndUser.first
+rails c
+rails c
+exit
+rails c
+exit

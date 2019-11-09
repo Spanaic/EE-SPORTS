@@ -817,3 +817,24 @@ signUp({ commit }, payload) {
   end
 ```
 ---
+
+## Nuxt.jsのrouteを確認する方法
+
+[Qiita参考URL](https://qiita.com/tekondo/items/80555991c019808669ef)
+
+* `基本的には[./.nuxt/router.js]を確認すればルーティングに必要な情報はすべて手に入る。`
+
+```
+router: {
+  routes: [
+    {
+      name: 'users-id',
+      path: '/users/:id?',
+      component: 'pages/users/_id.vue'
+    }
+  ]
+}
+```
+
+* showページなど[id]によって動的に変わるページは[_id.vue]のような_(アンダースコア)を付けたファイルを生成することでパスを指定できる。
+

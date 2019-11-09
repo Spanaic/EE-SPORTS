@@ -13,6 +13,8 @@
     </form>
     <button @click="googleLogIn">Googleアカウントで登録</button>
     <button @click="logOut">ログアウト</button>
+    <nuxt-link to="/post_Images">トップへ行く</nuxt-link>
+    <nuxt-link to="/post_images/new_post_image">新規投稿する</nuxt-link>
   </div>
 </template>
 

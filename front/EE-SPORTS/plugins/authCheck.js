@@ -13,7 +13,7 @@ export default (context) => {
                         email: user.email
                     }
                 })
-            store.commit('setUser', user)
+            store.commit('setUser', data)
             axios.post("/end_users/")
         }
     })

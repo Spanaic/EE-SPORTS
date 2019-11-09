@@ -71,7 +71,7 @@ export default {
       //   .then(res => {
       //     console.log("Sign-in successful.");
       //   });
-      this.$store.dispatch("logInGoogle");
+      this.$store.dispatch("logInGoogle", [this.email, this.name]);
     }
   }
 };
