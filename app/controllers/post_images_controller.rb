@@ -44,7 +44,7 @@ class PostImagesController < ApplicationController
         # file_name = params[:post_image][:image_name] + "." + ext[1]
         # ['wakudei','jpg']
 
-          output_path = Rails.root.join('public', file_name)
+          output_path = Rails.root.join('public/post_images', file_name)
         # #   TODO:pathでディレクトリを指定する
         #   output_path = Rails.root.join('public', uploaded_file.filename)
         # #   TODO:pathでディレクトリを指定する

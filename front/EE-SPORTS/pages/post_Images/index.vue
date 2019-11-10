@@ -2,7 +2,7 @@
   <v-container>
     <div>
       <div v-for="(post_image, index) in post_images" :key="index">
-        <img v-bind:src="'http://localhost:3001/' + post_image.image_name" />
+        <img v-bind:src="'http://localhost:3001/post_images/' + post_image.image_name" />
         {{ post_image.caption }}
       </div>
     </div>
