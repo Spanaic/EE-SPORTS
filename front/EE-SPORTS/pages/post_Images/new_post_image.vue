@@ -70,6 +70,7 @@ export default {
       formData.append("post_image[image]", this.files[0]);
       formData.append("post_image[caption]", this.caption);
       formData.append("post_image[image_name]", filename);
+      // formData.append("post_image[image_name]", img_name);
       formData.append("post_image[end_user_id]", this.$store.state.user.id);
       // formData.append("post_image[image]", this.caption);
       this.loading = true;
@@ -78,10 +79,10 @@ export default {
       //     console.log(res.data);
       //   });
       console.log(formData);
-      const data = {
-        caption: this.caption,
-        name: filename
-      };
+      // const data = {
+      //   caption: this.caption,
+      //   name: filename
+      // };
       axios.post("http://localhost:3001/post_images", formData);
     }
   }

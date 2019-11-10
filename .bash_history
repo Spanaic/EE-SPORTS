@@ -17,3 +17,14 @@ rails c
 exit
 rails c
 exit
+ks 0ktar
+ls -ltar
+exit
+mysql -u root -p 
+ls
+rails -v
+ls -ltar
+pwd
+ls -tlar
+rails db:migrate
+exit

@@ -17,3 +17,8 @@ PostImage.all
 EndUser.all
 exit
 PostImage.all
+Rails.root.join('public', 'post' + . + 'jpg')
+Rails.root.join('public', 'post','+', 'jpg')
+Rails.root.join('public', 'post','.', 'jpg')
+a = 'a' + '.' + 'jpg'
+params

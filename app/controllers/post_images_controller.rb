@@ -38,9 +38,15 @@ class PostImagesController < ApplicationController
     def create
 
         uploaded_file =  params[:post_image][:image]
-        # binding.pry
+        binding.pry
+        # ext = uploaded_file.original_filename.split(".")
+        # file_name = params[:post_image][:image_name] + . + ext[1]
+        # ['wakudei','jpg']
 
-          output_path = Rails.root.join('public', uploaded_file.original_filename)
+          output_path = Rails.root.join('public', file_name)
+        # #   TODO:pathでディレクトリを指定する
+        #   output_path = Rails.root.join('public', uploaded_file.filename)
+        # #   TODO:pathでディレクトリを指定する
 
     	  File.open(output_path, 'w+b') do |fp|
               fp.write  uploaded_file.read
