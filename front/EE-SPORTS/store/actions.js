@@ -79,16 +79,21 @@ const actions = {
                 payload[1],
             )
             .then(user => {
+                console.log(user)
                 commit('setUser', user)
+
                 const end_user = {
                     email: user.user.email,
                     name: payload[2],
                     profile_name: payload[3]
                 }
                 axios.post("/end_users", { end_user })
-                console.log(payload)
-                console.log('sign up success')
-                this.$router.push("/")
+                    .then(this.$router.push("/", user))
+                    .catch((err) => {
+                        alert(err)
+                    })
+                // console.log(payload)
+                // console.log('sign up success')
             });
     }
     // onAuth() {

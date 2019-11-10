@@ -78,6 +78,7 @@ export default {
       //   axios.get("http://localhost:3001/post_images.json").then(res => {
       //     console.log(res.data);
       //   });
+      console.log("----------------");
       console.log(formData);
       // const data = {
       //   caption: this.caption,

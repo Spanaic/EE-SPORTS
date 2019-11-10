@@ -890,3 +890,28 @@ CREATE DATABASE db名
 ```
 これでmigrateをすることが出来るようになる。
 
+### binding.pryの接続方法
+
+```
+docker-compose up -d
+```
+
+1. backgroundでコンテナを立ち上げる
+
+```
+docker-compose ps
+```
+
+2. container名を取得する
+
+```
+docker exec -it attach container名 (bash)
+```
+
+3. （上記のコマンドはちょっと怪しい）いつものコンソールに入れるようになる
+
+```
+mysql/data/*
+```
+
+4. .gitignoreに追記する。

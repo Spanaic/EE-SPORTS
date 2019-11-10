@@ -22,3 +22,24 @@ Rails.root.join('public', 'post','+', 'jpg')
 Rails.root.join('public', 'post','.', 'jpg')
 a = 'a' + '.' + 'jpg'
 params
+uploaded.file
+uploaded_file
+params
+post_image.image_name
+image.image_name
+params[:post_image][:image_name]
+uploaded_file.original_filename
+uploaded_file.original_filename.split('.'
+  uploaded_file.original_filename.split('.')
+uploaded_file.original_filename.split(".")
+a = uploaded_file.original_filename.split(".")
+file_name = params[:post_image][:image_name] + . + ext[1]
+file_name = params[:post_image][:image_name] +"." + ext[1]
+file_name = params[:post_image][:image_name] +"." + a[1]
+exit
+EndUser.all
+PostImage.all
+exit
+params
+next
+exit

@@ -12,7 +12,7 @@
 
 ActiveRecord::Schema.define(version: 2019_11_10_054650) do
 
-  create_table "end_users", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "end_users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "email"
     t.string "name"
     t.string "profile_name"
@@ -21,28 +21,28 @@ ActiveRecord::Schema.define(version: 2019_11_10_054650) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "favorites", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "favorites", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.integer "user_id"
     t.integer "post_image_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "hashtags", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "hashtags", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "hashname"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["hashname"], name: "index_hashtags_on_hashname", unique: true
   end
 
-  create_table "hashtags_post_images", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "hashtags_post_images", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.bigint "post_image_id"
     t.bigint "hashtag_id"
     t.index ["hashtag_id"], name: "index_hashtags_post_images_on_hashtag_id"
     t.index ["post_image_id"], name: "index_hashtags_post_images_on_post_image_id"
   end
 
-  create_table "notifications", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "notifications", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.integer "visitor_id", null: false
     t.integer "visited_id", null: false
     t.integer "post_image_id"
@@ -57,7 +57,7 @@ ActiveRecord::Schema.define(version: 2019_11_10_054650) do
     t.index ["visitor_id"], name: "index_notifications_on_visitor_id"
   end
 
-  create_table "post_comments", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "post_comments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.text "comment"
     t.integer "post_image_id"
     t.integer "user_id"
@@ -65,7 +65,7 @@ ActiveRecord::Schema.define(version: 2019_11_10_054650) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "post_comments_users", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "post_comments_users", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.bigint "post_comment_id"
     t.bigint "user_id"
     t.datetime "created_at", null: false
@@ -74,7 +74,7 @@ ActiveRecord::Schema.define(version: 2019_11_10_054650) do
     t.index ["user_id"], name: "index_post_comments_users_on_user_id"
   end
 
-  create_table "post_images", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "post_images", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.text "caption"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -83,14 +83,14 @@ ActiveRecord::Schema.define(version: 2019_11_10_054650) do
     t.integer "end_user_id"
   end
 
-  create_table "relationships", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "relationships", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.integer "following_id"
     t.integer "follower_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"

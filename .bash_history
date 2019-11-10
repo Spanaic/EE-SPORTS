@@ -28,3 +28,13 @@ pwd
 ls -tlar
 rails db:migrate
 exit
+rails c
+exit
+rails db:createi
+rails db:create
+rails db:migrate
+rails db:migrate
+cd log/
+l
+ls -ltar
+apt install less

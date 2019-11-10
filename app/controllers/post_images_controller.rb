@@ -38,9 +38,10 @@ class PostImagesController < ApplicationController
     def create
 
         uploaded_file =  params[:post_image][:image]
-        binding.pry
+        # binding.pry
         # ext = uploaded_file.original_filename.split(".")
-        # file_name = params[:post_image][:image_name] + . + ext[1]
+        file_name = params[:post_image][:image_name]
+        # file_name = params[:post_image][:image_name] + "." + ext[1]
         # ['wakudei','jpg']
 
           output_path = Rails.root.join('public', file_name)
@@ -61,12 +62,13 @@ class PostImagesController < ApplicationController
         # post_image.user_id = user.id
         # post_image.image_name = uploaded_file.original_filename
         # post_iamge.caption = uploaded_file.original_filename
-        if post_image.save
+        # binding.pry
+        if post_image.save!
             # redirect_to post_image_path(post_image.id)
             render :json => post_image
         else
             puts post_image.errors.full_messages
-            render :new
+            render :json => post_image
         end
     end
     # def create
