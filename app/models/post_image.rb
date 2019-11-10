@@ -1,7 +1,7 @@
 class PostImage < ApplicationRecord
     has_many :post_comments, dependent:  :destroy
     has_many :favorites, dependent:  :destroy
-    belongs_to :user
+    belongs_to :end_user
     has_and_belongs_to_many :hashtags
     has_many :notifications, dependent: :destroy
 

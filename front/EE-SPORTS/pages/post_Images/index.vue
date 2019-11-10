@@ -21,10 +21,10 @@ export default {
       post_image: ""
     };
   },
-  created: async function() {
-    const user = this.$store.state.user;
-    await axios.post("/post_images", { user });
-  },
+  //   created: async function() {
+  //     const user = this.$store.state.user;
+  //     await axios.post("/post_images", { user });
+  //   },
   mounted: async function() {
     const response = await axios.get(url);
     console.log(response);

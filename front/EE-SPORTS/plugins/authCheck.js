@@ -8,14 +8,12 @@ export default (context) => {
     firebase.auth().onAuthStateChanged(async user => {
         if (user) {
             const { data } =
-                await axios.get("/end_users/", {
-                    params: {
-                        email: user.email
-                    }
-                })
+                await axios.get(`/end_users?email=${user.email}`)
             store.commit('setUser', data)
-            axios.post("/end_users/")
         }
+
+        // axios.post("/end_users/")
+
     })
 }
 

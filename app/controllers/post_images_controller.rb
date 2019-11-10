@@ -46,18 +46,46 @@ class PostImagesController < ApplicationController
               fp.write  uploaded_file.read
          end
 
-        @post_image = PostImage.new(post_image_params)
+        post_image = PostImage.new(post_params)
+        #  puts post_image.user_id
+        # post_image.user_id =  params[:post_image][:user_id].to_i
         # binding.pry
-        @user = User.first
-        @post_image.user_id = @user.id
-        @post_image.caption = uploaded_file.original_filename
-        if @post_image.save
-            redirect_to post_image_path(@post_image.id)
+        # user = User.first
+        # # FIXME:userは後でパラメータを渡されるように設定する
+        # post_image.user_id = user.id
+        # post_image.image_name = uploaded_file.original_filename
+        # post_iamge.caption = uploaded_file.original_filename
+        if post_image.save
+            # redirect_to post_image_path(post_image.id)
+            render :json => post_image
         else
-            puts @post_image.errors.full_messages
+            puts post_image.errors.full_messages
             render :new
         end
     end
+    # def create
+
+    #     uploaded_file =  params[:post_image][:image]
+    #     # binding.pry
+
+    #       output_path = Rails.root.join('public', uploaded_file.original_filename)
+
+    # 	  File.open(output_path, 'w+b') do |fp|
+    #           fp.write  uploaded_file.read
+    #      end
+
+    #     @post_image = PostImage.new(post_image_params)
+    #     # binding.pry
+    #     @user = User.first
+    #     @post_image.user_id = @user.id
+    #     @post_image.caption = uploaded_file.original_filename
+    #     if @post_image.save
+    #         redirect_to post_image_path(@post_image.id)
+    #     else
+    #         puts @post_image.errors.full_messages
+    #         render :new
+    #     end
+    # end
 
     def edit
         @post_image = PostImage.find(params[:id])
@@ -94,7 +122,11 @@ class PostImagesController < ApplicationController
     end
 
     private
-    def post_image_params
-        params.require(:post_image).permit(:caption)
+    # def post_image_params
+    #     params.require(:post_image).permit(:caption, :image_name, :user_id, :image)
+    # end
+
+    def post_params
+        params.require(:post_image).permit(:caption, :image_name, :end_user_id)
     end
 end

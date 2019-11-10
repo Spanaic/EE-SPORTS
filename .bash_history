@@ -15,3 +15,5 @@ rails c
 exit
 rails c
 exit
+rails c
+exit
