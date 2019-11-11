@@ -16,6 +16,9 @@ class EndUsersController < ApplicationController
 
     def create
         user = EndUser.new(end_user_params)
+        # user.email = params[:end_user][:email]
+        # user.name = params[:end_user][:name]
+        # user.profile_name = params[:end_user][:profile_name]
         if user.save
 
         else

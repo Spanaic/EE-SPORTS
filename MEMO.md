@@ -915,3 +915,68 @@ mysql/data/*
 ```
 
 4. .gitignoreに追記する。
+
+## this.$router.pushとnuxt-linkの使い方(動的URL編)
+
+1. this.$router.push
+```
+this.$router.push({
+    name: "post_Images-id",
+    params: { postImageId: res.data.id }
+});
+```
+2. nuxt-link
+
+```
+<nuxt-link :to="{name: 'post_Images-id',params: { postImageId: res.data.id }}">
+    <img v-bind:src="'http://localhost:3001/post_images/' + post_image.image_name" />
+</nuxt-link>
+```
+
+`res.data.id`でリンクに飛べるかどうかは確認が必要。=>　飛べない...
+
+
+## mysqlのmy.conf内の設定
+
+[lower_case_table_names](https://moznion.hatenadiary.com/entry/2015/04/13/005641)
+
+大文字と小文字の区別をなくす？ための設定...my.confに設定
+
+## jsonの渡し方
+
+```
+def show
+     @post_image = PostImage.find_by(id: params[:id])
+    # @new_post_comment = PostComment.new
+    # @favorite = Favorite.new
+    # @post_comments = @post_image.post_comments.all
+    # @post_comments = @post_image.post_comments.page(params[:page]).per(4).reverse_order
+    respond_to do |format|
+        format.json {
+            render :json => {
+                :post_image => @post_image,
+                # :new_post_comment => @new_post_comment,
+                # :favorite => @favorite,
+                # :post_comments => @post_comments
+            }
+      # }
+    end
+end
+```
+上記のJsonの渡し方では、
+```
+{
+    -post_image: {
+        id: hogehoge
+        image_name: hogehoge
+    }
+}
+```
+と階層が一個下になってしまう。これでもパラメータとしては渡ってるので、使い方次第ではキチンとした値を取得出来るはず。
+```
+def show
+    post_image = PostImage.find(params[:id])
+    render :json => post_image
+end
+```
+渡すjsonが一つだけなら、[respond_to do]を使わない方が良い

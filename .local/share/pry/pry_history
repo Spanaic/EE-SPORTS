@@ -43,3 +43,12 @@ exit
 params
 next
 exit
+PostImage.all
+a = PostImage.find(1)
+a.destroy
+PostImage.all
+a.destroy
+PostImage.all
+a = PostImage.find(2)
+a.destroy
+exit

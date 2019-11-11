@@ -84,7 +84,13 @@ export default {
       //   caption: this.caption,
       //   name: filename
       // };
-      axios.post("http://localhost:3001/post_images", formData);
+      axios.post("http://localhost:3001/post_images", formData).then(res => {
+        console.log(res);
+        this.$router.push({
+          name: "post_Images-id",
+          params: { postImageId: res.data.id }
+        });
+      });
     }
   }
 };

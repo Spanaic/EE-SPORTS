@@ -38,3 +38,5 @@ cd log/
 l
 ls -ltar
 apt install less
+rails c
+exit
