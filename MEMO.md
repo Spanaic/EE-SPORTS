@@ -980,3 +980,100 @@ def show
 end
 ```
 渡すjsonが一つだけなら、[respond_to do]を使わない方が良い
+
+## params
+
+```
+    axios.post(`/post_images/${id}/post_comments`, this.post_comment);
+```
+
+このまま送ってしまうと、
+
+```
+Parameters: {"こめんと"=>nil, "post_image_id"=>"4"}
+api_1  | Can't verify CSRF token authenticity.
+```
+
+[this.post_comment]がparamsのキーとなってしまう。
+paramsの渡し方にもよるけど、渡したい値がキーとなってしまう場合や、基本的にparamsをpostするときはオブジェクトで渡してあげたほうがいい。
+
+```
+      axios.post(`/post_images/${id}/post_comments`, {comment: this.post_comment});
+```
+
+`[parameters => { "comment": "入力した値"}]`として渡される
+
+## jsonファイルの効率の良い渡し方
+
+[Qiita参考記事](https://qiita.com/eggc/items/29a3c9a41d77227fb10a)
+
+```
+@post_image = PostImage.all.to_json(include: [:子モデル,:子モデル])
+```
+
+変数に一つずついれてjsonで返すのはdb的にも良くないので、アソシエーションが組まれているモデルに関しては、[to_json(include:)]を使って必要な子モデルを含めたカタチでjsonファイルをフロントに渡して上げる。
+
+```
+render :json => @post_image
+```
+これだけで全てが渡るイメージ。
+`新規作成するときに必要だった[.new]などはjsonとして渡さなくてok`
+
+```
+@post_image = PostImage.all.to_json(include: [:post_comments, :favorites])
+```
+allで取得する場合
+
+```
+@post_image = PostImage.find(params[:id]).to_json(include: [:post_comments, :favorites])
+```
+showページ向けなどにデータを取得してくる場合
+```
+render :json => @post_image
+
+```
+frontへの返し方は一緒。
+
+アソシエーションが組まれているものは、その通りに呼び出す。
+
+## axiosを使った通信をするときなど
+
+```
+  methods: {
+    async saveComment(id) {
+      try {
+        this.dialog = false;
+        console.log(this);
+        const comment = {
+          comment: this.post_comment
+        };
+        await axios.post(`/post_images/${id}/post_comments`, comment);
+      } catch (error) {
+        alert("");
+      }
+
+      // .then(res => {
+      //   this.post_comment = res.data.post_comment;
+      // });
+    }
+  }
+```
+
+async await try =>　axiosの通信が動的に行われ、成功したらthis.$router.pushなどを実行する。
+
+.catchでerrorを返す。
+
+## find_by(カラム名: params[:パラメータ])の使い方に注意！
+
+```
+ @post_comment = PostImage.find_by(post_image: params[:post_image_id])
+```
+
+[find_by]を使うと指定したカラムを探しに行っちゃう。
+しかし、もしそのカラムがdbやモデルに存在しないとdbさんに怒られてしまうので要注意！ `no colmun!!!`
+
+```
+@post_comment = PostImage.find(params[:post_image_id])
+```
+
+idが渡ってきてるので、普通にfind(prams[:hogehoge])で大丈夫。

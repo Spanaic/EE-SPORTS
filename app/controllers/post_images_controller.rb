@@ -29,26 +29,29 @@ class PostImagesController < ApplicationController
     end
 
     # def show
-    #     # @post_image = PostImage.find_by(id: params[:id])
+    #     @post_image = PostImage.find_by(id: params[:id])
     #     # @new_post_comment = PostComment.new
-    #     # @favorite = Favorite.new
-    #     # @post_comments = @post_image.post_comments.all
-    #     # @post_comments = @post_image.post_comments.page(params[:page]).per(4).reverse_order
-    #     # respond_to do |format|
-    #     #     format.json {
-    #     #         render :json => {
-    #     #             :post_image => @post_image,
-    #     #             # :new_post_comment => @new_post_comment,
-    #     #             # :favorite => @favorite,
-    #     #             # :post_comments => @post_comments
-    #     #         }
-    #         # }
-    #     # end
+    #     to_json(include:
+    #     @new_post_comment = @post_image.post_comment
+    #     @favorite = Favorite.new
+    #     @post_comments = @post_image.post_comments.all
+    #     @post_comments = @post_image.post_comments.page(params[:page]).per(4).reverse_order
+    #     respond_to do |format|
+    #         format.json {
+    #             render :json => {
+    #                 :post_image => @post_image,
+    #                 # :new_post_comment => @new_post_comment,
+    #                 # :favorite => @favorite,
+    #                 # :post_comments => @post_comments
+    #             }
+    #         }
+    #     end
     # end
 
     def show
-        post_image = PostImage.find(params[:id])
-        render :json => post_image
+        # @post_image = PostImage.find(params[:id])
+        @post_image = PostImage.find(params[:id]).to_json(include: [:post_comments, :favorites])
+        render :json => @post_image
     end
 
     def create

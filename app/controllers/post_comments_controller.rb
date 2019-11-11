@@ -1,14 +1,19 @@
 class PostCommentsController < ApplicationController
     def create
-        @post_image = PostImage.find(params[:post_image_id])
-        @post_comment = PostComment.new(post_comment_params)
-        @post_comment.post_image_id = @post_image.id
-        @post_comment.user_id = current_user.id
-        if  @post_comment.save
+        @post_comment = PostImage.find(params[:post_image_id])
+        @post_comment.post_comments.new(post_comment_params)
+        # @post_image = PostImage.find(params[:post_image_id])
+        # @post_comment = PostComment.new(post_comment_params)
+        # @post_comment.post_image_id = @post_image.id
+        # @post_comment.user_id = current_user.id
+        if  @post_comment.save!
             @post_image.create_notification_post_comment(current_user, @post_comment)
-            redirect_to post_image_path(params[:post_image_id])
+            # redirect_to post_image_path(params[:post_image_id])
+            rende :json => @post_comment
         else
-            render template: "post_images/show"
+            puts @post_comment.errors.full_messages
+            rende :json => @post_comment , :status 500
+            # render template: "post_images/show"
         end
     end
 
