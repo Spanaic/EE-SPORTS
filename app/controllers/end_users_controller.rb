@@ -48,7 +48,8 @@ class EndUsersController < ApplicationController
     end
 
     def edit
-
+        @user = EndUser.find(params[:id])
+        render :json => @user
     end
 
     def update

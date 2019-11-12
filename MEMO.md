@@ -1085,3 +1085,16 @@ idが渡ってきてるので、普通にfind(prams[:hogehoge])で大丈夫。
 ```
 
 `:to=""`toをv-bindする理由は、axiosで取得したデータをdata内に代入したリアクティブなデータから[id]をバインディングするため。
+
+## 動的にネストされたルートからaxiosで叩く方法
+
+[動的にネストされたルート](https://qiita.com/notsunohito/items/46bc9c6ad88fed46ea14)
+[$route.params取得のタイミングとライフサイクルの理解](https://qiita.com/wata01/items/314c0bdc25f116d6f50c)
+
+```
+axios.get(`/end_users/${this.$route.params.userId}/edit`)
+```
+
+`this.$route.params.ネストしているディレクトリ名(変数名扱い)`
+動的にネストされた階層から$route.paramsで動的な値（id）を取得する時は、ディレクトリ名を入れないと行けないことを忘れずに！
+
