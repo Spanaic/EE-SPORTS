@@ -11,7 +11,7 @@ class PostImage < ApplicationRecord
     # validates :caption, presence: true, length: {maximum: 140}
 
     def favorited_by?(current_user)
-        favorites.where(user_id: current_user.id).exists?
+        favorites.where(end_user_id: current_user.id).exists?
     end
 
     after_create do

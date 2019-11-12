@@ -53,3 +53,17 @@ a = PostImage.find(2)
 a.destroy
 exit
 PostComment.all
+exit
+Favorite.all
+PostComment.all
+exit
+a PostComment.all
+a = PostComment.all
+rails db:migrate:reset
+exitt
+rails db:migrata:reset
+exit
+PostImage.all
+PostComment.all
+PostImage.all
+PostComment.all

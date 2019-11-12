@@ -1,13 +1,68 @@
 <template>
   <div>
-    <div v-for="(post_image, index) in post_images" :key="index">
-      <!-- <nuxt-link :to="{name: 'post_Images-id', params: { postImageId: post_image.id }}"> -->
-      <nuxt-link :to="`/post_images/${ post_image.id }`">
-        <!-- <button @click="showPostImage"> -->
-        <img v-bind:src="'http://localhost:3001/post_images/' + post_image.image_name" />
-        <!-- </button> -->
-      </nuxt-link>
-      {{ post_image.caption }}
+    <div v-for="(post_image, i) in post_images" :key="i">
+      <v-card class="mx-auto" max-width="400">
+        <nuxt-link :to="`/post_images/${ post_image.id }`">
+          <v-img
+            class="white--text align-end"
+            height="200px"
+            :src="'http://localhost:3001/post_images/' + post_image.image_name"
+          >
+            <v-card-title>Top 10 Australian beaches</v-card-title>
+          </v-img>
+        </nuxt-link>
+
+        <v-card-subtitle class="pb-0">Number 10</v-card-subtitle>
+
+        <v-card-text class="text--primary">
+          <div>{{post_image.caption}}</div>
+
+          <div>Whitsunday Island, Whitsunday Islands</div>
+        </v-card-text>
+
+        <v-card-actions>
+          <v-btn color="orange" text>Share</v-btn>
+
+          <v-btn color="orange" text>Explore</v-btn>
+
+          <v-btn icon>
+            <v-icon>mdi-heart</v-icon>
+          </v-btn>
+          <!-- <comment-form></comment-form> -->
+
+          <v-row justify="center">
+            <v-dialog v-model="dialog" persistent max-width="600px">
+              <template v-slot:activator="{ on }">
+                <v-btn color="primary" dark v-on="on">コメントする</v-btn>
+              </template>
+              <v-card>
+                <v-card-title>
+                  <span class="headline">User Profile</span>
+                </v-card-title>
+                <v-card-text>
+                  <v-container>
+                    <v-row>
+                      <v-col cols="12" sm="6" md="4" lg="12">
+                        <v-text-field label="Outlined" outlined v-model="post_comment"></v-text-field>
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                  <small>*indicates required field</small>
+                </v-card-text>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn>
+                  <v-btn color="blue darken-1" text @click="saveComment(post_image.id)">Save</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </v-row>
+        </v-card-actions>
+
+        <v-col cols="12" lg="12" sm="6" md="3">
+          <!-- <v-text-field label="Outlined" outlined></v-text-field> -->
+        </v-col>
+      </v-card>
     </div>
   </div>
 </template>
@@ -23,38 +78,35 @@ export default {
   data() {
     return {
       post_images: [],
-      post_image: ""
+      post_image: "",
+      dialog: false,
+      post_comment: ""
     };
   },
   components: {
     commentForm
   },
-  //   created: async function() {
-  //     const user = this.$store.state.user;
-  //     await axios.post("/post_images", { user });
-  //   },
-  //   created: () => {
-  //       store.commit('setUser', user)
-  //   },
   mounted: async function() {
-    const response = await axios.get(url);
-    console.log(response);
-    this.post_images = response.data.post_images;
+    const res = await axios.get(url);
+    this.post_images = res.data.post_images;
+  },
+  methods: {
+    async saveComment(id) {
+      try {
+        this.dialog = false;
+        console.log(this);
+        const comment = {
+          comment: this.post_comment
+        };
+        await axios.post(`/post_images/${id}/post_comments`, comment);
+      } catch (error) {
+        alert("");
+      }
+
+      // .then(res => {
+      //   this.post_comment = res.data.post_comment;
+      // });
+    }
   }
-  //   methods: {
-  //     showPostImage() {
-  //       this.$router.push(`post_images/${post_image.id}`, post_image.id);
-  //     }
-  //   }
 };
 </script>
-
-
-<style>
-</style>
-
-  // create_table "post_images", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-  //   t.integer "user_id"
-  //   t.text "caption"
-  //   t.string "image_name"
-  // end

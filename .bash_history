@@ -40,3 +40,7 @@ ls -ltar
 apt install less
 rails c
 exit
+rails c 
+rails routes
+rails c
+exit

@@ -6,7 +6,7 @@ class EndUser < ApplicationRecord
   has_and_belongs_to_many :post_comments
 
   has_many :post_images, dependent:  :destroy
-  has_many :post_comments, dependent:  :destroy
+  has_many :post_comments, dependent: :destroy
   has_many :favorites, dependent:  :destroy
 
   has_many :active_relationships, class_name: "Relationship", foreign_key: :following_id, dependent:  :destroy

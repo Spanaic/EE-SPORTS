@@ -1,11 +1,11 @@
 <template>
   <div>
     <div v-for="(post_image, i) in post_images" :key="i">
-      <v-card class="mx-auto" max-width="400">
+      <v-card class="mx-auto" max-width="800">
         <nuxt-link :to="`/post_images/${ post_image.id }`">
           <v-img
             class="white--text align-end"
-            height="200px"
+            height="400px"
             :src="'http://localhost:3001/post_images/' + post_image.image_name"
           >
             <v-card-title>Top 10 Australian beaches</v-card-title>
@@ -19,15 +19,29 @@
 
           <div>Whitsunday Island, Whitsunday Islands</div>
         </v-card-text>
+        <v-card-text
+          class="text--primary"
+          v-for="(post_comment, i) in post_image.post_comments"
+          :key="i"
+        >
+          <div>{{post_comment.comment}}</div>
+        </v-card-text>
 
         <v-card-actions>
           <v-btn color="orange" text>Share</v-btn>
 
           <v-btn color="orange" text>Explore</v-btn>
+          <template v-if="!favoriteCheck">
+            <v-btn icon @click="createFavorite(post_image)">
+              <v-icon>mdi-heart-outline</v-icon>
+            </v-btn>
+          </template>
+          <template v-else>
+            <v-btn icon @click="destroyFavorite(post_image)">
+              <v-icon>mdi-heart</v-icon>
+            </v-btn>
+          </template>
 
-          <v-btn icon>
-            <v-icon>mdi-heart</v-icon>
-          </v-btn>
           <!-- <comment-form></comment-form> -->
 
           <v-row justify="center">
@@ -37,7 +51,7 @@
               </template>
               <v-card>
                 <v-card-title>
-                  <span class="headline">User Profile</span>
+                  <span class="headline">コメント入力フォーム</span>
                 </v-card-title>
                 <v-card-text>
                   <v-container>
@@ -52,7 +66,8 @@
                 <v-card-actions>
                   <v-spacer></v-spacer>
                   <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn>
-                  <v-btn color="blue darken-1" text @click="saveComment(post_image.id)">Save</v-btn>
+                  {{post_image}}
+                  <v-btn color="blue darken-1" text @click="saveComment(post_image)">Save</v-btn>
                 </v-card-actions>
               </v-card>
             </v-dialog>
@@ -70,7 +85,7 @@
 <script>
 import axios from "@/plugins/axios";
 import Vuex from "vuex";
-import commentForm from "@/components/commentForm";
+// import commentForm from "@/components/commentForm";
 
 const url = "http://localhost:3001/post_images.json";
 
@@ -80,25 +95,37 @@ export default {
       post_images: [],
       post_image: "",
       dialog: false,
-      post_comment: ""
+      post_comments: [],
+      post_comment: "",
+      favoriteCheck: false
     };
   },
-  components: {
-    commentForm
-  },
+  // components: {
+  //   commentForm
+  // },
   mounted: async function() {
     const res = await axios.get(url);
-    this.post_images = res.data.post_images;
+    // for (this.post_images in { modal: false }) {
+    //   console.log(this.res.data);
+    // }
+    this.post_images = res.data;
+    // if this.post-images.end_user_id = this.$store.state.user.id;
   },
   methods: {
-    async saveComment(id) {
+    async saveComment(post_image) {
+      console.log(post_image.id);
       try {
         this.dialog = false;
         console.log(this);
         const comment = {
           comment: this.post_comment
         };
-        await axios.post(`/post_images/${id}/post_comments`, comment);
+        const { data } = await axios.post(
+          `/post_images/${post_image.id}/post_comments`,
+          comment
+        );
+        console.log({ data });
+        post_image.post_comments = data;
       } catch (error) {
         alert("");
       }
@@ -106,6 +133,25 @@ export default {
       // .then(res => {
       //   this.post_comment = res.data.post_comment;
       // });
+    },
+    async createFavorite(post_image) {
+      try {
+        await axios.post(`/post_images/${post_image.id}/favorites`, post_image);
+        this.favoriteCheck = true;
+      } catch (error) {
+        alert("");
+      }
+    },
+    destroyFavorite(post_image) {
+      try {
+        axios.delete(`/post_images/${post_image.id}/favorites`, [
+          post_image,
+          `${this.$store.state.user}`
+        ]);
+        this.favoriteCheck = false;
+      } catch (error) {
+        alert("");
+      }
     }
   }
 };
