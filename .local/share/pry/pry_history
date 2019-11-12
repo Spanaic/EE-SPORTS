@@ -67,3 +67,10 @@ PostImage.all
 PostComment.all
 PostImage.all
 PostComment.all
+Favorite.all
+User.all
+EndUser.all
+EndUser.first
+exit
+EndUser.first
+exit

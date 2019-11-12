@@ -73,6 +73,8 @@ export default {
   ** See https://axios.nuxtjs.org/options
   */
   axios: {
+    host: "localhost",
+    port: 3001
   },
   /*
   ** vuetify module configuration
@@ -104,5 +106,10 @@ export default {
     */
     extend(config, ctx) {
     }
+  },
+  generate: {
+    routes: [
+      '/end_users'
+    ]
   }
 }

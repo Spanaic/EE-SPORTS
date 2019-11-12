@@ -44,3 +44,27 @@ rails c
 rails routes
 rails c
 exit
+rails db:migrate:status
+rails db:migrate:down VERSION=20190919085232
+rails db:migrate:status
+rails db:migrate
+rails c
+rails db:migrate:status
+rails db:migrate:down VERSION=20190919044508
+rails db:migrate:down VERSION=20190919044508
+rails c
+rails db:migrate:reset
+rails db:migrate:status
+rails db:migrate:down VERSIOM=20190919044508
+rails db:migrate:down VERSION=20190919044508
+rails db:migrate:down VERSION=20190919044508
+rails db:migrate:down VERSION=20190919044508
+rails db:migrate:down VERSION=20190919044508
+rails db:migrate:down VERSION=20190919044508
+rails db:migrate:down VERSION=20190919044508
+rails db:migrate:down VERSION=20190919044508
+rails g migration AddEndUserToPostComments end_user_id:integer
+rails db:migrate:reset
+rails c
+rails c
+exit

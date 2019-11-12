@@ -19,6 +19,7 @@
     "dependencies": "0.0.1",
     "firebase": "^7.2.3",
     "nuxt": "^2.0.0",
+    "nuxt-property-decorator": "^2.5.0",
     "peer": "^0.2.10"
   },
   "devDependencies": {

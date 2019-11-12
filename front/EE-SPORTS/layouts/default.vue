@@ -33,6 +33,9 @@
       <v-btn>
         <nuxt-link to="/login">ログイン</nuxt-link>
       </v-btn>
+      <v-btn>
+        <nuxt-link :to="`/end_users/${this.$store.state.user.id}`">マイページ</nuxt-link>
+      </v-btn>
 
       <v-btn icon @click.stop="fixed = !fixed">
         <v-icon>mdi-minus</v-icon>
@@ -48,6 +51,7 @@
         <nuxt />
       </v-container>
     </v-content>
+
     <v-navigation-drawer v-model="rightDrawer" :right="right" temporary fixed>
       <v-list>
         <v-list-item @click.native="right = !right">
@@ -58,6 +62,7 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
+
     <v-footer :fixed="fixed" app>
       <span>&copy; 2019</span>
     </v-footer>
@@ -74,13 +79,13 @@ export default {
       items: [
         {
           icon: "mdi-apps",
-          title: "Welcome",
-          to: "/"
+          title: "トップページ",
+          to: "/post_Images"
         },
         {
           icon: "mdi-chart-bubble",
-          title: "Inspire",
-          to: "/inspire"
+          title: "ユーザーリスト",
+          to: "/end_users"
         }
       ],
       miniVariant: false,

@@ -1077,3 +1077,11 @@ async await try =>　axiosの通信が動的に行われ、成功したらthis.$
 ```
 
 idが渡ってきてるので、普通にfind(prams[:hogehoge])で大丈夫。
+
+## nuxt-linkのpathをリアクティブなデータから取得する方法
+
+```
+<nuxt-link :to="`/end_users/${end_user.id}`">{{ end_user.name }}</nuxt-link>
+```
+
+`:to=""`toをv-bindする理由は、axiosで取得したデータをdata内に代入したリアクティブなデータから[id]をバインディングするため。

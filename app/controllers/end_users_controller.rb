@@ -2,12 +2,28 @@ class EndUsersController < ApplicationController
 
     def index
         user = EndUser.find_by(email: params[:email])
-        render :json => user
+        # @user= EndUser.find(id: params[:profile_name])
+        users = EndUser.all
+        respond_to do |format|
+            format.json {
+                render :json => {:user => user, :users => users}
+            }
+        end
+        # render :json => user
+        # render :json => users
+        # render :json => @user
 
     end
 
     def show
-
+        @user = EndUser.find(params[:id])
+        # @user= EndUser.find_by(id: params[:profile_name])
+        render :json => @user
+        # @user = User.find_by(profile_name: params[:profile_name])
+        # @post_images = @user.post_images.page(params[:page]).per(9).reverse_order
+        # respond_to do |format|
+            # format.json {render :json =>{:user => @user,:post_images => @post_images} }
+        # end
     end
 
     def new
@@ -53,6 +69,6 @@ class EndUsersController < ApplicationController
 
     private
     def end_user_params
-        params.require(:end_user).permit(:email, :name, :profile_name)
+        params.require(:end_user).permit(:email, :name, :profile_name, :id)
     end
 end
