@@ -1,14 +1,22 @@
 class EndUsersController < ApplicationController
+    protect_from_forgery :except => [:update]
+
 
     def index
         user = EndUser.find_by(email: params[:email])
         # @user= EndUser.find(id: params[:profile_name])
         users = EndUser.all
-        respond_to do |format|
-            format.json {
-                render :json => {:user => user, :users => users}
-            }
-        end
+
+        end_users = []
+        end_users.push(user)
+        end_users.push(users)
+
+        render :json => end_users
+        # respond_to do |format|
+        #     format.json {
+        #         render json: {user: user, users: users}
+        #     }
+        # end
         # render :json => user
         # render :json => users
         # render :json => @user
@@ -35,7 +43,7 @@ class EndUsersController < ApplicationController
         # user.email = params[:end_user][:email]
         # user.name = params[:end_user][:name]
         # user.profile_name = params[:end_user][:profile_name]
-        if user.save
+        if user.save!
 
         else
         puts user.errors.full_messages
@@ -53,6 +61,22 @@ class EndUsersController < ApplicationController
     end
 
     def update
+        uploaded_file =  params[:end_user][:image]
+        file_name = params[:end_user][:profile_image_name]
+        output_path = Rails.root.join('public/end_users', file_name)
+
+        File.open(output_path, 'w+b') do |fp|
+            fp.write  uploaded_file.read
+        end
+
+        end_user = EndUser.find(params[:id])
+
+        if end_user.update!(end_user_params)
+            render :json => end_user
+        else
+            puts end_user.errors.full_messages
+            render :json => end_user
+        end
 
     end
 
@@ -70,6 +94,8 @@ class EndUsersController < ApplicationController
 
     private
     def end_user_params
-        params.require(:end_user).permit(:email, :name, :profile_name, :id)
+        params.require(:end_user).permit(:email, :name, :profile_name, :profile_image_name)
+
+        # params.require(:post_image).permit(:caption, :image_name, :end_user_id)
     end
 end

@@ -74,3 +74,8 @@ EndUser.first
 exit
 EndUser.first
 exit
+EndUser.all
+exit
+EndUser.all
+exit
+EndUser.all

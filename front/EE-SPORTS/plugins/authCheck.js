@@ -9,7 +9,8 @@ export default (context) => {
         if (user) {
             const { data } =
                 await axios.get(`/end_users?email=${user.email}`)
-            store.commit('setUser', data)
+            store.commit('setUser', data[0])
+            console.log(data);
         }
 
         // axios.post("/end_users/")

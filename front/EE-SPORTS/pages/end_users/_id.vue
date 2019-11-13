@@ -3,6 +3,7 @@
     <h1>{{ end_user.email }}</h1>
     <h2>{{ end_user.name }}</h2>
     <h2>{{ end_user.profile_name}}</h2>
+    <img :src="`http://localhost:3001/end_users/${end_user.profile_image_name}`" alt />
   </div>
 </template>
 

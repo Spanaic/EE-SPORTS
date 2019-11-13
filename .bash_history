@@ -68,3 +68,11 @@ rails db:migrate:reset
 rails c
 rails c
 exit
+rails c
+rails routes
+rails c
+rails rooutes
+rails routes
+rails c
+rails routes
+exit

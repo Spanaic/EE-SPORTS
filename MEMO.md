@@ -1,12 +1,12 @@
 # 学習メモ
 
-## jsonを返す方法
+## `【jsonを返す方法】`
 
 【参考URL】
 
 1.[qiitaの記事](https://qiita.com/k-penguin-sato/items/adba7a1a1ecc3582a9c9)
 
-### シンプルかつ、返すモデルが一つの場合
+### `シンプルかつ、返すモデルが一つの場合`
 
 ```
     def index
@@ -14,8 +14,9 @@
         render :json => @users
     end
 ```
+---
 
-### 返すモデルが複数の場合
+### `返すモデルが複数の場合`
 
 ```
     def show
@@ -27,14 +28,16 @@
         end
     end
 ```
+---
 
-### ルーティング設定を変更する(jsonファイルを返すように)
+### `ルーティング設定を変更する(jsonファイルを返すように)`
 
 ```
   get '/users/:profile_name' + '.json', to: "users#show" ,as: 'user_json'
 ```
+---
 
-### あまりないことだけど,viewのリンクからjsonファイルを返す場合
+### `あまりないことだけど,viewのリンクからjsonファイルを返す場合`
 
 ```
 <li class="list-icon">
@@ -43,9 +46,9 @@
     <% end %>
 </li>
 ```
-
-## local環境で作業をする場合
 ---
+
+## `【local環境で作業をする場合】`
 
 * rbenvでバージョンを指定を変更してあげる。
 * バージョンの直下にgemなどのファイルが生成される
@@ -57,7 +60,7 @@
 ---
 
 
-## axiosでbaseURLを設定して、各ページでそれを呼び出す運用方法
+## `【axiosでbaseURLを設定して、各ページでそれを呼び出す運用方法】`
 
 [Nuxt公式ドキュメント(axios)](https://ja.nuxtjs.org/api/configuration-env/)
 
@@ -67,7 +70,7 @@
 
 ---
 
-## axiosの.thenで取ってくる方法
+## `【axiosの.thenで取ってくる方法】`
 
 ```
 mounted() {
@@ -77,7 +80,9 @@ mounted() {
 }
 ```
 
-## axiosのasyncで取ってくる
+---
+
+## `【axiosのasyncで取ってくる】`
 
 ```
   mounted: async function() {
@@ -93,7 +98,9 @@ mounted() {
 
 最初にdataが取れなかったのはthisのスコープが原因か、response.data.post_images;のように"data"を噛ましてなかったため。
 
-## axiosでmthodsの@clickイベントからgetで値を取ってくる方法
+---
+
+## `【axiosでmthodsの@clickイベントからgetで値を取ってくる方法】`
 
 ```
   methods: {
@@ -106,7 +113,9 @@ mounted() {
 ```
 template内に<form></form>や<button></button>を設けて@clickイベントを設ける必要がある。
 
-## apiサーバーとしてフロントからフォームを渡す時の設定
+---
+
+## `【apiサーバーとしてフロントからフォームを渡す時の設定】`
 
 1. development.rb
 ```
@@ -117,7 +126,9 @@ template内に<form></form>や<button></button>を設けて@clickイベントを
     protect_from_forgery with: :null_session
 ```
 
-## dotenvを用いて、環境変数を格納する方法
+---
+
+## `【dotenvを用いて、環境変数を格納する方法】`
 
 1. dotenvモジュールをインストール
 2. firebase.jsの記述を以下に変更する。
@@ -184,7 +195,9 @@ const { API_KEY } = process.env;はES6の省略記法
 
 envは定数を記述する。
 
-## firebaseの意味不明エラ-「Firebase App named '[DEFAULT]' already exists (app/duplicate-app)」解決法
+---
+
+## `【firebaseの意味不明エラ-「Firebase App named '[DEFAULT]' already exists (app/duplicate-app)」解決法】`
 
 [firebase.jsの設定方法](https://qiita.com/_takeshi_24/items/419b9d0d879351f641f3)
 
@@ -194,7 +207,9 @@ if (!firebase.apps.length) {
 }
 ```
 
-## 三項演算子について
+---
+
+## `【三項演算子について】`
 
 ```
 user = user? user : {};
@@ -202,7 +217,9 @@ user = user? user : {};
 
 三項演算子はただの条件分岐式を短縮したカタチではなく、真偽値に応じて戻り値を返す条件式となる。
 
-## firebaseのログイン認証をvuexで管理する方法
+---
+
+## `【firebaseのログイン認証をvuexで管理する方法】`
 【参考URL】[Vueでvuexで認証情報を保持する](https://qiita.com/ErgoFriend/items/bd1bb445e185bf45e272)
 ```
 export default {
@@ -263,7 +280,9 @@ var user = firebase.auth().currentUser
 ```
 `ユーザ情報を取得できる。`
 
-## ユーザ認証の情報をstateで管理する方法
+---
+
+## `【ユーザ認証の情報をstateで管理する方法】`
 
 「vuex」は[index, state, mutations, actions].jsの各フォルダを持つようなカタチで管理する。（決まりは無いが今回はこのカタチで実装する）
 
@@ -305,7 +324,9 @@ vuexはvuexインスタンスを関数で返す必要があるため、定数`cr
 
 export defaultするのは 関数を代入した[createStore]となる。
 
-### state.js
+---
+
+### `state.js`
 
 ```
 const state = {
@@ -321,7 +342,9 @@ export default state;
 statusはログイン状態を真偽値で管理するための記述。
 `export default state;を行わないとstateにアクセスできないので忘れないこと！（他のファイルも同じことが言える）`
 
-### mutations.js
+---
+
+### `mutations.js`
 
 ```
 const mutations = {
@@ -341,7 +364,9 @@ export default mutations;
 stateの値を変更する関数を定義する。直接は使わずactions.jsでcommitして呼び出す。
 (state, payload)は決り文句（payloadとは引数の代名詞的なやつ）
 
-### actions.js
+---
+
+### `actions.js`
 
 ```
 
@@ -386,8 +411,9 @@ export default actions
 pluginsとmiddlewareはbeforeCreateよりも前に最初に読み込まれるファイルのため、記述場所をそこにする必要がある。
 今回はpluginsに記述し、nuxt.config.jsのpluginsに記述することで、importしなくてもライフサイクルが始まる前に認証状態の状態保持を持たせることで状態維持を可能とさせる記述を行う。
 
+---
 
-### 【例外】actions.js　payloadに入っている配列をactions側で受け取るもう一つの方法
+### `【例外】actions.js　payloadに入っている配列をactions側で受け取るもう一つの方法`
 
 ```
     logIn({ commit }, [email, password]) {
@@ -402,7 +428,7 @@ pluginsとmiddlewareはbeforeCreateよりも前に最初に読み込まれるフ
 1. `firebaseはvalidationで「@gmail.com」などちゃんとしたメールアドレスじゃないと引っかかる`
 2. `配列の番号はpayload[0]などのように鉤括弧でくくる、これは言語問わず共通ルール！`
 
-## vuexのstateの永続化
+## `【vuexのstateの永続化】`
 
 [公式ドキュメント](https://nuxt-api-state.lec.cafe/4.Vuex%20Store%20%E3%81%AE%E6%B0%B8%E7%B6%9A%E5%8C%96/#vuex-store-%E3%81%AE%E6%B0%B8%E7%B6%9A%E5%8C%96)
 
@@ -414,7 +440,7 @@ pluginsとmiddlewareはbeforeCreateよりも前に最初に読み込まれるフ
 
 ---
 
-## docker-compose.yml
+## `【docker-compose.yml】`
 
 ```
 version: '3'
@@ -457,7 +483,9 @@ services:
 3. 基本的にymlファイルからみた相対パスを記述する
 4. volumesの書き方は気をつける（相対パス）
 
-## databas.yml
+---
+
+## `【databas.yml】`
 
 ```
 development:
@@ -483,9 +511,9 @@ production:
 
 ---
 
-## firebaseの導入方法
+## `【firebaseの導入方法】`
 
-### firebaseのアカウント作成
+### `firebaseのアカウント作成`
 
 1. firebaseでアカウントを作成
 2. firebaseを-gインストール
@@ -496,7 +524,9 @@ npm -i firebase --save
 ```
 `--save`コマンドでpackage.jsonに追加
 
-### dotenvで環境変数を隠す
+---
+
+### `dotenvで環境変数を隠す`
 
 1. dotenvをインストールする。
 
@@ -546,7 +576,9 @@ export default {
   },
   ```
 
-  ### firebase.js
+---
+
+  ### `firebase.js`
 
   1. [.plugins/firebase.js]を作成
   2. [.env]で作成した記述を元に中身を編集する。
@@ -572,7 +604,9 @@ if (!firebase.apps.length) {
 export default firebase
 ```
 
-### Vuexの準備（ログインの認証管理）
+---
+
+### `Vuexの準備（ログインの認証管理）`
 
 1. [state.js]の作成
 
@@ -688,9 +722,9 @@ export default (context) => {
 
 ---
 
-## firebaseへの新規登録とmodelへのpostを同時に行う方法（User新規登録編）
+## `【firebaseへの新規登録とmodelへのpostを同時に行う方法（User新規登録編）】`
 
-### .vue側の記述
+### `.vue側の記述`
 
 1. actions.jsに渡すpayload内の配列をdispatchの第2引数に記述する。
 2. actions.js内で処理を完了させたい場合は、dispatchを呼び出すだけにする（axiosの記述も全てactions.jsに記述する）
@@ -725,7 +759,9 @@ export default (context) => {
 
 3. `state変更とモデルへの.save処理が終了したら、data内のプロパティを空にすること！`
 
-### actions.js側の記述
+---
+
+### `actions.js側の記述`
 
 ```
 signUp({ commit }, payload) {
@@ -753,7 +789,9 @@ signUp({ commit }, payload) {
 3. `定数[end_user]にオブジェクトを代入することで(params[:end_user][:email])のようにパラメータをapi側に送る事ができる`
 4. axios.post()の第2引数にオブジェクトとして入れ込む事もできるが、それだと二重にパラメータが送られることになるので良くない。
 
-### end_users.controller.rbの記述
+---
+
+### `end_users.controller.rbの記述`
 
 ```
     def create
@@ -818,7 +856,7 @@ signUp({ commit }, payload) {
 ```
 ---
 
-## Nuxt.jsのrouteを確認する方法
+## `【Nuxt.jsのrouteを確認する方法】`
 
 [Qiita参考URL](https://qiita.com/tekondo/items/80555991c019808669ef)
 
@@ -841,7 +879,7 @@ router: {
 
 ---
 
-## databaseの永続化
+## `【databaseの永続化】`
 
 [dockerとmysqlと初期化と永続化](https://qiita.com/juhn/items/274e44ee80354a39d872)
 
@@ -890,7 +928,9 @@ CREATE DATABASE db名
 ```
 これでmigrateをすることが出来るようになる。
 
-### binding.pryの接続方法
+---
+
+### `binding.pryの接続方法`
 
 ```
 docker-compose up -d
@@ -916,7 +956,9 @@ mysql/data/*
 
 4. .gitignoreに追記する。
 
-## this.$router.pushとnuxt-linkの使い方(動的URL編)
+---
+
+## `【this.$router.pushとnuxt-linkの使い方(動的URL編)】`
 
 1. this.$router.push
 ```
@@ -935,14 +977,17 @@ this.$router.push({
 
 `res.data.id`でリンクに飛べるかどうかは確認が必要。=>　飛べない...
 
+---
 
-## mysqlのmy.conf内の設定
+## `【mysqlのmy.conf内の設定】`
 
 [lower_case_table_names](https://moznion.hatenadiary.com/entry/2015/04/13/005641)
 
 大文字と小文字の区別をなくす？ための設定...my.confに設定
 
-## jsonの渡し方
+---
+
+## `【jsonの渡し方】`
 
 ```
 def show
@@ -981,7 +1026,9 @@ end
 ```
 渡すjsonが一つだけなら、[respond_to do]を使わない方が良い
 
-## params
+---
+
+## `【axiosのparamsの渡し方】`
 
 ```
     axios.post(`/post_images/${id}/post_comments`, this.post_comment);
@@ -1003,7 +1050,9 @@ paramsの渡し方にもよるけど、渡したい値がキーとなってし�
 
 `[parameters => { "comment": "入力した値"}]`として渡される
 
-## jsonファイルの効率の良い渡し方
+---
+
+## `【jsonファイルの効率の良い渡し方】`
 
 [Qiita参考記事](https://qiita.com/eggc/items/29a3c9a41d77227fb10a)
 
@@ -1036,7 +1085,9 @@ frontへの返し方は一緒。
 
 アソシエーションが組まれているものは、その通りに呼び出す。
 
-## axiosを使った通信をするときなど
+---
+
+## `【axiosを使った通信をするときなど】`
 
 ```
   methods: {
@@ -1063,7 +1114,9 @@ async await try =>　axiosの通信が動的に行われ、成功したらthis.$
 
 .catchでerrorを返す。
 
-## find_by(カラム名: params[:パラメータ])の使い方に注意！
+---
+
+## `【find_by(カラム名: params[:パラメータ])の使い方に注意！】`
 
 ```
  @post_comment = PostImage.find_by(post_image: params[:post_image_id])
@@ -1078,8 +1131,9 @@ async await try =>　axiosの通信が動的に行われ、成功したらthis.$
 
 idが渡ってきてるので、普通にfind(prams[:hogehoge])で大丈夫。
 
-## nuxt-linkのpathをリアクティブなデータから取得する方法
+---
 
+## `【nuxt-linkのpathをリアクティブなデータから取得する方法】`
 ```
 <nuxt-link :to="`/end_users/${end_user.id}`">{{ end_user.name }}</nuxt-link>
 ```
@@ -1097,4 +1151,86 @@ axios.get(`/end_users/${this.$route.params.userId}/edit`)
 
 `this.$route.params.ネストしているディレクトリ名(変数名扱い)`
 動的にネストされた階層から$route.paramsで動的な値（id）を取得する時は、ディレクトリ名を入れないと行けないことを忘れずに！
+
+---
+
+## `【respond_to do を使わずに複数の値をjsonファイルで渡したい】`
+
+```
+      user = EndUser.find_by(email: params[:email])
+        users = EndUser.all
+
+        respond_to do |format|
+            format.json {
+                render json: {user: user, users: users}
+            }
+        end
+```
+この記述（respond_to do）だと、vue側で[axios.get("".json)]で受け取らないとundefineでエラーになる。
+URL.jsonをすれば表示されるが、が通常のURLだとエラーが返される。
+
+```
+        user = EndUser.find_by(email: params[:email])
+        users = EndUser.all
+
+        end_users = []
+        end_users.push(user)
+        end_users.push(users)
+
+        render :json => end_users
+```
+
+`render ;json => hoge`だと[URL.json]をしなくても[URL]をaxios.getで叩けばjsonが返ってくる。
+`空の配列を適当な変数へ代入して、push(入れたいjsonの入った変数)`をすることで、
+
+```
+[{key: value}, {key: value}]
+```
+一つの変数に上記のカタチでjsonファイルをまとめる事ができる。
+
+---
+
+## `【formDataにappendした値を見る方法】`
+
+[appendの中身を見たい！](https://qiita.com/_Keitaro_/items/6a3342735d3429175300)
+
+```
+console.log(...formData.entries());
+```
+ES6より追加されたスプレッド演算子を使えば、値を見ることが出来る。
+
+---
+
+## `【rails-API + axiosでよくあるエラー】`
+
+### `Can't verify CSRF token authenticity.`
+
+[Qiita参考URL](https://qiita.com/nishina555/items/4ffaf5cc57a384b66230)
+
+formDataを渡すときにtokenを要求される.
+考えられる解決方法は今の所2つ考えられる。
+
+1. tokenを渡す.
+2. tokenを要求しないようにする。
+
+今回は②の方法で進める。
+
+```
+(apllication.controller)
+protect_from_forgery with: :null_session
+```
+* application.controllerに上記の記述を追加する。
+
+```
+(各コントローラ)
+protect_from_forgery :except => [:update]
+protect_from_forgery :except => [:許可したいアクション名]
+```
+* authenticity tokenを要求したくないアクションを指定して、各コントローラに記述する。
+
+---
+
+
+
+
 

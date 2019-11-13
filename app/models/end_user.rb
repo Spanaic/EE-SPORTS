@@ -21,7 +21,7 @@ class EndUser < ApplicationRecord
     passive_relationships.find_by(following_id: user.id).present?
   end
 
-  attachment :profile_image
+  # attachment :profile_image
 
   def self.find_for_oauth(auth)
     user = User.where(uid: auth.uid, provider: auth.provider).first
