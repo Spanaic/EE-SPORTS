@@ -4,16 +4,42 @@
       <v-col cols="7">
         <div>
           <div v-for="(post_image, i) in post_images" :key="i">
-            <v-card class="mx-auto" max-width="800">
-              <nuxt-link :to="`/post_images/${ post_image.id }`">
-                <v-img
-                  class="white--text align-end"
-                  height="400px"
-                  :src="'http://localhost:3001/post_images/' + post_image.image_name"
-                >
-                  <v-card-title>Top 10 Australian beaches</v-card-title>
-                </v-img>
-              </nuxt-link>
+            <!-- 投稿一覧のカード表示とオーバーレイの組み込み -->
+            <v-toolbar color="indigo" dark>
+              <v-list-item>
+                <v-list-item-avatar>
+                  <v-img
+                    :src="'http://localhost:3001/end_users/' + `${post_image.end_user.profile_image_name}`"
+                  ></v-img>
+                </v-list-item-avatar>
+                <v-list-item-content>
+                  <v-list-item-title class="headline">{{ post_image.title }}</v-list-item-title>
+                  <v-list-item-subtitle>by {{ post_image.end_user.profile_name }}</v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+            </v-toolbar>
+
+            <v-card class="mx-auto" height="100%" max-width="800" @click="overlay =!overlay">
+              <v-img
+                class="white--text align-end"
+                height="400px"
+                :src="'http://localhost:3001/post_images/' + post_image.image_name"
+              >
+                <v-card-title>Top 10 Australian beaches</v-card-title>
+              </v-img>
+              <v-overlay :value="overlay">
+                <v-btn icon @click="overlay = false">
+                  <v-icon>mdi-close</v-icon>
+                  <nuxt-link :to="`/post_images/${ post_image.id }`">
+                    <v-img
+                      class="white--text align-end"
+                      height="480px"
+                      width="720px"
+                      :src="'http://localhost:3001/post_images/' + post_image.image_name"
+                    ></v-img>
+                  </nuxt-link>
+                </v-btn>
+              </v-overlay>
 
               <v-card-subtitle class="pb-0">Number 10</v-card-subtitle>
 
@@ -34,6 +60,8 @@
                 <v-btn color="orange" text>Share</v-btn>
 
                 <v-btn color="orange" text>Explore</v-btn>
+
+                <!-- お気に入り機能ボタンボタン（作りかけ） -->
                 <template v-if="!favoriteCheck">
                   <v-btn icon @click="createFavorite(post_image)">
                     <v-icon>mdi-heart-outline</v-icon>
@@ -46,7 +74,7 @@
                 </template>
 
                 <!-- <comment-form></comment-form> -->
-
+                <!-- コメント入力のダイアログ -->
                 <v-row justify="center">
                   <v-dialog v-model="dialog" persistent max-width="600px">
                     <template v-slot:activator="{ on }">
@@ -122,9 +150,14 @@
           </v-list>
         </v-card>-->
 
+        <!-- サイドバーのプロフィール画面 -->
         <v-card max-width="375" class="mx-auto">
-          <v-img src="https://cdn.vuetifyjs.com/images/lists/ali.png" height="300px" dark>
-            <v-row class="fill-height">
+          <v-img
+            :src="'http://localhost:3001/end_users/' + `${this.$store.state.user.profile_image_name}`"
+            height="auto"
+            dark
+          >
+            <v-row class>
               <v-card-title>
                 <v-btn dark icon>
                   <v-icon>mdi-chevron-left</v-icon>
@@ -143,9 +176,9 @@
 
               <v-spacer></v-spacer>
 
-              <v-card-title class="white--text pl-12 pt-12">
+              <!-- <v-card-title class="white--text pl-12 pt-12">
                 <div class="display-1 pl-12 pt-12">Ali Conners</div>
-              </v-card-title>
+              </v-card-title>-->
             </v-row>
           </v-img>
 
@@ -156,8 +189,8 @@
               </v-list-item-icon>
 
               <v-list-item-content>
-                <v-list-item-title>(650) 555-1234</v-list-item-title>
-                <v-list-item-subtitle>Mobile</v-list-item-subtitle>
+                <v-list-item-title>{{ this.$store.state.user.name }}</v-list-item-title>
+                <v-list-item-subtitle>お名前</v-list-item-subtitle>
               </v-list-item-content>
 
               <v-list-item-icon>
@@ -169,8 +202,8 @@
               <v-list-item-action></v-list-item-action>
 
               <v-list-item-content>
-                <v-list-item-title>(323) 555-6789</v-list-item-title>
-                <v-list-item-subtitle>Work</v-list-item-subtitle>
+                <v-list-item-title>{{ this.$store.state.user.profile_name }}</v-list-item-title>
+                <v-list-item-subtitle>ニックネーム</v-list-item-subtitle>
               </v-list-item-content>
 
               <v-list-item-icon>
@@ -186,7 +219,7 @@
               </v-list-item-icon>
 
               <v-list-item-content>
-                <v-list-item-title>aliconnors@example.com</v-list-item-title>
+                <v-list-item-title>{{ this.$store.state.user.email }}</v-list-item-title>
                 <v-list-item-subtitle>Personal</v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
@@ -235,7 +268,9 @@ export default {
       post_comments: [],
       post_comment: "",
       favoriteCheck: false,
-      favorite_list: []
+      favorite_list: [],
+      absolute: true,
+      overlay: false
     };
   },
   // components: {
@@ -248,7 +283,7 @@ export default {
     // }
     this.post_images = res.data;
     this.favorite_list = res.data.favorites;
-    console.log(res.data.favorites);
+    console.log(res.data.end_user);
     // if this.post-images.end_user_id = this.$store.state.user.id;
   },
   methods: {

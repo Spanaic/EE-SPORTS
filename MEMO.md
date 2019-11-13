@@ -1230,6 +1230,37 @@ protect_from_forgery :except => [:許可したいアクション名]
 
 ---
 
+## `【<v-img>タグの画像をバインドさせる方法(src)】`
+
+### `OKパターン`
+
+```
+<v-img
+  :src="'http://localhost:3001/end_users/' + `${this.$store.state.user.profile_image_name}`"
+  height="300px"
+  dark
+>
+```
+
+### `NGパターン(ベタ打ち)`
+
+```
+<v-img
+  :src="`http://localhost:3001/end_users/${this.$store.state.user.profile_image_name}`"
+  height="300px"
+  dark
+>
+```
+
+### `NGパターン(require(これはvue-loaderをうまくインストール出来ればいけるかも...))`
+
+```
+<v-img
+  :src="require(`http://localhost:3001/end_users/${this.$store.state.user.profile_image_name}`)"
+  height="300px"
+  dark
+>
+```
 
 
 

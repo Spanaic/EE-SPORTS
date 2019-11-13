@@ -10,6 +10,7 @@
           <p class="preview-item-name">{{ img_name }}</p>
         </div>
       </div>
+      <input type="text" v-model="title" />
       <input type="text" v-model="caption" />
       <input type="submit" id="apply-upload" v-show="uploadedImage" />
     </form>
@@ -30,7 +31,8 @@ export default {
       files: [],
       itemLength: 0,
       loading: false,
-      caption: ""
+      caption: "",
+      title: ""
     };
   },
   created() {
@@ -69,6 +71,7 @@ export default {
       console.log(this.uploadFile);
       formData.append("post_image[image]", this.files[0]);
       formData.append("post_image[caption]", this.caption);
+      formData.append("post_image[title]", this.title);
       formData.append("post_image[image_name]", filename);
       // formData.append("post_image[image_name]", img_name);
       formData.append("post_image[end_user_id]", this.$store.state.user.id);

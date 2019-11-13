@@ -1,298 +1,161 @@
 <template>
-  <v-container>
-    <v-row>
-      <v-col cols="7">
-        <div>
-          <div v-for="(post_image, i) in post_images" :key="i">
-            <v-card class="mx-auto" max-width="800">
-              <nuxt-link :to="`/post_images/${ post_image.id }`">
-                <v-img
-                  class="white--text align-end"
-                  height="400px"
-                  :src="'http://localhost:3001/post_images/' + post_image.image_name"
-                >
-                  <v-card-title>Top 10 Australian beaches</v-card-title>
-                </v-img>
-              </nuxt-link>
+  <v-app dark>
+    <v-navigation-drawer v-model="drawer" :mini-variant="miniVariant" :clipped="clipped" fixed app>
+      <v-list>
+        <v-list-item v-for="(item, i) in items" :key="i" :to="item.to" router exact>
+          <v-list-item-action>
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title v-text="item.title" />
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
+    <v-app-bar :clipped-left="clipped" fixed app>
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
+      <v-btn icon @click.stop="miniVariant = !miniVariant">
+        <v-icon>mdi-{{ `chevron-${miniVariant ? 'right' : 'left'}` }}</v-icon>
+      </v-btn>
+      <v-btn icon @click.stop="clipped = !clipped">
+        <v-icon>mdi-application</v-icon>
+      </v-btn>
+      <!--
+      <v-btn>
+        <nuxt-link to="/post_Images">トップへ行く</nuxt-link>
+      </v-btn>
+      <v-btn>
+        <nuxt-link to="/post_images/new_post_image">新規投稿する</nuxt-link>
+      </v-btn>
+      <v-btn>
+        <nuxt-link to="/signUp">新規登録</nuxt-link>
+      </v-btn>
+      <v-btn>
+        <nuxt-link to="/login">ログイン</nuxt-link>
+      </v-btn>
+      <v-btn>
+        <nuxt-link :to="`/end_users/${this.$store.state.user.id}`">マイページ</nuxt-link>
+      </v-btn>-->
 
-              <v-card-subtitle class="pb-0">Number 10</v-card-subtitle>
+      <v-btn icon @click.stop="fixed = !fixed">
+        <v-icon>mdi-minus</v-icon>
+      </v-btn>
+      <v-toolbar-title v-text="title" />
+      <v-spacer />
+      <v-btn icon @click.stop="rightDrawer = !rightDrawer">
+        <v-icon>mdi-menu</v-icon>
+      </v-btn>
+    </v-app-bar>
+    <v-content>
+      <v-container>
+        <nuxt />
+      </v-container>
+    </v-content>
 
-              <v-card-text class="text--primary">
-                <div>{{post_image.caption}}</div>
+    <v-navigation-drawer v-model="rightDrawer" :right="right" temporary fixed>
+      <v-list>
+        <v-list-item @click.native="right = !right">
+          <v-list-item-action>
+            <v-icon light>mdi-repeat</v-icon>
+          </v-list-item-action>
+          <v-list-item-title>Switch drawer (click me)</v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
 
-                <div>Whitsunday Island, Whitsunday Islands</div>
-              </v-card-text>
-              <v-card-text
-                class="text--primary"
-                v-for="(post_comment, i) in post_image.post_comments"
-                :key="i"
-              >
-                <div>{{post_comment.comment}}</div>
-              </v-card-text>
-
-              <v-card-actions>
-                <v-btn color="orange" text>Share</v-btn>
-
-                <v-btn color="orange" text>Explore</v-btn>
-                <template v-if="!favoriteCheck">
-                  <v-btn icon @click="createFavorite(post_image)">
-                    <v-icon>mdi-heart-outline</v-icon>
-                  </v-btn>
-                </template>
-                <template v-else>
-                  <v-btn icon @click="destroyFavorite(post_image)">
-                    <v-icon>mdi-heart</v-icon>
-                  </v-btn>
-                </template>
-
-                <!-- <comment-form></comment-form> -->
-
-                <v-row justify="center">
-                  <v-dialog v-model="dialog" persistent max-width="600px">
-                    <template v-slot:activator="{ on }">
-                      <v-btn color="primary" dark v-on="on">コメントする</v-btn>
-                    </template>
-                    <v-card>
-                      <v-card-title>
-                        <span class="headline">コメント入力フォーム</span>
-                      </v-card-title>
-                      <v-card-text>
-                        <v-container>
-                          <v-row>
-                            <v-col cols="12" sm="6" md="4" lg="12">
-                              <v-text-field label="Outlined" outlined v-model="post_comment"></v-text-field>
-                            </v-col>
-                          </v-row>
-                        </v-container>
-                        <small>*indicates required field</small>
-                      </v-card-text>
-                      <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn>
-                        {{post_image}}
-                        <v-btn color="blue darken-1" text @click="saveComment(post_image)">Save</v-btn>
-                      </v-card-actions>
-                    </v-card>
-                  </v-dialog>
-                </v-row>
-              </v-card-actions>
-
-              <v-col cols="12" lg="12" sm="6" md="3">
-                <!-- <v-text-field label="Outlined" outlined></v-text-field> -->
-              </v-col>
-            </v-card>
-          </div>
-        </div>
-      </v-col>
-      <v-col cols="1"></v-col>
-      <v-col cols="4">
-        <!-- <v-card class="mx-auto" max-width="434" tile>
-          <v-img height="100%" src="https://cdn.vuetifyjs.com/images/cards/server-room.jpg">
-            <v-row align="end" class="fill-height">
-              <v-col align-self="start" class="pa-0" cols="12">
-                <v-avatar class="profile" color="grey" size="164" tile>
-                  <v-img src="https://cdn.vuetifyjs.com/images/profiles/marcus.jpg"></v-img>
-                </v-avatar>
-              </v-col>
-              <v-col class="py-0">
-                <v-list-item color="rgba(0, 0, 0, .4)" dark>
-                  <v-list-item-content>
-                    <v-list-item-title class="title">Marcus Obrien</v-list-item-title>
-                    <v-list-item-subtitle>Network Engineer</v-list-item-subtitle>
-                  </v-list-item-content>
-                </v-list-item>
-              </v-col>
-            </v-row>
-          </v-img>
-        </v-card>-->
-
-        <!-- <v-card class="mx-auto" max-width="300" tile>
-          <v-list rounded>
-            <v-subheader>REPORTS</v-subheader>
-            <v-list-item-group v-model="item" color="primary">
-              <v-list-item v-for="(item, i) in items" :key="i">
-                <v-list-item-icon>
-                  <v-icon v-text="item.icon"></v-icon>
-                </v-list-item-icon>
-                <v-list-item-content>
-                  <v-list-item-title v-text="item.text"></v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list-item-group>
-          </v-list>
-        </v-card>-->
-
-        <v-card max-width="375" class="mx-auto">
-          <v-img src="https://cdn.vuetifyjs.com/images/lists/ali.png" height="300px" dark>
-            <v-row class="fill-height">
-              <v-card-title>
-                <v-btn dark icon>
-                  <v-icon>mdi-chevron-left</v-icon>
-                </v-btn>
-
-                <v-spacer></v-spacer>
-
-                <v-btn dark icon class="mr-4">
-                  <v-icon>mdi-pencil</v-icon>
-                </v-btn>
-
-                <v-btn dark icon>
-                  <v-icon>mdi-dots-vertical</v-icon>
-                </v-btn>
-              </v-card-title>
-
-              <v-spacer></v-spacer>
-
-              <v-card-title class="white--text pl-12 pt-12">
-                <div class="display-1 pl-12 pt-12">Ali Conners</div>
-              </v-card-title>
-            </v-row>
-          </v-img>
-
-          <v-list two-line>
-            <v-list-item @click>
-              <v-list-item-icon>
-                <v-icon color="indigo">mdi-phone</v-icon>
-              </v-list-item-icon>
-
-              <v-list-item-content>
-                <v-list-item-title>(650) 555-1234</v-list-item-title>
-                <v-list-item-subtitle>Mobile</v-list-item-subtitle>
-              </v-list-item-content>
-
-              <v-list-item-icon>
-                <v-icon>mdi-message-text</v-icon>
-              </v-list-item-icon>
-            </v-list-item>
-
-            <v-list-item @click>
-              <v-list-item-action></v-list-item-action>
-
-              <v-list-item-content>
-                <v-list-item-title>(323) 555-6789</v-list-item-title>
-                <v-list-item-subtitle>Work</v-list-item-subtitle>
-              </v-list-item-content>
-
-              <v-list-item-icon>
-                <v-icon>mdi-message-text</v-icon>
-              </v-list-item-icon>
-            </v-list-item>
-
-            <v-divider inset></v-divider>
-
-            <v-list-item @click>
-              <v-list-item-icon>
-                <v-icon color="indigo">mdi-email</v-icon>
-              </v-list-item-icon>
-
-              <v-list-item-content>
-                <v-list-item-title>aliconnors@example.com</v-list-item-title>
-                <v-list-item-subtitle>Personal</v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-
-            <v-list-item @click>
-              <v-list-item-action></v-list-item-action>
-
-              <v-list-item-content>
-                <v-list-item-title>ali_connors@example.com</v-list-item-title>
-                <v-list-item-subtitle>Work</v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-
-            <v-divider inset></v-divider>
-
-            <v-list-item @click>
-              <v-list-item-icon>
-                <v-icon color="indigo">mdi-map-marker</v-icon>
-              </v-list-item-icon>
-
-              <v-list-item-content>
-                <v-list-item-title>1400 Main Street</v-list-item-title>
-                <v-list-item-subtitle>Orlando, FL 79938</v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list>
-        </v-card>
-      </v-col>
-    </v-row>
-  </v-container>
+    <v-footer :fixed="fixed" app>
+      <span>&copy; 2019</span>
+    </v-footer>
+  </v-app>
 </template>
 
 <script>
-import axios from "@/plugins/axios";
-// import Vuex from "vuex";
-// import commentForm from "@/components/commentForm";
-
-const url = "http://localhost:3001/post_images.json";
+export default {
+  data() {
+    return {
+      clipped: false,
+      drawer: false,
+      fixed: false,
+      items: [
+        {
+          icon: "mdi-apps",
+          title: "トップページ",
+          to: "/post_Images"
+        },
+        {
+          icon: "mdi-chart-bubble",
+          title: "ユーザーリスト",
+          to: "/end_users"
+        },
+        {
+          icon: "mdi-chart-bubble",
+          title: "新規投稿",
+          to: "/post_images/new_post_image"
+        },
+        {
+          icon: "mdi-chart-bubble",
+          title: "新規登録",
+          to: "/signUp"
+        },
+        {
+          icon: "mdi-chart-bubble",
+          title: "ログイン",
+          to: "/login"
+        },
+        {
+          icon: "mdi-chart-bubble",
+          title: "マイページ",
+          to: `/end_users/${this.$store.state.user.id}`
+        }
+      ],
+      miniVariant: false,
+      right: true,
+      rightDrawer: false,
+      title: "Vuetify.js"
+    };
+  }
+};
+</script>
 
 export default {
   data() {
     return {
-      post_images: [],
-      post_image: "",
       dialog: false,
-      post_comments: [],
-      post_comment: "",
-      favoriteCheck: false,
-      favorite_list: []
+      items: [
+        {
+          icon: "folder",
+          iconClass: "grey lighten-1 white--text",
+          title: "Photos",
+          subtitle: "Jan 9, 2014"
+        },
+        {
+          icon: "folder",
+          iconClass: "grey lighten-1 white--text",
+          title: "Recipes",
+          subtitle: "Jan 17, 2014"
+        },
+        {
+          icon: "folder",
+          iconClass: "grey lighten-1 white--text",
+          title: "Work",
+          subtitle: "Jan 28, 2014"
+        }
+      ],
+      items2: [
+        {
+          icon: "assignment",
+          iconClass: "blue white--text",
+          title: "Vacation itinerary",
+          subtitle: "Jan 20, 2014"
+        },
+        {
+          icon: "call_to_action",
+          iconClass: "amber white--text",
+          title: "Kitchen remodel",
+          subtitle: "Jan 10, 2014"
+        }
+      ]
     };
-  },
-  // components: {
-  //   commentForm
-  // },
-  mounted: async function() {
-    const res = await axios.get(url);
-    // for (this.post_images in { modal: false }) {
-    //   console.log(this.res.data);
-    // }
-    this.post_images = res.data;
-    this.favorite_list = res.data.favorites;
-    console.log(res.data.favorites);
-    // if this.post-images.end_user_id = this.$store.state.user.id;
-  },
-  methods: {
-    async saveComment(post_image) {
-      console.log(post_image.id);
-      try {
-        this.dialog = false;
-        console.log(this);
-        const comment = {
-          comment: this.post_comment
-        };
-        const { data } = await axios.post(
-          `/post_images/${post_image.id}/post_comments`,
-          comment
-        );
-        console.log({ data });
-        post_image.post_comments = data;
-      } catch (error) {
-        alert("");
-      }
-
-      // .then(res => {
-      //   this.post_comment = res.data.post_comment;
-      // });
-    },
-    async createFavorite(post_image) {
-      try {
-        await axios.post(`/post_images/${post_image.id}/favorites`, post_image);
-        this.favoriteCheck = true;
-      } catch (error) {
-        alert("");
-      }
-    },
-    destroyFavorite(post_image) {
-      try {
-        axios.delete(`/post_images/${post_image.id}/favorites`, [
-          post_image,
-          `${this.$store.state.user}`
-        ]);
-        this.favoriteCheck = false;
-      } catch (error) {
-        alert("");
-      }
-    }
   }
 };
 </script>

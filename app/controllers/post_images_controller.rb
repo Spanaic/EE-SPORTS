@@ -7,7 +7,7 @@ class PostImagesController < ApplicationController
     def index
         # @post_images = PostImage.page(params[:page]).per(6).reverse_order
         # @post_images = PostImage.page(params[:page]).reverse_order
-        @post_images = PostImage.all.to_json(include: [:post_comments, :favorites])
+        @post_images = PostImage.all.to_json(include: [:post_comments, :favorites, :end_user])
         # @notifications = Notification.all
         # randoms = EndUser.order("RANDOM()").limit(20)
         # FIXME:mysqlに.order("RANDOM()").limit(20)の表現はできないかも...
@@ -133,7 +133,7 @@ class PostImagesController < ApplicationController
     # end
 
     def post_params
-        params.require(:post_image).permit(:caption, :image_name, :end_user_id)
+        params.require(:post_image).permit(:caption, :image_name, :end_user_id, :title)
     end
 end
 # class PostImagesController < ApplicationController
