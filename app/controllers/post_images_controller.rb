@@ -7,6 +7,9 @@ class PostImagesController < ApplicationController
     def index
         # @post_images = PostImage.page(params[:page]).per(6).reverse_order
         # @post_images = PostImage.page(params[:page]).reverse_order
+        # Book.first.to_json(include: [:author, {publisher: {only: :name}}])
+
+
         @post_images = PostImage.all.to_json(include: [:post_comments, :favorites, :end_user])
         # @notifications = Notification.all
         # randoms = EndUser.order("RANDOM()").limit(20)
@@ -86,10 +89,10 @@ class PostImagesController < ApplicationController
         # binding.pry
         if @post_image.save!
             # redirect_to post_image_path(post_image.id)
-            render :json => post_image
+            render :json => @post_image
         else
             puts @post_image.errors.full_messages
-            render :json => post_image
+            render :json => @post_image
         end
     end
 

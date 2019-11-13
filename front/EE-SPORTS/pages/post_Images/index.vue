@@ -19,11 +19,12 @@
               </v-list-item>
             </v-toolbar>
 
-            <v-card class="mx-auto mb-5" height="100%" max-width="800" @click="overlay =!overlay">
+            <v-card class="mx-auto mb-5" height="100%" max-width="800">
               <v-img
                 class="white--text align-end"
                 height="400px"
                 :src="'http://localhost:3001/post_images/' + post_image.image_name"
+                @click="overlay =!overlay"
               >
                 <v-card-title>Top 10 Australian beaches</v-card-title>
               </v-img>
@@ -62,7 +63,7 @@
                 <v-btn color="orange" text>Explore</v-btn>
 
                 <!-- お気に入り機能ボタンボタン（作りかけ） -->
-                <template v-if="!favoriteCheck">
+                <template v-if="!post_image.isFav">
                   <v-btn icon @click="createFavorite(post_image)">
                     <v-icon>mdi-heart-outline</v-icon>
                   </v-btn>
@@ -257,7 +258,7 @@ import axios from "@/plugins/axios";
 // import Vuex from "vuex";
 // import commentForm from "@/components/commentForm";
 
-const url = "http://localhost:3001/post_images.json";
+const url = "http://localhost:3001/post_images";
 
 export default {
   data() {
@@ -276,15 +277,29 @@ export default {
   // components: {
   //   commentForm
   // },
-  mounted: async function() {
+  async created() {
     const res = await axios.get(url);
     // for (this.post_images in { modal: false }) {
     //   console.log(this.res.data);
     // }
-    this.post_images = res.data;
-    this.favorite_list = res.data.favorites;
-    console.log(res.data.end_user);
+    const favorite = {
+      end_user_id: this.user.id
+    };
+    this.post_images = res.data.map(post_image => {
+      post_image.isFav = post_image.favorites.some(
+        fav => fav.end_user_id === favorite.end_user_id
+      );
+      return post_image;
+    });
+    console.log(this.post_images);
+    // this.favorite_list = res.data.favorites;
+    console.log(this.$store.state.user.profile_image_name);
     // if this.post-images.end_user_id = this.$store.state.user.id;
+  },
+  computed: {
+    user() {
+      return this.$store.state.user;
+    }
   },
   methods: {
     async saveComment(post_image) {
@@ -312,18 +327,25 @@ export default {
     async createFavorite(post_image) {
       try {
         await axios.post(`/post_images/${post_image.id}/favorites`, post_image);
-        this.favoriteCheck = true;
+        post_image.isFav = true;
       } catch (error) {
         alert("");
       }
     },
     destroyFavorite(post_image) {
+      let vm = this;
+      const ps = post_image.favorites.map(fav => {
+        if (fav.end_user_id === vm.user.id) {
+          return fav;
+        }
+      });
+
+      console.log({ ps });
       try {
-        axios.delete(`/post_images/${post_image.id}/favorites`, [
-          post_image,
-          `${this.$store.state.user}`
-        ]);
-        this.favoriteCheck = false;
+        axios.delete(
+          `/post_images/${post_image.id}/favorites/${post_image.favorites}/${ps[0].id}`
+        );
+        post_image.isFav = false;
       } catch (error) {
         alert("");
       }

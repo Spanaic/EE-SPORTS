@@ -1,81 +1,142 @@
-<template>
-  <div>
-    <form action @submit.prevent="hundleSubmit">
-      <input type="text" v-model="email" />
-      <input type="text" v-model="password" />
-      <input type="submit" />
+ <template>
+  <v-card class="pa-5 mt-5">
+    <form action>
+      <v-text-field
+        v-model="email"
+        :error-messages="emailErrors"
+        label="Email"
+        required
+        @input="$v.email.$touch()"
+        @blur="$v.email.$touch()"
+      ></v-text-field>
+      <v-text-field
+        v-model="password"
+        :error-messages="passwordErrors"
+        label="パスワード"
+        required
+        @input="$v.password.$touch()"
+        @blur="$v.password.$touch()"
+      ></v-text-field>
+
+      <!-- <button type="button" @click="googleLogIn">Google認証</button>
+      <button type="button" @click="logOut">log out</button>-->
+
+      <v-btn class="mr-4" @click="submit">submit</v-btn>
+      <v-btn @click="clear">clear</v-btn>
     </form>
-    <button type="button" @click="googleLogIn">Google認証</button>
-    <button type="button" @click="logOut">log out</button>
-    <div v-if="error_checker === true">{{error}}</div>
-  </div>
+  </v-card>
 </template>
 
 <script>
+import { validationMixin } from "vuelidate";
+import { required, email, minLength } from "vuelidate/lib/validators";
 import firebase from "@/plugins/firebase";
-import axios from "axios";
+import axios from "@/plugins/axios";
 
 export default {
-  data() {
-    return {
-      email: "",
-      password: "",
-      error: "",
-      error_checker: false
-    };
+  mixins: [validationMixin],
+
+  validations: {
+    email: { required, email },
+    password: { required, minLength: minLength(6) }
   },
-  mounted() {
-    // console.log(firebase.auth().currentUser);
+
+  data: () => ({
+    email: "",
+    password: ""
+  }),
+
+  computed: {
+    emailErrors() {
+      const errors = [];
+      if (!this.$v.email.$dirty) return errors;
+      !this.$v.email.email &&
+        errors.push("正しいEmailアドレスを入力して下さい");
+      !this.$v.email.required && errors.push("Emailは入力必須です");
+      return errors;
+    },
+    passwordErrors() {
+      const errors = [];
+      if (!this.$v.password.$dirty) return errors;
+      !this.$v.password.minLength &&
+        errors.push("パスワードは6文字以上で入力して下さい");
+      !this.$v.password.required && errors.push("パスワードは入力必須です");
+      return errors;
+    }
   },
+
   methods: {
-    hundleSubmit() {
+    submit() {
       this.$store.dispatch("logIn", [this.email, this.password]);
-      //   var provider = new firebase.auth.GoogleAuthProvider();
-      //   firebase.auth().signInWithPopup(provider);
-      // firebase
-      //   .auth()
-      //   .createUserWithEmailAndPassword(this.email, this.password)
-      //   .then(user => {
-      //     console.log(user.user.email);
-      //     axios.post("http://localhost:3001/users", {
-      //       email: this.email
-      //     });
-      //     this.email = "";
-      //     this.password = "";
-      //     console.log("Sign-out successful.");
-      //     this.$router.push("/");
-      //   })
-      //   .catch(err => {
-      //     this.error = err.message;
-      //     this.error_checker = true;
-      //     console.log(this.error_checker);
-      //   });
-    },
-    logOut() {
-      this.$store.dispatch("logOut");
-      // firebase
-      //   .auth()
-      //   .signOut()
-      //   .then(function() {
-      //     console.log("Sign-out successful.");
-      //   })
-      //   .catch(function(error) {
-      //     console.log("An error happened.");
-      //   });
-    },
-    googleLogIn() {
-      // var provider = new firebase.auth.GoogleAuthProvider();
-      // firebase
-      //   .auth()
-      //   .signInWithPopup(provider)
-      //   .then(res => {
-      //     console.log("Sign-in successful.");
-      //   });
-      this.$store.dispatch("logInGoogle", [this.email, this.name]);
+      // this.email = "";
+      // this.password = "";
+      // this.name = "";
+      // this.profile_name = "";
     }
   }
 };
-</script>
 
-<style>
-</style>
+// import firebase from "@/plugins/firebase";
+// import axios from "axios";
+
+// export default {
+//   data() {
+//     return {
+//       email: "",
+//       password: "",
+//       error: "",
+//       error_checker: false
+//     };
+//   },
+//   mounted() {
+//     // console.log(firebase.auth().currentUser);
+//   },
+//   methods: {
+//     hundleSubmit() {
+//       this.$store.dispatch("logIn", [this.email, this.password]);
+//       //   var provider = new firebase.auth.GoogleAuthProvider();
+//       //   firebase.auth().signInWithPopup(provider);
+//       // firebase
+//       //   .auth()
+//       //   .createUserWithEmailAndPassword(this.email, this.password)
+//       //   .then(user => {
+//       //     console.log(user.user.email);
+//       //     axios.post("http://localhost:3001/users", {
+//       //       email: this.email
+//       //     });
+//       //     this.email = "";
+//       //     this.password = "";
+//       //     console.log("Sign-out successful.");
+//       //     this.$router.push("/");
+//       //   })
+//       //   .catch(err => {
+//       //     this.error = err.message;
+//       //     this.error_checker = true;
+//       //     console.log(this.error_checker);
+//       //   });
+//     },
+//     logOut() {
+//       this.$store.dispatch("logOut");
+//       // firebase
+//       //   .auth()
+//       //   .signOut()
+//       //   .then(function() {
+//       //     console.log("Sign-out successful.");
+//       //   })
+//       //   .catch(function(error) {
+//       //     console.log("An error happened.");
+//       //   });
+//     },
+//     googleLogIn() {
+//       // var provider = new firebase.auth.GoogleAuthProvider();
+//       // firebase
+//       //   .auth()
+//       //   .signInWithPopup(provider)
+//       //   .then(res => {
+//       //     console.log("Sign-in successful.");
+//       //   });
+//       this.$store.dispatch("logInGoogle", [this.email, this.name]);
+//     }
+//   }
+// };
+</script>

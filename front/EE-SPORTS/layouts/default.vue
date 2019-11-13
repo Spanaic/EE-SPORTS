@@ -56,9 +56,14 @@
         </v-btn>
         <v-toolbar-title v-text="title" />
         <v-spacer />
-        <v-btn icon @click.stop="rightDrawer = !rightDrawer">
-          <v-icon>mdi-menu</v-icon>
+
+        <v-btn icon @click="logOut" :right="right">
+          <v-icon>mdi-logout</v-icon>
         </v-btn>
+
+        <!-- <v-btn icon @click.stop="rightDrawer = !rightDrawer">
+          <v-icon>mdi-menu</v-icon>
+        </v-btn>-->
       </v-app-bar>
       <v-content>
         <v-container>
@@ -66,7 +71,7 @@
         </v-container>
       </v-content>
 
-      <v-navigation-drawer v-model="rightDrawer" :right="right" temporary fixed>
+      <!-- <v-navigation-drawer v-model="rightDrawer" :right="right" temporary fixed>
         <v-list>
           <v-list-item @click.native="right = !right">
             <v-list-item-action>
@@ -75,7 +80,7 @@
             <v-list-item-title>Switch drawer (click me)</v-list-item-title>
           </v-list-item>
         </v-list>
-      </v-navigation-drawer>
+      </v-navigation-drawer>-->
 
       <v-footer :fixed="fixed" app>
         <span>&copy; 2019</span>
@@ -87,6 +92,8 @@
 </template>
 
 <script>
+import { mdiLogout } from "@mdi/js";
+
 export default {
   data() {
     return {
@@ -122,7 +129,7 @@ export default {
         {
           icon: "mdi-chart-bubble",
           title: "マイページ",
-          to: `/end_users/${this.$store.state.user.id}`
+          to: "/end_users/" + `${this.$store.state.user.id}`
         }
       ],
       miniVariant: false,
@@ -130,6 +137,12 @@ export default {
       rightDrawer: false,
       title: "Vuetify.js"
     };
+  },
+  methods: {
+    logOut() {
+      this.$store.dispatch("logOut");
+      this.$router.go("/post_images");
+    }
   }
 };
 </script>

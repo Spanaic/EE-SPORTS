@@ -80,3 +80,9 @@ EndUser.all
 exit
 EndUser.all
 exit
+Favorite.delete_all
+exit
+Favorite.all
+Favorite.count
+Favorite.delete_all
+exit

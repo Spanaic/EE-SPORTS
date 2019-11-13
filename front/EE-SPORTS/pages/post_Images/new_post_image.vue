@@ -46,7 +46,9 @@ export default {
     onFileChange(e) {
       console.log(e);
       const files = e.target.files;
+      console.log("-----------------");
       this.createImage(files[0]);
+      console.log("-----------------");
       console.log(files[0]);
       this.files = files;
       this.img_name = files[0].name;

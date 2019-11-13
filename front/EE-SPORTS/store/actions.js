@@ -29,7 +29,7 @@ const actions = {
             .then(user => {
                 commit("setUser", user);
                 console.log('login success!')
-                this.$router.push("/");
+                this.$router.go("/post_images");
             })
             .catch(function (error) {
                 // Handle Errors here.
@@ -88,12 +88,15 @@ const actions = {
                     profile_name: payload[3]
                 }
                 axios.post("/end_users", { end_user })
-                    .then(this.$router.push("/", user))
+                    .then(this.$router.go("/post_images", user))
                     .catch((err) => {
                         alert(err)
                     })
                 // console.log(payload)
                 // console.log('sign up success')
+            })
+            .catch(eer => {
+                alert(eer)
             });
     }
     // onAuth() {
