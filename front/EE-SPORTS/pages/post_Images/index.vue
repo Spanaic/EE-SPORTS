@@ -19,7 +19,7 @@
               </v-list-item>
             </v-toolbar>
 
-            <v-card class="mx-auto" height="100%" max-width="800" @click="overlay =!overlay">
+            <v-card class="mx-auto mb-5" height="100%" max-width="800" @click="overlay =!overlay">
               <v-img
                 class="white--text align-end"
                 height="400px"

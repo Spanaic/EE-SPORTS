@@ -135,7 +135,4 @@ export default {
 </script>
 
 <style>
-.parallax-curtain {
-  background: rgba(255, 255, 255, 0.5);
-}
 </style>
