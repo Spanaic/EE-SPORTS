@@ -99,7 +99,7 @@ export default {
           console.log(res);
           this.$router.push({
             name: "end_users-id",
-            params: { endUserId: res.data.id }
+            params: { id: res.data.id }
           });
         });
     }

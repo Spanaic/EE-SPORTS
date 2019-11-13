@@ -77,7 +77,6 @@ class EndUsersController < ApplicationController
             puts end_user.errors.full_messages
             render :json => end_user
         end
-
     end
 
     def follows

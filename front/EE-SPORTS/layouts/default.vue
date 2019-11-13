@@ -86,6 +86,31 @@ export default {
           icon: "mdi-chart-bubble",
           title: "ユーザーリスト",
           to: "/end_users"
+        },
+        {
+          icon: "mdi-chart-bubble",
+          title: "ユーザーリスト",
+          to: "/end_users"
+        },
+        {
+          icon: "mdi-chart-bubble",
+          title: "ユーザーリスト",
+          to: "/end_users"
+        },
+        {
+          icon: "mdi-chart-bubble",
+          title: "ユーザーリスト",
+          to: "/end_users"
+        },
+        {
+          icon: "mdi-chart-bubble",
+          title: "ユーザーリスト",
+          to: "/end_users"
+        },
+        {
+          icon: "mdi-chart-bubble",
+          title: "ユーザーリスト",
+          to: "/end_users"
         }
       ],
       miniVariant: false,
