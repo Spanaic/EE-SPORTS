@@ -34,27 +34,42 @@ export default {
       return this.$store.state.user;
     }
   },
-  async created() {
+  async mounted() {
     const res = await axios.get(`/end_users/${this.$route.params.id}`);
     this.end_user = res.data;
-    // console.log(res.data);
+    console.log("--------------");
+    console.log(res.data.passive_relationships);
+    console.log("--------------");
+
     const following = {
+      // end_user_idは空っぽでok, this.user.idを代入してる。
       end_user_id: this.user.id
     };
-    // this.戻り値を代入する変数を定義する
-    // this.followers = res.data.passive_relationships.map(follower => {
-    //   follower.isFol = follower.passive_relationships.some(
-    //     fol => fol.followed_id === following.end_user_id
-    //   );
-    //   return follower;
-    // });
-    // debugger;
 
-    // console.log(this.follower);
-    // const follow = {
-    //   res.data. this
-    // };
+    this.followers = res.data.passive_relationships.map(follower => {
+      follower.isFol = follower.following_id;
+    });
+
+    // this.戻り値を代入する変数を定義する;
+    // this.followersも空っぽでok, mapとsomeで引っ張る値を代入する;
+    // this.followers = res.data.passive_relationships.some(
+    //   fol => fol.followed_id === following.end_user.id
+    // );
+    // return fol;
+    debugger;
   },
+  // this.followers = res.data.passive_relationships.map(follower => {
+  //   follower.isFol = follower.passive_relationships.some(
+  //     fol => fol.followed_id === following.end_user_id
+  //   );
+  //   return follower;
+  // });
+
+  // console.log(this.follower);
+  // const follow = {
+  //   res.data. this
+  // };
+
   methods: {
     async createFollow(end_user) {
       const vm = { id: this.user.id };
@@ -91,6 +106,7 @@ export default {
           `/end_users/${this.end_user.id}/relationships/${ps[0].id}`
           // `/end_users/${this.end_user.id}/relationships/${ps[0].follower_id}`
         );
+        end_user.isFol = false;
       } catch (err) {
         alert(err);
       }

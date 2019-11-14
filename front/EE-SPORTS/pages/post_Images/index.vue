@@ -280,7 +280,7 @@ export default {
   async created() {
     const res = await axios.get(url);
     // for (this.post_images in { modal: false }) {
-    //   console.log(this.res.data);
+    console.log(res.data);
     // }
     const favorite = {
       end_user_id: this.user.id
@@ -291,6 +291,7 @@ export default {
       );
       return post_image;
     });
+    debugger;
     console.log(this.post_images);
     // this.favorite_list = res.data.favorites;
     console.log(this.$store.state.user.profile_image_name);
