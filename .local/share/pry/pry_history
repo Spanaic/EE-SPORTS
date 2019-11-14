@@ -96,3 +96,13 @@ follow = user.active_relationships.build(following_id: 1, follower_id: 6)
 params
 exit
 Relationship.all
+exit
+Relationship.all
+a = Relationship.all
+a.destroy_all
+Relationship.all
+a = Relationship.all
+a.destroy_all
+Relationship.all
+Relationship.find(8)
+Relationship.all

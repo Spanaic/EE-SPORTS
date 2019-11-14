@@ -65,9 +65,11 @@ export default {
         console.log("--------------");
         // console.log(vm[0]);
         console.log("--------------");
-        console.log(this.end_user);
+        console.log(this.end_user.passive_relationships);
         console.log("--------------");
-        console.log(this.user);
+        console.log(this.end_user.passive_relationships.following_id);
+        console.log("--------------");
+        console.log(this.user.id);
         await axios.post(`/end_users/${this.end_user.id}/relationships`, vm);
         end_user.isFol = true;
       } catch (err) {
@@ -76,15 +78,18 @@ export default {
     },
     async destroyFollow(end_user) {
       let vm = this;
-      const ps = vm.end_user.followers.map(fol => {
-        if (fol.id === vm.user.id) {
+      const ps = end_user.passive_relationships.map(fol => {
+        if (fol.following_id === vm.user.id) {
           return fol;
+          console.log(fol);
         }
       });
+      console.log("--------------");
       console.log({ ps });
       try {
         await axios.delete(
           `/end_users/${this.end_user.id}/relationships/${ps[0].id}`
+          // `/end_users/${this.end_user.id}/relationships/${ps[0].follower_id}`
         );
       } catch (err) {
         alert(err);
