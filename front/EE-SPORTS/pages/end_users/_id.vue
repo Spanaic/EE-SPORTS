@@ -40,14 +40,22 @@ export default {
     console.log("--------------");
     console.log(res.data.passive_relationships);
     console.log("--------------");
-
+    const vm = this.end_user;
     const following = {
       // end_user_idは空っぽでok, this.user.idを代入してる。
-      end_user_id: this.user.id
+      end_user_id: vm.id
+      // end_user_id: this.user.id
     };
+    // debugger;
 
     this.followers = res.data.passive_relationships.map(follower => {
-      follower.isFol = follower.following_id;
+      follower.isFol =
+        follower.following_id === following.end_user_id ? true : false;
+      // .includes(following.end_user_id);
+      console.log(follower.isFol);
+      debugger;
+      return follower;
+      console.log(follower);
     });
 
     // this.戻り値を代入する変数を定義する;
@@ -56,7 +64,6 @@ export default {
     //   fol => fol.followed_id === following.end_user.id
     // );
     // return fol;
-    debugger;
   },
   // this.followers = res.data.passive_relationships.map(follower => {
   //   follower.isFol = follower.passive_relationships.some(
