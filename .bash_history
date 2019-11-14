@@ -76,3 +76,18 @@ rails routes
 rails c
 rails routes
 exit
+rails c
+rails routes
+rails c
+rails db:migration AddTitleToPostImages title:string
+rails g migration AddTitleToPostImages title:string
+rails db:migrate
+rails c
+rails routes
+rails c
+rails routex
+rails routes | grep favorites
+rails routes
+rails c
+docker ps
+exit

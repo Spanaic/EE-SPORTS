@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-for="(end_user, i) in end_users" :key="i">
-      {{ end_user.name }}
+      <!-- {{ end_user.name }} -->
       <nuxt-link :to="`/end_users/${end_user.id}`">{{ end_user.name }}</nuxt-link>
     </div>
   </div>
@@ -16,10 +16,10 @@ export default {
       end_users: []
     };
   },
-  mounted: async function() {
-    const res = await axios.get("/end_users.json");
-    this.end_users = res.data.users;
-    console.log(res.data.users);
+  created: async function() {
+    const res = await axios.get("/end_users");
+    this.end_users = res.data[1];
+    console.log(res.data[1]);
   }
 };
 </script>

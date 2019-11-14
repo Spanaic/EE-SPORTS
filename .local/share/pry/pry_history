@@ -86,3 +86,13 @@ Favorite.all
 Favorite.count
 Favorite.delete_all
 exit
+Favorite.all
+Relationship.all
+rails c
+user = 1
+follow = user.active_relationships.build(following_id: 1, follower_id: 6)
+follow = user.active_relationships.build(following_id: 1, follower_id: 6)        follow = current_user.active_relationships.build(following_id: current_user.id, follower_id: @user.id)
+follow = user.active_relationships.build(following_id: 1, follower_id: 6)
+params
+exit
+Relationship.all

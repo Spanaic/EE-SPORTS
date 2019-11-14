@@ -34,8 +34,8 @@
         <v-btn icon @click.stop="clipped = !clipped">
           <v-icon>mdi-application</v-icon>
         </v-btn>
-        <!--
-      <v-btn>
+
+        <!-- <v-btn>
         <nuxt-link to="/post_Images">トップへ行く</nuxt-link>
       </v-btn>
       <v-btn>
@@ -46,10 +46,10 @@
       </v-btn>
       <v-btn>
         <nuxt-link to="/login">ログイン</nuxt-link>
-      </v-btn>
-      <v-btn>
-        <nuxt-link :to="`/end_users/${this.$store.state.user.id}`">マイページ</nuxt-link>
         </v-btn>-->
+        <v-btn>
+          <nuxt-link :to="`/end_users/${this.$store.state.user.id}`">マイページ</nuxt-link>
+        </v-btn>
 
         <v-btn icon @click.stop="fixed = !fixed">
           <v-icon>mdi-minus</v-icon>
@@ -137,11 +137,17 @@ export default {
       rightDrawer: false,
       title: "Vuetify.js"
     };
+    consol.log(this);
   },
   methods: {
     logOut() {
       this.$store.dispatch("logOut");
       this.$router.go("/post_images");
+    }
+  },
+  computed: {
+    currentUser() {
+      return this.$store.state.user;
     }
   }
 };

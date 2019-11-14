@@ -1,40 +1,82 @@
 <template>
-  <div class="contents">
-    <form action @submit.prevent="handleSubmit" enctype="multipart/form-data">
-      <label v-show="!uploadedImage" class="input-item__label">画像を選択</label>
-      <input type="file" @change="onFileChange" />
+  <form @submit.prevent="handleSubmit" enctype="multipart/form-data">
+    <v-text-field
+      v-model="title"
+      :error-messages="titleErrors"
+      :counter="30"
+      label="title"
+      required
+      @input="$v.title.$touch()"
+      @blur="$v.title.$touch()"
+    ></v-text-field>
+    <v-text-field
+      v-model="caption"
+      :error-messages="captionErrors"
+      :counter="300"
+      label="caption"
+      required
+      @input="$v.caption.$touch()"
+      @blur="$v.caption.$touch()"
+    ></v-text-field>
+    <!-- <label v-show="!uploadedImage" class="input-item__label">画像を選択</label> -->
 
-      <div class="preview-item">
-        <img v-show="uploadedImage" class="preview-item-file" :src="uploadedImage" alt />
-        <div v-show="uploadedImage" class="preview-item-btn" @click="remove">
-          <p class="preview-item-name">{{ img_name }}</p>
-        </div>
-      </div>
-      <input type="text" v-model="title" />
-      <input type="text" v-model="caption" />
-      <input type="submit" id="apply-upload" v-show="uploadedImage" />
-    </form>
+    <v-file-input label="File input" outlined dense @change="onFileChange"></v-file-input>
 
-    <div v-if="loading"></div>
-  </div>
+    <!-- <label v-show="!uploadedImage" class="input-item__label">画像を選択</label>
+    <input type="file" @change="onFileChange" />-->
+
+    <v-btn class="mr-4">
+      <input type="submit" id="apply-upload" />
+    </v-btn>
+    <!-- <v-btn @click="clear">clear</v-btn> -->
+  </form>
 </template>
 
 <script>
-import axios from "axios";
+import { validationMixin } from "vuelidate";
+import { required, maxLength, minLength } from "vuelidate/lib/validators";
+import firebase from "@/plugins/firebase";
+import axios from "@/plugins/axios";
 
 export default {
-  components: {},
+  mixins: [validationMixin],
+
+  validations: {
+    title: { required, maxLength: maxLength(30) },
+    caption: { required, maxLength: maxLength(300) }
+  },
+
   data() {
     return {
       uploadedImage: "",
       img_name: "",
-      files: [],
+      file: null,
       itemLength: 0,
       loading: false,
       caption: "",
       title: ""
     };
   },
+
+  computed: {
+    titleErrors() {
+      const errors = [];
+      if (!this.$v.title.$dirty) return errors;
+      !this.$v.title.maxLength &&
+        errors.push("タイトルは30文字以内で入力して下さい");
+      !this.$v.title.required && errors.push("タイトルは入力必須です");
+      return errors;
+    },
+    captionErrors() {
+      const errors = [];
+      if (!this.$v.caption.$dirty) return errors;
+      !this.$v.caption.maxLength &&
+        errors.push("本文は300文字以内で入力して下さい");
+      !this.$v.caption.required && errors.push("本文は入力必須です");
+      return errors;
+    }
+  },
+
   created() {
     var vm = this;
     var params = {
@@ -45,13 +87,16 @@ export default {
   methods: {
     onFileChange(e) {
       console.log(e);
-      const files = e.target.files;
-      console.log("-----------------");
-      this.createImage(files[0]);
-      console.log("-----------------");
-      console.log(files[0]);
-      this.files = files;
-      this.img_name = files[0].name;
+      // const files = e.target.files;
+
+      // console.log("-------------");
+      // console.log(e.target.files);
+      // console.log("-------------");
+
+      this.createImage(e);
+      // console.log(files[0]);
+      this.file = e;
+      this.img_name = e.name;
     },
     // アップロードした画像を表示
     createImage(file) {
@@ -71,7 +116,7 @@ export default {
       var timestamp = new Date().getTime();
       var filename = "file" + timestamp + ".jpg";
       console.log(this.uploadFile);
-      formData.append("post_image[image]", this.files[0]);
+      formData.append("post_image[image]", this.file);
       formData.append("post_image[caption]", this.caption);
       formData.append("post_image[title]", this.title);
       formData.append("post_image[image_name]", filename);

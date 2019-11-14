@@ -24,7 +24,7 @@ class EndUsersController < ApplicationController
     end
 
     def show
-        @user = EndUser.find(params[:id])
+        @user = EndUser.find(params[:id]).to_json(include: [:favorites, :post_images, :post_comments, :active_relationships, :passive_relationships, :followings, :followers])
         # @user= EndUser.find_by(id: params[:profile_name])
         render :json => @user
         # @user = User.find_by(profile_name: params[:profile_name])

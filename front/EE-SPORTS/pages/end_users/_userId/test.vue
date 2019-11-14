@@ -1,5 +1,3 @@
-// _id/end_userページ
-
 <template>
   <div>
     <h1>{{ end_user.email }}</h1>

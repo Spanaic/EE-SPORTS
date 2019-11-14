@@ -22,7 +22,7 @@ Rails.application.routes.draw do
   # end
 
   resources :end_users do
-    resource :relationships, param: :profile_name, only: [:create, :destroy]
+    resources :relationships, only: [:create, :destroy]
     get :follows, on: :member
     get :followers, on: :member
     get :explore, on: :collection
