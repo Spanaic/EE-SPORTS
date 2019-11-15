@@ -1261,7 +1261,158 @@ protect_from_forgery :except => [:許可したいアクション名]
   dark
 >
 ```
+---
+## `【検索フォーム(rails)】`
 
+### `vue側：検索したいindexにサーチを投げる(axios)`
 
+```
+<div class="search-box">
+        <%= form_tag(items_path,method: :get) do %>
+          <%= text_field_tag :search, "", placeholder: "アーティストやタイトルで検索" %>
+          <%= button_tag '<i class="fa fa-search"></i>'.html_safe, type: 'submit', :name => nil %>
+        <% end %>
+      </div>
+```
 
+* 検索したいモデルのindexにaxios.getでparamsを投げる。
+
+### `コントローラの書き方`
+
+```
+def index
+    unless params[:search].blank?
+      artist = Item.joins(:artist).where("artist_name LIKE ?", "%#{params[:search]}%")
+      track =  Item.joins(discs: :tracks).where("track_name LIKE ?", "%#{params[:search]}%")
+      title = Item.where("title LIKE ?", "%#{params[:search]}%")
+      merged_result = (artist | title)P
+      @items = (merged_result | track)
+      @items = Kaminari.paginate_array(@items).page(params[:page]).per(10)
+    else
+      @items = Item.page(params[:page]).per(10).reverse_order
+    end
+  end
+```
+1. 検索フォームがブランクじゃなければ検索結果用のjsonを返すように記述を変更する
+2. 検索モデルに関連したモデルから引っ張ってくる場合は.joinメソッドを使う
+3. "カラム名 LIKE?"で部分一致検索
+4. whereメソッドの第2引数に("%#{params[:search]}%")を入れる
+
+---
+
+## `【リアルタイム検索（残念ながらうまくいかず）】`
+
+[参考記事](https://blog.capilano-fw.com/?p=648)
+
+※ 同一コンポーネント内で検索フォームを設ける場合はかなり有効な気がする...
+`残念ながら上記のURLの方法では実装出来ず...`
+
+```
+<html>
+<body>
+<div id="app">
+    <input type="text" v-model="keyword">
+    <table>
+        <tr v-for="user in filteredUsers">
+            <td v-text="user.id"></td>
+            <td v-text="user.name"></td>
+            <td v-text="user.email"></td>
+        </tr>
+    </table>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.min.js"></script>
+<script>
+
+    new Vue({
+        el: '#app',
+        data: {
+            keyword: '',
+            users: [
+                {
+                    id: 1,
+                    name: '鈴木太郎',
+                    email: 'suzukitaro@example.com'
+                },
+                {
+                    id: 2,
+                    name: '佐藤二郎',
+                    email: 'satoujiro@example.com'
+                },
+                {
+                    id: 3,
+                    name: '田中三郎',
+                    email: 'tanakasaburo@example.com'
+                },
+                {
+                    id: 4,
+                    name: '山本四郎',
+                    email: 'yamamotoshiro@example.com'
+                },
+                {
+                    id: 5,
+                    name: '高橋五郎',
+                    email: 'takahashigoro@example.com'
+                },
+            ]
+        },
+        computed: {
+            filteredUsers: function() {
+                var users = [];
+                for(var i in this.users) {
+                    var user = this.users[i];
+                    if(user.name.indexOf(this.keyword) !== -1 ||
+                        user.email.indexOf(this.keyword) !== -1) {
+                        users.push(user);
+                    }
+                }
+                return users;
+            }
+        }
+    });
+
+</script>
+</body>
+</html>
+```
+---
+## `【filterとincludes関数によるフィルタリング機能を利用したリアルタイム検索の実装】`
+
+[参考URL](https://codepen.io/AndrewThian/pen/QdeOVa)
+
+### `記事の記述`
+
+```
+computed: {
+    filteredList() {
+      return this.postList.filter(post => {
+        return post.title.toLowerCase().includes(this.search.toLowerCase())
+      })
+    }
+  }
+```
+### `自分の記述`
+
+```
+    filterdPostImages() {
+      return this.post_images.filter(post_image => {
+        return (
+          post_image.title.includes(this.keyword) ||
+          post_image.caption.includes(this.keyword) ||
+          post_image.end_user.profile_name.includes(this.keyword)
+        );
+      });
+    }
+```
+1. filter関数で条件を指定した新しい配列を返す。
+2. includes関数でv-modelからバインドしてきた値を指定したカラムから検索させる
+3. || orを使うことで、どこかにヒットしたら、という条件を追加する。
+4. collback関数で返した値の入った配列をfilter関数の戻り値に入れて,computed:の値として`filteredPostImages`にreturnで返す.
+
+### `templateの記述`
+
+```
+<div v-for="(post_image, i) in filterdPostImages" :key="i">
+```
+
+5. v-forに渡していたdataをfilter関数を通した戻り値の入ったcomputedプロパティの値と差し替える。（元はpost_images）
 

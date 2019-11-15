@@ -34,7 +34,6 @@
         <!-- <v-text>Close</v-text> -->
         <!-- </v-btn> -->
         <!-- </v-col> -->
-        -->
         <!-- </v-list> -->
       </v-navigation-drawer>
 
@@ -52,9 +51,9 @@
 
         <v-spacer></v-spacer>
 
-        <v-form class="pt-4">
+        <v-form @submit.prevent="searchSubmit" class="pt-4">
           <v-container>
-            <v-text-field>
+            <v-text-field v-model="keyword">
               <template v-slot:label>
                 <strong>"#"</strong> or
                 <strong>ユーザー名</strong>
@@ -63,6 +62,18 @@
             </v-text-field>
           </v-container>
         </v-form>
+
+        <!-- <v-form @submit.prevent="searchSubmit" class="pt-4">
+          <v-container>
+            <v-text-field v-model="keyword">
+              <template v-slot:label>
+                <strong>"#"</strong> or
+                <strong>ユーザー名</strong>
+                <v-icon style="vertical-align: middle">find_in_page</v-icon>
+              </template>
+            </v-text-field>
+          </v-container>
+        </v-form>-->
         <v-checkbox v-model="collapseOnScroll" color="white" hide-details></v-checkbox>
       </v-app-bar>
 
@@ -80,6 +91,9 @@
           <!-- </v-container> -->
           <!-- </v-content> -->
           <v-footer :fixed="fixed" app>
+            <v-btn icon @click="logOut" :right="right">
+              <v-icon>mdi-logout</v-icon>
+            </v-btn>
             <span>&copy; 2019</span>
           </v-footer>
         </v-parallax>
@@ -90,10 +104,12 @@
 
 <script>
 import { mdiLogout } from "@mdi/js";
+import axios from "@/plugins/axios";
 
 export default {
   data() {
     return {
+      keyword: "",
       collapseOnScroll: true,
       clipped: false,
       drawer: false,
@@ -142,6 +158,11 @@ export default {
       this.$store.dispatch("logOut");
       this.$router.go("/post_images");
     }
+    // async searchSubmit () {
+    //   try {
+    //     await axios.get(`/post_images?`)
+    //   }
+    // }
   },
   computed: {
     currentUser() {

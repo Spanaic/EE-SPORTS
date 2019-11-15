@@ -9,13 +9,19 @@ class PostImagesController < ApplicationController
         # @post_images = PostImage.page(params[:page]).reverse_order
         # Book.first.to_json(include: [:author, {publisher: {only: :name}}])
 
+        unless params[:search].blank?
+        else
+            @post_images = PostImage.all.to_json(include: [:post_comments, :favorites, :end_user, :hashtags])
+            render :json => @post_images
+        end
 
-        @post_images = PostImage.all.to_json(include: [:post_comments, :favorites, :end_user])
+
+        # @post_images = PostImage.all.to_json(include: [:post_comments, :favorites, :end_user])
         # @notifications = Notification.all
         # randoms = EndUser.order("RANDOM()").limit(20)
         # FIXME:mysqlに.order("RANDOM()").limit(20)の表現はできないかも...
         # user = EndUser.find_by(email: params[:end_user][:email])
-         render :json => @post_images
+        #  render :json => @post_images
         #  render :json => @notification
         # respond_to do |format|
         #     format.json {
