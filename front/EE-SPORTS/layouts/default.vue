@@ -1,13 +1,6 @@
 <template>
-  <v-app dark>
-    <v-parallax
-      dark
-      src="http://localhost:3001/performance-3110696_1920.jpg"
-      height="100%"
-      width="100%"
-    >
-      <!-- <row align="center" justify="center"> -->
-      <!-- <v-col class="text-center" cols="12"> -->
+  <v-app>
+    <v-card class="overflow-hidden">
       <v-navigation-drawer
         v-model="drawer"
         :mini-variant="miniVariant"
@@ -25,69 +18,65 @@
             </v-list-item-content>
           </v-list-item>
         </v-list>
+        <!-- <v-list > -->
+
+        <template v-slot:append>
+          <div class="pa-2">
+            <v-btn block @click.stop="drawer = !drawer">
+              <v-text>Close</v-text>
+            </v-btn>
+          </div>
+        </template>
+
+        <!-- <v-col :justify="center">
+          <v-btn @click.stop="drawer = !drawer">
+        <!-- <v-icon>mdi-{{ `chevron-${miniVariant ? 'right' : 'left'}` }}</v-icon>-->
+        <!-- <v-text>Close</v-text> -->
+        <!-- </v-btn> -->
+        <!-- </v-col> -->
+        -->
+        <!-- </v-list> -->
       </v-navigation-drawer>
-      <v-app-bar :clipped-left="clipped" fixed app>
+
+      <v-app-bar
+        :collapse="!collapseOnScroll"
+        :collapse-on-scroll="collapseOnScroll"
+        absolute
+        color="deep-purple accent-4"
+        dark
+        scroll-target="#scrolling-techniques-6"
+      >
         <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-        <v-btn icon @click.stop="miniVariant = !miniVariant">
-          <v-icon>mdi-{{ `chevron-${miniVariant ? 'right' : 'left'}` }}</v-icon>
-        </v-btn>
-        <v-btn icon @click.stop="clipped = !clipped">
-          <v-icon>mdi-application</v-icon>
-        </v-btn>
 
-        <!-- <v-btn>
-        <nuxt-link to="/post_Images">トップへ行く</nuxt-link>
-      </v-btn>
-      <v-btn>
-        <nuxt-link to="/post_images/new_post_image">新規投稿する</nuxt-link>
-      </v-btn>
-      <v-btn>
-        <nuxt-link to="/signUp">新規登録</nuxt-link>
-      </v-btn>
-      <v-btn>
-        <nuxt-link to="/login">ログイン</nuxt-link>
-        </v-btn>-->
-        <v-btn>
-          <nuxt-link :to="`/end_users/${this.$store.state.user.id}`">マイページ</nuxt-link>
-        </v-btn>
+        <v-toolbar-title>Collapsing Bar</v-toolbar-title>
 
-        <v-btn icon @click.stop="fixed = !fixed">
-          <v-icon>mdi-minus</v-icon>
-        </v-btn>
-        <v-toolbar-title v-text="title" />
-        <v-spacer />
+        <v-spacer></v-spacer>
 
-        <v-btn icon @click="logOut" :right="right">
-          <v-icon>mdi-logout</v-icon>
-        </v-btn>
-
-        <!-- <v-btn icon @click.stop="rightDrawer = !rightDrawer">
-          <v-icon>mdi-menu</v-icon>
-        </v-btn>-->
+        <v-form class="pt-4">
+          <v-container>
+            <v-text-field>
+              <template v-slot:label>
+                <strong>"#"</strong> or
+                <strong>ユーザー名</strong>
+                <v-icon style="vertical-align: middle">find_in_page</v-icon>
+              </template>
+            </v-text-field>
+          </v-container>
+        </v-form>
+        <v-checkbox v-model="collapseOnScroll" color="white" hide-details></v-checkbox>
       </v-app-bar>
-      <v-content>
-        <v-container>
-          <nuxt />
-        </v-container>
-      </v-content>
 
-      <!-- <v-navigation-drawer v-model="rightDrawer" :right="right" temporary fixed>
-        <v-list>
-          <v-list-item @click.native="right = !right">
-            <v-list-item-action>
-              <v-icon light>mdi-repeat</v-icon>
-            </v-list-item-action>
-            <v-list-item-title>Switch drawer (click me)</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-navigation-drawer>-->
-
-      <v-footer :fixed="fixed" app>
-        <span>&copy; 2019</span>
-      </v-footer>
-      <!-- </v-col> -->
-      <!-- </row> -->
-    </v-parallax>
+      <v-sheet id="scrolling-techniques-6" class="overflow-y-auto" max-height="600">
+        <v-parallax
+          dark
+          src="http://localhost:3001/performance-3110696_1920.jpg"
+          height="100%"
+          width="100%"
+        >
+          <v-container style="height: 1000px;"></v-container>
+        </v-parallax>
+      </v-sheet>
+    </v-card>
   </v-app>
 </template>
 
@@ -97,6 +86,7 @@ import { mdiLogout } from "@mdi/js";
 export default {
   data() {
     return {
+      collapseOnScroll: true,
       clipped: false,
       drawer: false,
       fixed: false,
