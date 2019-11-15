@@ -66,14 +66,22 @@
         <v-checkbox v-model="collapseOnScroll" color="white" hide-details></v-checkbox>
       </v-app-bar>
 
-      <v-sheet id="scrolling-techniques-6" class="overflow-y-auto" max-height="600">
+      <v-sheet id="scrolling-techniques-6" class="overflow-y-auto" max-height="1280">
         <v-parallax
           dark
           src="http://localhost:3001/performance-3110696_1920.jpg"
           height="100%"
           width="100%"
         >
-          <v-container style="height: 1000px;"></v-container>
+          <v-container style="height: 100px;"></v-container>
+          <!-- <v-content> -->
+          <!-- <v-container> -->
+          <nuxt />
+          <!-- </v-container> -->
+          <!-- </v-content> -->
+          <v-footer :fixed="fixed" app>
+            <span>&copy; 2019</span>
+          </v-footer>
         </v-parallax>
       </v-sheet>
     </v-card>
