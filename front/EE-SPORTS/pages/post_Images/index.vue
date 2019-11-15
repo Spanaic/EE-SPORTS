@@ -290,8 +290,8 @@ export default {
         fav => fav.end_user_id === favorite.end_user_id
       );
       return post_image;
+      debugger;
     });
-    debugger;
     console.log(this.post_images);
     // this.favorite_list = res.data.favorites;
     console.log(this.$store.state.user.profile_image_name);

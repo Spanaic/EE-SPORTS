@@ -91,3 +91,6 @@ rails routes
 rails c
 docker ps
 exit
+rails c
+rails c
+exit

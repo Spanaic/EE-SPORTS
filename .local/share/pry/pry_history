@@ -106,3 +106,8 @@ a.destroy_all
 Relationship.all
 Relationship.find(8)
 Relationship.all
+a = Relationship.all
+a.destory_all
+a.delete_all
+a = Relationship.all
+exit

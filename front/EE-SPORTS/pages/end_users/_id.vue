@@ -6,16 +6,17 @@
     <nuxt-link :to="`/end_users/${this.end_user.id}/edit`">プロフィール編集</nuxt-link>
     <img :src="`http://localhost:3001/end_users/${this.end_user.profile_image_name}`" alt />
 
-    <template v-if="!end_user.isFol">
+    <!-- <div v-for="(follower,i) in followers" :key="i"> -->
+    <template v-if="!this.end_user.isFol">
       <v-btn @click="createFollow(end_user)">フォロー</v-btn>
     </template>
     <template v-else>
       <v-btn @click="destroyFollow(end_user)">フォローをやめる</v-btn>
     </template>
-    <v-btn @click="destroyFollow(end_user)">フォローをやめる</v-btn>
+    <!-- </div> -->
+    <!-- <v-btn @click="destroyFollow(end_user)">フォローをやめる</v-btn> -->
   </div>
 </template>
-
 <script>
 import axios from "@/plugins/axios";
 import vuex from "vuex";
@@ -38,7 +39,7 @@ export default {
     const res = await axios.get(`/end_users/${this.$route.params.id}`);
     this.end_user = res.data;
     console.log("--------------");
-    console.log(res.data.passive_relationships);
+    console.log(this.end_user.passive_relationships[0].isFol);
     console.log("--------------");
     const vm = this.end_user;
     const following = {
@@ -47,35 +48,31 @@ export default {
       // end_user_id: this.user.id
     };
     // debugger;
-
+    console.log(this);
     this.followers = res.data.passive_relationships.map(follower => {
       follower.isFol =
         follower.following_id === following.end_user_id ? true : false;
       // .includes(following.end_user_id);
-      console.log(follower.isFol);
-      debugger;
+      // console.log(follower.isFol);
       return follower;
-      console.log(follower);
+      debugger;
+      // return (follower = this.follower);
+      const currentfollower = followers.followings.includes(
+        following.end_user_id
+      );
+      // includesはtrue/falseで返す
+      console.log(this.followers);
     });
-
-    // this.戻り値を代入する変数を定義する;
-    // this.followersも空っぽでok, mapとsomeで引っ張る値を代入する;
-    // this.followers = res.data.passive_relationships.some(
-    //   fol => fol.followed_id === following.end_user.id
-    // );
-    // return fol;
+    // this.followers = res.data.passive_relationships.map(follower => {
+    //   follower.isFol =
+    //     follower.following_id === following.end_user_id ? true : false;
+    //   // .includes(following.end_user_id);
+    //   console.log(follower.isFol);
+    //   debugger;
+    //   return follower;
+    //   console.log(follower);
+    // });
   },
-  // this.followers = res.data.passive_relationships.map(follower => {
-  //   follower.isFol = follower.passive_relationships.some(
-  //     fol => fol.followed_id === following.end_user_id
-  //   );
-  //   return follower;
-  // });
-
-  // console.log(this.follower);
-  // const follow = {
-  //   res.data. this
-  // };
 
   methods: {
     async createFollow(end_user) {
@@ -93,7 +90,7 @@ export default {
         console.log("--------------");
         console.log(this.user.id);
         await axios.post(`/end_users/${this.end_user.id}/relationships`, vm);
-        end_user.isFol = true;
+        follower.isFol = true;
       } catch (err) {
         alert(err);
       }
@@ -113,7 +110,7 @@ export default {
           `/end_users/${this.end_user.id}/relationships/${ps[0].id}`
           // `/end_users/${this.end_user.id}/relationships/${ps[0].follower_id}`
         );
-        end_user.isFol = false;
+        follower.isFol = false;
       } catch (err) {
         alert(err);
       }
