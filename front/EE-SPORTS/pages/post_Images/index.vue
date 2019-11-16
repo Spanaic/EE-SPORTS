@@ -3,7 +3,10 @@
     <v-row>
       <v-col cols="7">
         <div>
-          <div v-for="(post_image, i) in post_images" :key="i">
+          <!-- 今の所機能しているv-for -->
+          <!-- <div v-for="(post_image, i) in post_images" :key="i"> -->
+          <!-- hashtag付きで、これから試すv-for -->
+          <div v-for="(post_image, i) in post_images_with_links" :key="i">
             <!-- 投稿一覧のカード表示とオーバーレイの組み込み -->
             <v-toolbar color="indigo" dark>
               <v-list-item>
@@ -296,6 +299,40 @@ export default {
     // this.favorite_list = res.data.favorites;
     console.log(this.$store.state.user.profile_image_name);
     // if this.post-images.end_user_id = this.$store.state.user.id;
+    const post_images_with_hashtags = this.post_images.map(
+      post_image => {
+        post_image.hashtag_list = post_image.hashtags.map(hashtag => {
+          console.log("----------");
+          console.log(post_image);
+          console.log("----------");
+          post_image_hashname = hashtag
+            .delete({ hashname: "#" })
+            .link(`/post/hashtag/${hashtag.hashname}`);
+          return hashtag;
+          debugger;
+        });
+        return post_image;
+        // post_image.link = this.post_image.caption.replace(/[#＃][\w\p{Han}ぁ-ヶｦ-ﾟー]+/).link(`/post/hashtag/${this.post_image.caption.delete("#")}`)
+      }
+      // this.post_images_with_links = this.post_images.map(post_image => {
+      //   post_image.link = this.post_image.hashtags.map(hashtag => {
+      //     hashtag.replace()
+      // })
+      // })
+    );
+    // return post_image;
+    const post_images_with_links = this.post_images_with_hashtags.map(
+      post_image => {
+        post_image.hashtag = post_image.hashtags.map(hashtag => {
+          hashtag.post_image.caption.replace(
+            /[#＃][\w\p{Han}ぁ-ヶｦ-ﾟー]+/,
+            this.post_image.hashtag.hashname
+          );
+          return hashtag;
+        });
+        return post_image;
+      }
+    );
   },
   computed: {
     user() {

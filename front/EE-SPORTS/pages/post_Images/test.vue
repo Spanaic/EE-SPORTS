@@ -3,8 +3,14 @@
     <v-row>
       <v-col cols="7">
         <div>
+          <!-- 今まで動いてたやつ -->
           <div v-for="(post_image, i) in filterdPostImages" :key="i">
             <!-- 投稿一覧のカード表示とオーバーレイの組み込み -->
+
+            <!-- hashtag付きで、これから試すv-for -->
+            <!-- <div v-for="(post_image, i) in post_images" :key="i"> -->
+            <!-- 投稿一覧のカード表示とオーバーレイの組み込み -->
+
             <v-toolbar color="indigo" dark>
               <v-list-item>
                 <v-list-item-avatar>
@@ -45,6 +51,9 @@
               <v-card-subtitle class="pb-0">Number 10</v-card-subtitle>
 
               <v-card-text class="text--primary">
+                <div v-for="(hashtag, i) in post_image.hashtags" :key="i">
+                  <nuxt-link :to="`/post_Images/hashtag/${hashtag.hashname}`">{{ hashtag.hashname }}</nuxt-link>
+                </div>
                 <div>{{post_image.caption}}</div>
 
                 <div>Whitsunday Island, Whitsunday Islands</div>
@@ -298,17 +307,125 @@ export default {
     const favorite = {
       end_user_id: this.user.id
     };
+    // これは動くやーつ
+    // this.post_images = res.data.map(post_image => {
+    //   post_image.isFav = post_image.favorites.some(
+    //     fav => fav.end_user_id === favorite.end_user_id
+    //   );
+    //   return post_image;
+    //   debugger;
+    // });
+    // ここまで動くやーつ
+
+    // ここからhashtagを処理して返すやーつ
     this.post_images = res.data.map(post_image => {
       post_image.isFav = post_image.favorites.some(
         fav => fav.end_user_id === favorite.end_user_id
       );
+
+      // post_image.caption = post_image.caption.replace(
+      //   /[#＃][\w\p{Han}ぁ-ヶｦ-ﾟー]+/,
+      //   this.post_image.hashtag.hashname
+      // );
+      // console.log(post_image);
+
+      // 受け取ったhashnameを<a>タグのリンクに変換完了
+      // post_image.hashtag_list = post_image.hashtags.map(hashtag => {
+      //   console.log("----------");
+      //   console.log(post_image.hashtags);
+      //   console.log("----------");
+      //   hashtag.hashname = hashtag.hashname
+      //     .split(["#", "＃"])
+      //     // FIXME:rails側で修正するか、js側でsplit&joinする際に除外するか..(#記号の話)
+      //     // 全角と半角をsplitする方法とは？
+      //     .join("")
+      //     .link(`/post/hashtag/${hashtag.hashname}`);
+      //   return hashtag;
+      //   console.log(hashtag);
+      // });
+
+      post_image.caption = post_image.caption.replace(
+        /[#＃][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー._-]+/gm,
+        ""
+      );
+
+      // // captionからhashtagを覗いた文字列を返すことに成功。
+      // // これをcaptionに表示して、hashtagsをv-forで回して,aタグ付きのhashnameを表示すれば完成。
+      // let only_caption = post_image.caption.replace(
+      //   /[#＃][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー._-]+/gm,
+      //   ""
+      // );
+
+      // console.log("yyyyyyyyyy");
+      // console.log(only_caption);
+      // console.log("yyyyyyyyyy");
+
+      // // 変換したhashnameでcaptionに検索を掛けて、replaceする必要があり...
+      // // リレーションで降りていくことはできるけど、リレーションを戻ることは出来ない？
+
+      // let vms = post_image.caption.match(
+      //   /[#＃][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー._-]+/gm
+      // );
+      // // captionからhashtagを一つずつ抜き出すことに成功
+
+      // // let vm = post_image.caption.match(/[#＃][\w\p{Han}ぁ-ヶｦ-ﾟー]+/);
+      // console.log("gggggggggg");
+      // console.log(vms);
+      // console.log("gggggggggg");
+
+      // // post_image.hashtag = post_image.hashtags.map(hashtag => {
+      // //   hashtag.post_image.caption.replace(
+      // //     /[#＃][\w\p{Han}ぁ-ヶｦ-ﾟー]+/,
+      // //     this.post_image.hashtag.hashname
+      // //   );
+      // //   return hashtag;
+      // // });
+
       return post_image;
       debugger;
     });
+    // ここまで
     console.log(this.post_images);
     // this.favorite_list = res.data.favorites;
     console.log(this.$store.state.user.profile_image_name);
     // if this.post-images.end_user_id = this.$store.state.user.id;
+
+    // hashtag機能ために追記した部分
+    // const post_images_with_hashtags = this.post_images.map(
+    //   post_image => {
+    //     debugger;
+    //     post_image.hashtag_list = post_image.hashtags.map(hashtag => {
+    //       console.log("----------");
+    //       console.log(post_image);
+    //       console.log("----------");
+    //       post_image_hashname = hashtag
+    //         .replace("#", "")
+    //         .link(`/post/hashtag/${hashtag.hashname}`);
+    //       return hashtag;
+    //     });
+    //     return post_image;
+    //     // post_image.link = this.post_image.caption.replace(/[#＃][\w\p{Han}ぁ-ヶｦ-ﾟー]+/).link(`/post/hashtag/${this.post_image.caption.delete("#")}`)
+    //   }
+    //   // this.post_images_with_links = this.post_images.map(post_image => {
+    //   //   post_image.link = this.post_image.hashtags.map(hashtag => {
+    //   //     hashtag.replace()
+    //   // })
+    //   // })
+    // );
+    // // return post_image;
+    // const post_images_with_links = this.post_images_with_hashtags.map(
+    //   post_image => {
+    //     post_image.hashtag = post_image.hashtags.map(hashtag => {
+    //       hashtag.post_image.caption.replace(
+    //         /[#＃][\w\p{Han}ぁ-ヶｦ-ﾟー]+/,
+    //         this.post_image.hashtag.hashname
+    //       );
+    //       return hashtag;
+    //     });
+    //     return post_image;
+    //   }
+    // );
+    // hashtagここまで
   },
   computed: {
     user() {
