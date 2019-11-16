@@ -4,8 +4,10 @@ class EndUsersController < ApplicationController
 
     def index
         user = EndUser.find_by(email: params[:email])
+        # .to_json(include: [:favorites, :post_images, :post_comments, :active_relationships, :passive_relationships, :followings, :followers, :active_notifications, :passive_notifications])
         # @user= EndUser.find(id: params[:profile_name])
         users = EndUser.all
+        # .to_json(include: [:favorites, :post_images, :post_comments, :active_relationships, :passive_relationships, :followings, :followers, :active_notifications, :passive_notifications])
 
         end_users = []
         end_users.push(user)
@@ -24,7 +26,8 @@ class EndUsersController < ApplicationController
     end
 
     def show
-        @user = EndUser.find(params[:id]).to_json(include: [:favorites, :post_images, :post_comments, :active_relationships, :passive_relationships, :followings, :followers])
+        @user = EndUser.find(params[:id]).to_json(include: [:favorites, :post_images, :post_comments, :active_relationships, :passive_relationships, :followings, :followers, :active_notifications, :passive_notifications])
+        p @user
         # @user= EndUser.find_by(id: params[:profile_name])
         render :json => @user
         # @user = User.find_by(profile_name: params[:profile_name])

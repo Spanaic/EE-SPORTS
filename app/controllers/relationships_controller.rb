@@ -8,6 +8,7 @@ class RelationshipsController < ApplicationController
         following_user = EndUser.find(params[:id])
         # follow = current_user.active_relationships.build(following_id: current_user.id, follower_id: @user.id)
         if follow.save!
+            p follow
             render :json => follow
         else
             puts follow.errors.full_messages, status: 500

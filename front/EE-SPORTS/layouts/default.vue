@@ -90,12 +90,12 @@
           <nuxt />
           <!-- </v-container> -->
           <!-- </v-content> -->
-          <v-footer :fixed="fixed" app>
+          <!-- <v-footer :fixed="fixed" app>
             <v-btn icon @click="logOut" :right="right">
               <v-icon>mdi-logout</v-icon>
             </v-btn>
             <span>&copy; 2019</span>
-          </v-footer>
+          </v-footer>-->
         </v-parallax>
       </v-sheet>
     </v-card>
