@@ -11,7 +11,7 @@ class PostImagesController < ApplicationController
 
         unless params[:search].blank?
         else
-            @post_images = PostImage.all.to_json(include: [:post_comments, :favorites, :end_user, :hashtags, :notificatios])
+            @post_images = PostImage.all.to_json(include: [:post_comments, :favorites, :end_user, :hashtags, :notifications])
             render :json => @post_images
         end
 
@@ -61,7 +61,7 @@ class PostImagesController < ApplicationController
 
     def show
         # @post_image = PostImage.find(params[:id])
-        @post_image = PostImage.find(params[:id]).to_json(include: [:post_comments, :favorites, :end_user, :hashtags, :notificatios])
+        @post_image = PostImage.find(params[:id]).to_json(include: [:post_comments, :favorites, :end_user, :hashtags, :notifications])
         render :json => @post_image
     end
 
@@ -101,7 +101,7 @@ class PostImagesController < ApplicationController
     end
 
     def edit
-        @post_image = PostImage.find(params[:id]).to_json(include: [:post_comments, :favorites, :end_user, :hashtags, :notificatios])
+        @post_image = PostImage.find(params[:id]).to_json(include: [:post_comments, :favorites, :end_user, :hashtags, :notifications])
         render :json => @post_image
     end
 

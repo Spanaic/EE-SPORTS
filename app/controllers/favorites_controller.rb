@@ -10,7 +10,7 @@ class FavoritesController < ApplicationController
         else
             render :json => favorite, status: 500
         end
-        # @post_image.create_notification_favorite(current_user)
+        @post_image.create_notification_favorite(@user)
         # @favorites = Favorite.where(post_image_id: params[:post_image_id])
         # @post_images = PostImage.all.to_json(include: [:favorites])
         # render :json => @favorites

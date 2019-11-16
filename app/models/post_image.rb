@@ -40,10 +40,11 @@ class PostImage < ApplicationRecord
     end
 
     def create_notification_favorite(current_user)
-        temp = Notification.where(["visitor_id = ? and visited_id = ? and post_image_id = ? and action = ?", current_user.id, user_id, id, 'favorite'])
+        temp = Notification.where(["visitor_id = ? and visited_id = ? and post_image_id = ? and action = ?", current_user.id, end_user_id, id, 'favorite'])
         if temp.blank?
-            notification = current_user.active_notifications.new(visited_id: user_id, post_image_id: id, action: 'favorite')
-            if notification.visitor_id == notification.visited.id
+            notification = current_user.active_notifications.new(visited_id: end_user_id, post_image_id: id, action: 'favorite')
+            # if notification.visitor_id == notification.visited.id
+            if notification.visitor_id == notification.visited_id
                 notification.checked = true
             end
             notification.save if notification.valid?
@@ -51,17 +52,18 @@ class PostImage < ApplicationRecord
     end
 
     def create_notification_post_comment(current_user, post_comment_id)
-        temp_ids = PostComment.select(:user_id).where(post_image_id: id).where.not(user_id: current_user.id).distinct
+        temp_ids = PostComment.select(:end_user_id).where(post_image_id: id).where.not(end_user_id: current_user.id).distinct
         temp_ids.each do |temp_id|
-            save_notification_post_comment(current_user, @new_post_comment, temp_id['user_id'])
+            # save_notification_post_comment(current_user, @new_post_comment, temp_id['user_id'])
+            save_notification_post_comment(current_user, @new_post_comment, temp_id['end_user_id'])
         end
-        save_notification_post_comment(current_user, @new_post_comment, user_id) if temp_ids.blank?
+        save_notification_post_comment(current_user, @new_post_comment, end_user_id) if temp_ids.blank?
     end
 
     def save_notification_post_comment(current_user, comment_id, visited_id)
 
         notification = current_user.active_notifications.new(
-            visited_id: user_id,
+            visited_id: end_user_id,
             post_image_id: id,
             post_comment_id: comment_id,
             action: 'comment',

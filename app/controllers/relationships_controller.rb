@@ -2,16 +2,17 @@ class RelationshipsController < ApplicationController
     protect_from_forgery :except => [:create, :destroy]
 
     def create
-        # @user = EndUser.find(params[:end_user_id])
+        @user = EndUser.find(params[:end_user_id])
         # current_user = EndUser.find(params[:id])
         follow = Relationship.new(following_id: params[:id], follower_id: params[:end_user_id])
+        following_user = EndUser.find(params[:id])
         # follow = current_user.active_relationships.build(following_id: current_user.id, follower_id: @user.id)
         if follow.save!
             render :json => follow
         else
             puts follow.errors.full_messages, status: 500
         end
-        # @user.create_notification_follow(current_user)
+        @user.create_notification_follow(following_user)
         # redirect_to user_path(params[:user_profile_name])
     end
 
