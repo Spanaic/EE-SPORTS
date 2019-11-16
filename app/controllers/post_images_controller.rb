@@ -11,7 +11,7 @@ class PostImagesController < ApplicationController
 
         unless params[:search].blank?
         else
-            @post_images = PostImage.all.to_json(include: [:post_comments, :favorites, :end_user, :hashtags])
+            @post_images = PostImage.all.to_json(include: [:post_comments, :favorites, :end_user, :hashtags, :notificatios])
             render :json => @post_images
         end
 
@@ -61,7 +61,7 @@ class PostImagesController < ApplicationController
 
     def show
         # @post_image = PostImage.find(params[:id])
-        @post_image = PostImage.find(params[:id]).to_json(include: [:post_comments, :favorites])
+        @post_image = PostImage.find(params[:id]).to_json(include: [:post_comments, :favorites, :end_user, :hashtags, :notificatios])
         render :json => @post_image
     end
 
@@ -75,9 +75,7 @@ class PostImagesController < ApplicationController
         # ['wakudei','jpg']
 
           output_path = Rails.root.join('public/post_images', file_name)
-        # #   TODO:pathでディレクトリを指定する
         #   output_path = Rails.root.join('public', uploaded_file.filename)
-        # #   TODO:pathでディレクトリを指定する
 
     	  File.open(output_path, 'w+b') do |fp|
               fp.write  uploaded_file.read
@@ -103,7 +101,8 @@ class PostImagesController < ApplicationController
     end
 
     def edit
-        @post_image = PostImage.find(params[:id])
+        @post_image = PostImage.find(params[:id]).to_json(include: [:post_comments, :favorites, :end_user, :hashtags, :notificatios])
+        render :json => @post_image
     end
 
     def update

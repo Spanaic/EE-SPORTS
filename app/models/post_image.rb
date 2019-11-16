@@ -1,4 +1,6 @@
 class PostImage < ApplicationRecord
+    require 'nkf'
+
     has_many :post_comments, dependent:  :destroy
     has_many :favorites, dependent:  :destroy
     belongs_to :end_user
@@ -18,7 +20,10 @@ class PostImage < ApplicationRecord
         post_image = PostImage.find_by(id: self.id)
         hashtags = self.caption.scan(/[#＃][\w\p{Han}ぁ-ヶｦ-ﾟー]+/)
         hashtags.uniq.map do |hashtag|
-            tag = Hashtag.find_or_create_by(hashname: hashtag.downcase.delete('#'))
+            nkf = NKF.nkf('-w -Z4', hashtag)
+            # string = hashtag.tr("０-９ａ-ｚＡ-Ｚ 　（）－−", "0-9a-zA-Z  ()-")
+            # tag = Hashtag.find_or_create_by(hashname: nkf.downcase.delete('#'))
+            tag = Hashtag.find_or_create_by(hashname: nkf.downcase)
             post_image.hashtags << tag
         end
     end
@@ -27,7 +32,9 @@ class PostImage < ApplicationRecord
         post_image.hashtags.clear
         hashtags = self.caption.scan(/[#＃][\w\p{Han}ぁ-ヶｦ-ﾟー]+/)
         hashtags.uniq.map do |hashtag|
-            tag = Hashtag.find_or_create_by(hashname: hashtag.downcase.delete('#'))
+            nkf = NKF.nkf('-w -Z4', hashtag)
+            tag = Hashtag.find_or_create_by(hashname: nkf.downcase)
+            # tag = Hashtag.find_or_create_by(hashname: nkf.downcase.delete('#'))
             post_image.hashtags << tag
         end
     end

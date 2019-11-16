@@ -52,7 +52,28 @@
 
               <v-card-text class="text--primary">
                 <div v-for="(hashtag, i) in post_image.hashtags" :key="i">
-                  <nuxt-link :to="`/post_Images/hashtag/${hashtag.hashname}`">{{ hashtag.hashname }}</nuxt-link>
+                  <!-- <nuxt-link :to="`/post_Images/hashtag/${hashtag.hashname}`"> -->
+                  <!-- <div class="text-left">
+                    <v-badge color="teal" left>
+                      <template v-slot:badge>
+                        <v-icon dark>mdi-pound</v-icon>
+                      </template>
+                      <span>{{ hashtag.hashname }}</span>
+                    </v-badge>
+                  </div>-->
+                  <!-- <v-row> -->
+                  <!-- <div class="d-flex"> -->
+                  <nuxt-link :to="`/post_Images/hashtag/${hashtag.hashname}`">
+                    <!-- <v-flex> -->
+                    <!-- <div> -->
+                    <v-chip class="ma-2" color="secondary">{{ hashtag.hashname }}</v-chip>
+                    <!-- </div> -->
+                    <!-- </v-flex> -->
+                  </nuxt-link>
+                  <!-- </div> -->
+
+                  <!-- </v-row> -->
+                  <!-- </nuxt-link> -->
                 </div>
                 <div>{{post_image.caption}}</div>
 
@@ -276,6 +297,8 @@
 
 <script>
 import axios from "@/plugins/axios";
+import { mdiPound } from "@mdi/js";
+import { mdiPoundBoxOutline } from "@mdi/js";
 // import Vuex from "vuex";
 // import commentForm from "@/components/commentForm";
 
@@ -348,6 +371,10 @@ export default {
         /[#＃][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー._-]+/gm,
         ""
       );
+
+      post_image.hashtags.map(hashtag => {
+        hashtag.hashname.replace(/[#＃]/gm, "");
+      });
 
       // // captionからhashtagを覗いた文字列を返すことに成功。
       // // これをcaptionに表示して、hashtagsをv-forで回して,aタグ付きのhashnameを表示すれば完成。
