@@ -84,7 +84,7 @@
                 v-for="(post_comment, i) in post_image.post_comments"
                 :key="i"
               >
-                <div>{{post_comment.post_image_id}}</div>
+                <div>{{post_comment.comment}}</div>
               </v-card-text>
 
               <v-card-actions>
@@ -94,7 +94,7 @@
 
                 <!-- お気に入り機能ボタンボタン（作りかけ） -->
                 <template v-if="!post_image.isFav">
-                  <div>{{post_image.id}}</div>
+                  <!-- <div>{{post_image.id}}</div> -->
                   <v-btn icon @click="createFavorite(post_image)">
                     <v-icon>mdi-heart-outline</v-icon>
                   </v-btn>
@@ -110,9 +110,14 @@
                 <v-row justify="center">
                   <v-dialog v-model="dialog" persistent max-width="600px">
                     <template v-slot:activator="{ on }">
-                      <div>{{post_image.id}}</div>
-                      {{i}}
-                      <v-btn color="primary" dark v-on="on">コメントする</v-btn>
+                      <!-- <div>{{post_image.id}}</div> -->
+                      <!-- {{i}} -->
+                      <v-btn
+                        color="primary"
+                        dark
+                        v-on="on"
+                        @click="setPostImage(post_image); "
+                      >コメントする</v-btn>
                     </template>
                     <v-card>
                       <v-card-title>
@@ -131,7 +136,7 @@
                       <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn>
-                        <v-btn color="blue darken-1" text @click="saveComment(post_image)">Save</v-btn>
+                        <v-btn color="blue darken-1" text @click="saveComment()">Save</v-btn>
                       </v-card-actions>
                     </v-card>
                   </v-dialog>
@@ -311,6 +316,7 @@ export default {
     return {
       keyword: "",
       post_images: [],
+      post_image: {},
       dialog: false,
       post_comments: [],
       post_comment: "",
@@ -484,6 +490,10 @@ export default {
     // }
   },
   methods: {
+    setPostImage(postImage) {
+      this.post_image = postImage;
+    },
+
     async updatePostImages() {
       const res = await axios.get(url);
       console.log(res.data);
@@ -504,8 +514,9 @@ export default {
         return post_image;
       });
     },
-    async saveComment(post_image) {
-      console.log("id:" + post_image.id);
+    async saveComment() {
+      console.log("-----------------------");
+      console.log("id:" + this.post_image.id);
       try {
         this.dialog = false;
         console.log(this);
@@ -513,11 +524,11 @@ export default {
           comment: this.post_comment
         };
         const { data } = await axios.post(
-          `/post_images/${post_image.id}/post_comments`,
+          `/post_images/${this.post_image.id}/post_comments`,
           comment
         );
         console.log({ data });
-        post_image.post_comments = data;
+        this.post_image.post_comments = data;
       } catch (error) {
         alert("");
       }
