@@ -84,7 +84,7 @@
                 v-for="(post_comment, i) in post_image.post_comments"
                 :key="i"
               >
-                <div>{{post_comment.comment}}</div>
+                <div>{{post_comment.post_image_id}}</div>
               </v-card-text>
 
               <v-card-actions>
@@ -94,6 +94,7 @@
 
                 <!-- お気に入り機能ボタンボタン（作りかけ） -->
                 <template v-if="!post_image.isFav">
+                  <div>{{post_image.id}}</div>
                   <v-btn icon @click="createFavorite(post_image)">
                     <v-icon>mdi-heart-outline</v-icon>
                   </v-btn>
@@ -109,6 +110,8 @@
                 <v-row justify="center">
                   <v-dialog v-model="dialog" persistent max-width="600px">
                     <template v-slot:activator="{ on }">
+                      <div>{{post_image.id}}</div>
+                      {{i}}
                       <v-btn color="primary" dark v-on="on">コメントする</v-btn>
                     </template>
                     <v-card>
@@ -128,7 +131,6 @@
                       <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn>
-                        {{post_image}}
                         <v-btn color="blue darken-1" text @click="saveComment(post_image)">Save</v-btn>
                       </v-card-actions>
                     </v-card>
@@ -309,7 +311,6 @@ export default {
     return {
       keyword: "",
       post_images: [],
-      post_image: "",
       dialog: false,
       post_comments: [],
       post_comment: "",
@@ -483,8 +484,28 @@ export default {
     // }
   },
   methods: {
+    async updatePostImages() {
+      const res = await axios.get(url);
+      console.log(res.data);
+      const favorite = {
+        end_user_id: this.user.id
+      };
+      this.post_images = res.data.map(post_image => {
+        post_image.isFav = post_image.favorites.some(
+          fav => fav.end_user_id === favorite.end_user_id
+        );
+        post_image.caption = post_image.caption.replace(
+          /[#＃][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー._-]+/gm,
+          ""
+        );
+        post_image.hashtags.map(hashtag => {
+          hashtag.hashname.replace(/[#＃]/gm, "");
+        });
+        return post_image;
+      });
+    },
     async saveComment(post_image) {
-      console.log(post_image.id);
+      console.log("id:" + post_image.id);
       try {
         this.dialog = false;
         console.log(this);
@@ -508,27 +529,29 @@ export default {
     async createFavorite(post_image) {
       try {
         await axios.post(`/post_images/${post_image.id}/favorites`, post_image);
+        await this.updatePostImages();
         post_image.isFav = true;
       } catch (error) {
         alert("");
       }
     },
-    destroyFavorite(post_image) {
-      let vm = this;
+    async destroyFavorite(post_image) {
+      let that = this;
       const ps = post_image.favorites.map(fav => {
-        if (fav.end_user_id === vm.user.id) {
+        if (fav.end_user_id === that.user.id) {
           return fav;
         }
       });
-
+      // debugger;
       console.log({ ps });
       try {
-        axios.delete(
-          `/post_images/${post_image.id}/favorites/${post_image.favorites}/${ps[0].id}`
+        await axios.delete(
+          `/post_images/${post_image.id}/favorites/${ps[0].id}`
         );
+        this.updatePostImages();
         post_image.isFav = false;
       } catch (error) {
-        alert("");
+        alert(error);
       }
     }
   }

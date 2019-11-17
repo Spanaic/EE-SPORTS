@@ -8,12 +8,13 @@ class RelationshipsController < ApplicationController
         following_user = EndUser.find(params[:id])
         # follow = current_user.active_relationships.build(following_id: current_user.id, follower_id: @user.id)
         if follow.save!
-            p follow
+            p following_user
+            p @user
             render :json => follow
+            @user.create_notification_follow(following_user, @user)
         else
             puts follow.errors.full_messages, status: 500
         end
-        @user.create_notification_follow(following_user)
         # redirect_to user_path(params[:user_profile_name])
     end
 
