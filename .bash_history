@@ -94,3 +94,7 @@ exit
 rails c
 rails c
 exit
+rails c
+rails db:migrate:reset
+rails s
+exit

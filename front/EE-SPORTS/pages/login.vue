@@ -68,6 +68,8 @@ export default {
   methods: {
     submit() {
       this.$store.dispatch("logIn", [this.email, this.password]);
+      // this.$router.push("/post_Images");
+
       // this.email = "";
       // this.password = "";
       // this.name = "";

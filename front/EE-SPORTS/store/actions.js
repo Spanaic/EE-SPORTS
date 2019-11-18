@@ -23,13 +23,26 @@ const actions = {
                 this.$router.push("/")
             })
     },
+    // logIn({ commit }, payload) {
+    //     firebase.auth()
+    //         .signInWithEmailAndPassword(payload[0], payload[1])
+    //     const { data } = axios.get(`/end_users?email=${payload[0]}`);
+    //     debugger;
+    //     commit('setUser', data[0])
+    //     console.log(data[0])
+    //     this.$router.push("/post_Images");
+    // },
+
+
     logIn({ commit }, payload) {
         firebase.auth()
             .signInWithEmailAndPassword(payload[0], payload[1])
+            // console.log(data)
             .then(user => {
                 commit("setUser", user);
                 console.log('login success!')
                 this.$router.go("/post_images");
+                // this.$router.push("/post_Images");
             })
             .catch(function (error) {
                 // Handle Errors here.
@@ -56,7 +69,6 @@ const actions = {
         //         this.error = err.message;
         //         this.error_checker = true;
         //         console.log(this.error_checker);
-        //     });
     },
     logOut({ commit }) {
         firebase
@@ -64,7 +76,7 @@ const actions = {
             .signOut()
             .then(user => {
                 console.log(user);
-                commit("setUser", user)
+                commit("setUser", user);
                 console.log('logout success!')
             })
             .catch(function (error) {
@@ -88,15 +100,20 @@ const actions = {
                     profile_name: payload[3]
                 }
                 axios.post("/end_users", { end_user })
-                    .then(this.$router.go("/post_images", user))
+                    .then(user => {
+                        commit("setUser", user.data)
+                        this.$router.push(`/end_users/${user.data.id}`)
+                    })
+                    // this.$router.go("/post_images", user)
+                    // )
                     .catch((err) => {
                         alert(err)
                     })
                 // console.log(payload)
                 // console.log('sign up success')
             })
-            .catch(eer => {
-                alert(eer)
+            .catch(err => {
+                alert(err)
             });
     }
     // onAuth() {

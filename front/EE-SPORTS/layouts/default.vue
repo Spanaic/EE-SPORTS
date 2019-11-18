@@ -9,7 +9,14 @@
         app
       >
         <v-list>
-          <v-list-item v-for="(item, i) in items" :key="i" :to="item.to" router exact>
+          <v-list-item
+            v-for="(item, i) in items"
+            :key="i"
+            :to="item.to"
+            router
+            exact
+            @click.stop="drawer = !drawer"
+          >
             <v-list-item-action>
               <v-icon>{{ item.icon }}</v-icon>
             </v-list-item-action>
@@ -51,6 +58,22 @@
 
         <v-spacer></v-spacer>
 
+        <!-- notification表示候補1 -->
+        <!-- <v-badge class="mr-5" :bottom="bottom" :color="color" :left="left" :overlap="overlap">
+          <template v-slot:badge>
+            <span>
+              2
+            </span>
+          </template>
+          <v-icon large color="grey lighten-1">mdi-bell</v-icon>
+        </v-badge>-->
+
+        <!-- notification表示候補2 -->
+        <template v-slot:badge>
+          <span v-if="messages > 0">{{ messages }}</span>
+        </template>
+        <v-icon large>mdi-bell</v-icon>
+
         <v-form @submit.prevent="searchSubmit" class="pt-4">
           <v-container>
             <v-text-field v-model="keyword">
@@ -78,25 +101,28 @@
       </v-app-bar>
 
       <v-sheet id="scrolling-techniques-6" class="overflow-y-auto" max-height="1280">
-        <v-parallax
+        <!-- <v-parallax
           dark
           src="http://localhost:3001/performance-3110696_1920.jpg"
           height="100%"
           width="100%"
-        >
+        >-->
+        <div class="bg">
           <v-container style="height: 100px;"></v-container>
           <!-- <v-content> -->
           <!-- <v-container> -->
           <nuxt />
-          <!-- </v-container> -->
-          <!-- </v-content> -->
-          <!-- <v-footer :fixed="fixed" app>
-            <v-btn icon @click="logOut" :right="right">
-              <v-icon>mdi-logout</v-icon>
-            </v-btn>
-            <span>&copy; 2019</span>
-          </v-footer>-->
-        </v-parallax>
+        </div>
+
+        <!-- </v-container> -->
+        <!-- </v-content> -->
+        <v-footer :fixed="fixed" app>
+          <v-btn icon @click="logOut" :right="right">
+            <v-icon>mdi-logout</v-icon>
+          </v-btn>
+          <span>&copy; 2019</span>
+        </v-footer>
+        <!-- </v-parallax> -->
       </v-sheet>
     </v-card>
   </v-app>
@@ -104,6 +130,7 @@
 
 <script>
 import { mdiLogout } from "@mdi/js";
+import { mdiBell } from "@mdi/js";
 import axios from "@/plugins/axios";
 
 export default {
@@ -114,49 +141,35 @@ export default {
       clipped: false,
       drawer: false,
       fixed: false,
-      items: [
-        {
-          icon: "mdi-apps",
-          title: "トップページ",
-          to: "/post_Images"
-        },
-        {
-          icon: "mdi-chart-bubble",
-          title: "ユーザーリスト",
-          to: "/end_users"
-        },
-        {
-          icon: "mdi-chart-bubble",
-          title: "新規投稿",
-          to: "/post_images/new_post_image"
-        },
-        {
-          icon: "mdi-chart-bubble",
-          title: "新規登録",
-          to: "/signUp"
-        },
-        {
-          icon: "mdi-chart-bubble",
-          title: "ログイン",
-          to: "/login"
-        },
-        {
-          icon: "mdi-chart-bubble",
-          title: "マイページ",
-          to: "/end_users/" + `${this.$store.state.user.id}`
-        }
-      ],
+
       miniVariant: false,
       right: true,
       rightDrawer: false,
-      title: "Vuetify.js"
+      title: "Vuetify.js",
+
+      // notificationのbadge用
+      bottom: false,
+      color: "primary",
+      colors: [
+        "primary",
+        "accent",
+        "warning lighten-2",
+        "teal",
+        "error lighten-2"
+      ],
+      left: false,
+      overlap: true,
+
+      // notification/badge
+      show: false,
+      messages: 0
     };
-    consol.log(this);
+    // consol.log(this);
   },
   methods: {
     logOut() {
       this.$store.dispatch("logOut");
-      this.$router.go("/post_images");
+      this.$router.push("/post_Images");
     }
     // async searchSubmit () {
     //   try {
@@ -167,10 +180,67 @@ export default {
   computed: {
     currentUser() {
       return this.$store.state.user;
+    },
+    items() {
+      if (this.currentUser) {
+        return [
+          {
+            icon: "mdi-apps",
+            title: "トップページ",
+            to: "/post_Images"
+          },
+          {
+            icon: "mdi-chart-bubble",
+            title: "ユーザーリスト",
+            to: "/end_users"
+          },
+          {
+            icon: "mdi-chart-bubble",
+            title: "新規投稿",
+            to: "/post_images/new_post_image"
+          },
+          {
+            icon: "mdi-chart-bubble",
+            title: "マイページ",
+            to: "/end_users/" + `${this.currentUser.id}`
+          }
+        ];
+      } else {
+        return [
+          {
+            icon: "mdi-apps",
+            title: "トップページ",
+            to: "/post_Images"
+          },
+          {
+            icon: "mdi-chart-bubble",
+            title: "ユーザーリスト",
+            to: "/end_users"
+          },
+          {
+            icon: "mdi-chart-bubble",
+            title: "新規登録",
+            to: "/signUp"
+          },
+          {
+            icon: "mdi-chart-bubble",
+            title: "ログイン",
+            to: "/login"
+          }
+        ];
+      }
     }
   }
 };
 </script>
 
 <style>
+.bg {
+  background-size: cover;
+  background-position: top;
+  background: url("http://localhost:3001/performance-3110696_1920.jpg");
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  /* opacity: 0.4; */
+}
 </style>

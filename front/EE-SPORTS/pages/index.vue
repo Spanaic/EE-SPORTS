@@ -60,7 +60,7 @@ import VuetifyLogo from "~/components/VuetifyLogo.vue";
 export default {
   data() {
     return {
-      user: this.$store.state.user.user
+      // user: this.$store.state.user.user
     };
   },
   components: {

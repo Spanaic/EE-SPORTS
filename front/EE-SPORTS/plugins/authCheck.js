@@ -6,7 +6,9 @@ export default (context) => {
         store
     } = context
     firebase.auth().onAuthStateChanged(async user => {
+        // console.log("test")
         if (user) {
+            // console.log(user)
             const { data } =
                 await axios.get(`/end_users?email=${user.email}`)
             store.commit('setUser', data[0])

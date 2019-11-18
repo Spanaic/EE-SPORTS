@@ -201,102 +201,105 @@
         </v-card>-->
 
         <!-- サイドバーのプロフィール画面 -->
-        <v-card max-width="375" class="mx-auto">
-          <v-img
-            :src="'http://localhost:3001/end_users/' + `${this.$store.state.user.profile_image_name}`"
-            height="auto"
-            dark
-          >
-            <v-row class>
-              <v-card-title>
-                <v-btn dark icon>
-                  <v-icon>mdi-chevron-left</v-icon>
-                </v-btn>
+        <!-- {{ this.user }} -->
+        <div v-if="this.$store.state.user">
+          <v-card max-width="375" class="mx-auto">
+            <v-img
+              :src="'http://localhost:3001/end_users/' + `${this.$store.state.user.profile_image_name}`"
+              height="auto"
+              dark
+            >
+              <v-row class>
+                <v-card-title>
+                  <v-btn dark icon>
+                    <v-icon>mdi-chevron-left</v-icon>
+                  </v-btn>
+
+                  <v-spacer></v-spacer>
+
+                  <v-btn dark icon class="mr-4">
+                    <v-icon>mdi-pencil</v-icon>
+                  </v-btn>
+
+                  <v-btn dark icon>
+                    <v-icon>mdi-dots-vertical</v-icon>
+                  </v-btn>
+                </v-card-title>
 
                 <v-spacer></v-spacer>
 
-                <v-btn dark icon class="mr-4">
-                  <v-icon>mdi-pencil</v-icon>
-                </v-btn>
-
-                <v-btn dark icon>
-                  <v-icon>mdi-dots-vertical</v-icon>
-                </v-btn>
-              </v-card-title>
-
-              <v-spacer></v-spacer>
-
-              <!-- <v-card-title class="white--text pl-12 pt-12">
+                <!-- <v-card-title class="white--text pl-12 pt-12">
                 <div class="display-1 pl-12 pt-12">Ali Conners</div>
-              </v-card-title>-->
-            </v-row>
-          </v-img>
+                </v-card-title>-->
+              </v-row>
+            </v-img>
 
-          <v-list two-line>
-            <v-list-item @click>
-              <v-list-item-icon>
-                <v-icon color="indigo">mdi-phone</v-icon>
-              </v-list-item-icon>
+            <v-list two-line>
+              <v-list-item @click>
+                <v-list-item-icon>
+                  <v-icon color="indigo">mdi-phone</v-icon>
+                </v-list-item-icon>
 
-              <v-list-item-content>
-                <v-list-item-title>{{ this.$store.state.user.name }}</v-list-item-title>
-                <v-list-item-subtitle>お名前</v-list-item-subtitle>
-              </v-list-item-content>
+                <v-list-item-content>
+                  <v-list-item-title>{{ this.$store.state.user.name }}</v-list-item-title>
+                  <v-list-item-subtitle>お名前</v-list-item-subtitle>
+                </v-list-item-content>
 
-              <v-list-item-icon>
-                <v-icon>mdi-message-text</v-icon>
-              </v-list-item-icon>
-            </v-list-item>
+                <v-list-item-icon>
+                  <v-icon>mdi-message-text</v-icon>
+                </v-list-item-icon>
+              </v-list-item>
 
-            <v-list-item @click>
-              <v-list-item-action></v-list-item-action>
+              <v-list-item @click>
+                <v-list-item-action></v-list-item-action>
 
-              <v-list-item-content>
-                <v-list-item-title>{{ this.$store.state.user.profile_name }}</v-list-item-title>
-                <v-list-item-subtitle>ニックネーム</v-list-item-subtitle>
-              </v-list-item-content>
+                <v-list-item-content>
+                  <v-list-item-title>{{ this.$store.state.user.profile_name }}</v-list-item-title>
+                  <v-list-item-subtitle>ニックネーム</v-list-item-subtitle>
+                </v-list-item-content>
 
-              <v-list-item-icon>
-                <v-icon>mdi-message-text</v-icon>
-              </v-list-item-icon>
-            </v-list-item>
+                <v-list-item-icon>
+                  <v-icon>mdi-message-text</v-icon>
+                </v-list-item-icon>
+              </v-list-item>
 
-            <v-divider inset></v-divider>
+              <v-divider inset></v-divider>
 
-            <v-list-item @click>
-              <v-list-item-icon>
-                <v-icon color="indigo">mdi-email</v-icon>
-              </v-list-item-icon>
+              <v-list-item @click>
+                <v-list-item-icon>
+                  <v-icon color="indigo">mdi-email</v-icon>
+                </v-list-item-icon>
 
-              <v-list-item-content>
-                <v-list-item-title>{{ this.$store.state.user.email }}</v-list-item-title>
-                <v-list-item-subtitle>Personal</v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
+                <v-list-item-content>
+                  <v-list-item-title>{{ this.$store.state.user.email }}</v-list-item-title>
+                  <v-list-item-subtitle>Personal</v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
 
-            <v-list-item @click>
-              <v-list-item-action></v-list-item-action>
+              <v-list-item @click>
+                <v-list-item-action></v-list-item-action>
 
-              <v-list-item-content>
-                <v-list-item-title>ali_connors@example.com</v-list-item-title>
-                <v-list-item-subtitle>Work</v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
+                <v-list-item-content>
+                  <v-list-item-title>ali_connors@example.com</v-list-item-title>
+                  <v-list-item-subtitle>Work</v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
 
-            <v-divider inset></v-divider>
+              <v-divider inset></v-divider>
 
-            <v-list-item @click>
-              <v-list-item-icon>
-                <v-icon color="indigo">mdi-map-marker</v-icon>
-              </v-list-item-icon>
+              <v-list-item @click>
+                <v-list-item-icon>
+                  <v-icon color="indigo">mdi-map-marker</v-icon>
+                </v-list-item-icon>
 
-              <v-list-item-content>
-                <v-list-item-title>1400 Main Street</v-list-item-title>
-                <v-list-item-subtitle>Orlando, FL 79938</v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list>
-        </v-card>
+                <v-list-item-content>
+                  <v-list-item-title>1400 Main Street</v-list-item-title>
+                  <v-list-item-subtitle>Orlando, FL 79938</v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
+          </v-card>
+        </div>
       </v-col>
     </v-row>
   </v-container>
@@ -521,8 +524,10 @@ export default {
         this.dialog = false;
         console.log(this);
         const comment = {
-          comment: this.post_comment
+          comment: this.post_comment,
+          end_user: this.user
         };
+
         const { data } = await axios.post(
           `/post_images/${this.post_image.id}/post_comments`,
           comment
@@ -530,7 +535,7 @@ export default {
         console.log({ data });
         this.post_image.post_comments = data;
       } catch (error) {
-        alert("");
+        alert(error);
       }
 
       // .then(res => {

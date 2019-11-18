@@ -122,3 +122,14 @@ a.delete_all
 a = Relationship.all
 Notification.all
 exit
+EndUser.all
+a = EndUser.find_by(email: do@gmail.com)
+EndUser.first
+EndUser.all
+a = EndUser.find(2)
+a.delete
+exit
+EndUser.all
+a = EndUser.all
+a.delete_all
+exit

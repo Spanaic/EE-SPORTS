@@ -41,14 +41,14 @@ class PostImage < ApplicationRecord
 
     def create_notification_favorite(current_user)
         temp = Notification.where(["visitor_id = ? and visited_id = ? and post_image_id = ? and action = ?", current_user.id, end_user_id, id, 'favorite'])
-        if temp.blank?
+        # if temp.blank?
             notification = current_user.active_notifications.new(visited_id: end_user_id, post_image_id: id, action: 'favorite')
             # if notification.visitor_id == notification.visited.id
             if notification.visitor_id == notification.visited_id
                 notification.checked = true
             end
             notification.save if notification.valid?
-        end
+        # end
     end
 
     def create_notification_post_comment(current_user, post_comment_id)
@@ -57,7 +57,9 @@ class PostImage < ApplicationRecord
             # save_notification_post_comment(current_user, @new_post_comment, temp_id['user_id'])
             save_notification_post_comment(current_user, @new_post_comment, temp_id['end_user_id'])
         end
-        save_notification_post_comment(current_user, @new_post_comment, end_user_id) if temp_ids.blank?
+        # save_notification_post_comment(current_user, @new_post_comment, end_user_id) if temp_ids.blank?
+        save_notification_post_comment(current_user, @new_post_comment, end_user_id)
+        # 上記の記述はもしかしたら必要かも...(if以外)
     end
 
     def save_notification_post_comment(current_user, comment_id, visited_id)

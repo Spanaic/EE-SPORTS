@@ -28,5 +28,7 @@ Rails.application.routes.draw do
     get :explore, on: :collection
   end
 
-  resources :notifications, only: [:index]
+  # resources :notifications, only: [:index]
+
+  get 'notifications/:id' => 'notifications#index', as: 'notifications'
 end
