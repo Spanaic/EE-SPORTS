@@ -68,11 +68,55 @@
           <v-icon large color="grey lighten-1">mdi-bell</v-icon>
         </v-badge>-->
 
+        <!-- <v-switch v-model="closeOnContentClick" label="Close on content click"></v-switch> -->
+        <!-- <v-menu top :close-on-content-click="closeOnContentClick"> -->
         <!-- notification表示候補2 -->
-        <template v-slot:badge>
+        <div v-if="this.currentUser">
+          <v-menu top>
+            <template v-slot:badge>
+              <span v-if="messages > 0">{{ messages }}</span>
+            </template>
+            <template v-slot:activator="{ on }">
+              <!-- <v-btn color="primary" dark v-on="on"> -->
+              <v-icon large v-on="on" @click="checkNotifications">mdi-bell</v-icon>
+              <!-- </v-btn> -->
+            </template>
+
+            <v-list>
+              <template v-if="this.notifications == []">
+                <!-- {{ this.notifications }} -->
+                <v-list-item-title>
+                  <span>新しい通知はありません。</span>
+                </v-list-item-title>
+                <v-else>
+                  <v-list-item v-for="(notification, index) in notifications" :key="index" @click>
+                    <v-list-item-title>
+                      <span v-if="notification.action == follow">
+                        <nuxt-link
+                          :to="`/end_users/${notification.visitor_id}`"
+                        >{{ notification.visitor.profile_name }}</nuxt-link>さんがあなたをフォローしました。
+                      </span>
+                      <span v-else-if="notification.action == favorite">
+                        さんが
+                        <nuxt-link :to="`post_Images/${notification.post_image._id}`">あなたの投稿</nuxt-link>にいいねしました。
+                      </span>
+                      <span v-else-if="notification.action = comment">
+                        さんが
+                        <nuxt-link :to="`post_Images/${notification.post_image._id}`">あなたの投稿</nuxt-link>にコメントしました。
+                      </span>
+                      <span v-else>新しい通知はありません。</span>
+                    </v-list-item-title>
+                  </v-list-item>
+                </v-else>
+              </template>
+            </v-list>
+          </v-menu>
+        </div>
+
+        <!-- <template v-slot:badge>
           <span v-if="messages > 0">{{ messages }}</span>
         </template>
-        <v-icon large>mdi-bell</v-icon>
+        <v-icon large>mdi-bell</v-icon>-->
 
         <v-form @submit.prevent="searchSubmit" class="pt-4">
           <v-container>
@@ -162,7 +206,10 @@ export default {
 
       // notification/badge
       show: false,
-      messages: 0
+      messages: 0,
+
+      // notification_list
+      notifications: []
     };
     // consol.log(this);
   },
@@ -170,12 +217,32 @@ export default {
     logOut() {
       this.$store.dispatch("logOut");
       this.$router.push("/post_Images");
-    }
+    },
     // async searchSubmit () {
     //   try {
     //     await axios.get(`/post_images?`)
     //   }
     // }
+    async checkNotifications() {
+      let vm = this.currentUser;
+      try {
+        const res = await axios.get(`/notifications/${vm.id}`);
+        console.log(res.data);
+        // this.notifications = res.data;
+        // this.notifications = res.data.map(notification => {
+        //   notification.checked == false;
+        // });
+        this.notifications = res.data.filter(notification => {
+          console.log(notification.checked);
+          return (notification.checked = false);
+        });
+        // return notification;
+        console.log(this.notifications);
+      } catch (err) {
+        // alert(err);
+        console.log(err);
+      }
+    }
   },
   computed: {
     currentUser() {

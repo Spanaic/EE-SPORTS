@@ -1416,3 +1416,14 @@ computed: {
 
 5. v-forに渡していたdataをfilter関数を通した戻り値の入ったcomputedプロパティの値と差し替える。（元はpost_images）
 
+## `【自己結合のclass_nameオプションについて】`
+
+```
+    belongs_to :visitor, class_name: 'EndUser', foreign_key: :visitor_id, optional: true
+    belongs_to :visited, class_name: 'EndUser', foreign_key: :visited_id, optional: true
+```
+`class_nameオプションはアソシエーションを組むモデル名を記述している`
+
+
+
+

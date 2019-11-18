@@ -2,154 +2,171 @@
   <v-container>
     <v-row>
       <v-col cols="7">
-        <div>
-          <!-- 今まで動いてたやつ -->
-          <div v-for="(post_image, i) in filterdPostImages" :key="i">
-            <!-- 投稿一覧のカード表示とオーバーレイの組み込み -->
+        <!-- メインコンテンツのスクロール化 -->
+        <v-responsive class="overflow-y-auto" max-height="600">
+          <v-lazy
+            v-model="isActive"
+            :options="{
+          threshold: .5
+        }"
+            min-height="200"
+            transition="fade-transition"
+          >
+            <div>
+              <!-- 今まで動いてたやつ -->
+              <div v-for="(post_image, i) in filterdPostImages" :key="i">
+                <!-- 投稿一覧のカード表示とオーバーレイの組み込み -->
 
-            <!-- hashtag付きで、これから試すv-for -->
-            <!-- <div v-for="(post_image, i) in post_images" :key="i"> -->
-            <!-- 投稿一覧のカード表示とオーバーレイの組み込み -->
+                <!-- hashtag付きで、これから試すv-for -->
+                <!-- <div v-for="(post_image, i) in post_images" :key="i"> -->
+                <!-- 投稿一覧のカード表示とオーバーレイの組み込み -->
 
-            <v-toolbar color="indigo" dark>
-              <v-list-item>
-                <v-list-item-avatar>
+                <v-toolbar color="indigo" dark>
+                  <v-list-item>
+                    <v-list-item-avatar>
+                      <v-img
+                        :src="'http://localhost:3001/end_users/' + `${post_image.end_user.profile_image_name}`"
+                      ></v-img>
+                    </v-list-item-avatar>
+                    <v-list-item-content>
+                      <v-list-item-title class="headline">{{ post_image.title }}</v-list-item-title>
+                      <v-list-item-subtitle>by {{ post_image.end_user.profile_name }}</v-list-item-subtitle>
+                    </v-list-item-content>
+                  </v-list-item>
+                </v-toolbar>
+
+                <v-card class="mx-auto mb-5" height="100%" max-width="800">
                   <v-img
-                    :src="'http://localhost:3001/end_users/' + `${post_image.end_user.profile_image_name}`"
-                  ></v-img>
-                </v-list-item-avatar>
-                <v-list-item-content>
-                  <v-list-item-title class="headline">{{ post_image.title }}</v-list-item-title>
-                  <v-list-item-subtitle>by {{ post_image.end_user.profile_name }}</v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-            </v-toolbar>
+                    class="white--text align-end"
+                    height="400px"
+                    :src="'http://localhost:3001/post_images/' + post_image.image_name"
+                    @click="overlay =!overlay"
+                  >
+                    <v-card-title>Top 10 Australian beaches</v-card-title>
+                  </v-img>
+                  <v-overlay :value="overlay">
+                    <v-btn icon @click="overlay = false">
+                      <v-icon>mdi-close</v-icon>
+                      <nuxt-link :to="`/post_images/${ post_image.id }`">
+                        <v-img
+                          class="white--text align-end"
+                          height="480px"
+                          width="720px"
+                          :src="'http://localhost:3001/post_images/' + post_image.image_name"
+                        ></v-img>
+                      </nuxt-link>
+                    </v-btn>
+                  </v-overlay>
 
-            <v-card class="mx-auto mb-5" height="100%" max-width="800">
-              <v-img
-                class="white--text align-end"
-                height="400px"
-                :src="'http://localhost:3001/post_images/' + post_image.image_name"
-                @click="overlay =!overlay"
-              >
-                <v-card-title>Top 10 Australian beaches</v-card-title>
-              </v-img>
-              <v-overlay :value="overlay">
-                <v-btn icon @click="overlay = false">
-                  <v-icon>mdi-close</v-icon>
-                  <nuxt-link :to="`/post_images/${ post_image.id }`">
-                    <v-img
-                      class="white--text align-end"
-                      height="480px"
-                      width="720px"
-                      :src="'http://localhost:3001/post_images/' + post_image.image_name"
-                    ></v-img>
-                  </nuxt-link>
-                </v-btn>
-              </v-overlay>
+                  <v-card-subtitle class="pb-0">Number 10</v-card-subtitle>
 
-              <v-card-subtitle class="pb-0">Number 10</v-card-subtitle>
-
-              <v-card-text class="text--primary">
-                <div v-for="(hashtag, i) in post_image.hashtags" :key="i">
-                  <!-- <nuxt-link :to="`/post_Images/hashtag/${hashtag.hashname}`"> -->
-                  <!-- <div class="text-left">
+                  <v-card-text class="text--primary">
+                    <div v-for="(hashtag, i) in post_image.hashtags" :key="i">
+                      <!-- <nuxt-link :to="`/post_Images/hashtag/${hashtag.hashname}`"> -->
+                      <!-- <div class="text-left">
                     <v-badge color="teal" left>
                       <template v-slot:badge>
                         <v-icon dark>mdi-pound</v-icon>
                       </template>
                       <span>{{ hashtag.hashname }}</span>
                     </v-badge>
-                  </div>-->
-                  <!-- <v-row> -->
-                  <!-- <div class="d-flex"> -->
-                  <nuxt-link :to="`/post_Images/hashtag/${hashtag.hashname}`">
-                    <!-- <v-flex> -->
-                    <!-- <div> -->
-                    <v-chip class="ma-2" color="secondary">{{ hashtag.hashname }}</v-chip>
-                    <!-- </div> -->
-                    <!-- </v-flex> -->
-                  </nuxt-link>
-                  <!-- </div> -->
+                      </div>-->
+                      <!-- <v-row> -->
+                      <!-- <div class="d-flex"> -->
+                      <nuxt-link :to="`/post_Images/hashtag/${hashtag.hashname}`">
+                        <!-- <v-flex> -->
+                        <!-- <div> -->
+                        <v-chip class="ma-2" color="secondary">{{ hashtag.hashname }}</v-chip>
+                        <!-- </div> -->
+                        <!-- </v-flex> -->
+                      </nuxt-link>
+                      <!-- </div> -->
 
-                  <!-- </v-row> -->
-                  <!-- </nuxt-link> -->
-                </div>
-                <div>{{post_image.caption}}</div>
+                      <!-- </v-row> -->
+                      <!-- </nuxt-link> -->
+                    </div>
+                    <div>{{post_image.caption}}</div>
 
-                <div>Whitsunday Island, Whitsunday Islands</div>
-              </v-card-text>
-              <v-card-text
-                class="text--primary"
-                v-for="(post_comment, i) in post_image.post_comments"
-                :key="i"
-              >
-                <div>{{post_comment.comment}}</div>
-              </v-card-text>
+                    <div>Whitsunday Island, Whitsunday Islands</div>
+                  </v-card-text>
+                  <v-card-text
+                    class="text--primary"
+                    v-for="(post_comment, i) in post_image.post_comments"
+                    :key="i"
+                  >
+                    <div>{{post_comment.comment}}</div>
+                  </v-card-text>
 
-              <v-card-actions>
-                <v-btn color="orange" text>Share</v-btn>
+                  <v-card-actions>
+                    <v-btn color="orange" text>Share</v-btn>
 
-                <v-btn color="orange" text>Explore</v-btn>
+                    <v-btn color="orange" text>Explore</v-btn>
 
-                <!-- お気に入り機能ボタンボタン（作りかけ） -->
-                <template v-if="!post_image.isFav">
-                  <!-- <div>{{post_image.id}}</div> -->
-                  <v-btn icon @click="createFavorite(post_image)">
-                    <v-icon>mdi-heart-outline</v-icon>
-                  </v-btn>
-                </template>
-                <template v-else>
-                  <v-btn icon @click="destroyFavorite(post_image)">
-                    <v-icon>mdi-heart</v-icon>
-                  </v-btn>
-                </template>
-
-                <!-- <comment-form></comment-form> -->
-                <!-- コメント入力のダイアログ -->
-                <v-row justify="center">
-                  <v-dialog v-model="dialog" persistent max-width="600px">
-                    <template v-slot:activator="{ on }">
+                    <!-- お気に入り機能ボタンボタン（作りかけ） -->
+                    <template v-if="!post_image.isFav">
                       <!-- <div>{{post_image.id}}</div> -->
-                      <!-- {{i}} -->
-                      <v-btn
-                        color="primary"
-                        dark
-                        v-on="on"
-                        @click="setPostImage(post_image); "
-                      >コメントする</v-btn>
+                      <v-btn icon @click="createFavorite(post_image)">
+                        <!-- <v-icon>mdi-heart-outline</v-icon> -->
+                        <v-icon>mdi-thumb-up-outline</v-icon>
+                      </v-btn>
                     </template>
-                    <v-card>
-                      <v-card-title>
-                        <span class="headline">コメント入力フォーム</span>
-                      </v-card-title>
-                      <v-card-text>
-                        <v-container>
-                          <v-row>
-                            <v-col cols="12" sm="6" md="4" lg="12">
-                              <v-text-field label="Outlined" outlined v-model="post_comment"></v-text-field>
-                            </v-col>
-                          </v-row>
-                        </v-container>
-                        <small>*indicates required field</small>
-                      </v-card-text>
-                      <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn>
-                        <v-btn color="blue darken-1" text @click="saveComment()">Save</v-btn>
-                      </v-card-actions>
-                    </v-card>
-                  </v-dialog>
-                </v-row>
-              </v-card-actions>
+                    <template v-else>
+                      <!-- <v-btn icon @click="destroyFavorite(post_image)">
+                        <v-icon>mdi-heart</v-icon>
+                      </v-btn>-->
+                      <v-btn text icon color="deep-orange" @click="destroyFavorite(post_image)">
+                        <v-icon>mdi-thumb-up</v-icon>
+                      </v-btn>
+                    </template>
 
-              <v-col cols="12" lg="12" sm="6" md="3">
-                <!-- <v-text-field label="Outlined" outlined></v-text-field> -->
-              </v-col>
-            </v-card>
-          </div>
-        </div>
+                    <!-- <comment-form></comment-form> -->
+                    <!-- コメント入力のダイアログ -->
+                    <v-row justify="center">
+                      <v-dialog v-model="dialog" persistent max-width="600px">
+                        <template v-slot:activator="{ on }">
+                          <!-- <div>{{post_image.id}}</div> -->
+                          <!-- {{i}} -->
+                          <v-btn
+                            color="primary"
+                            dark
+                            v-on="on"
+                            @click="setPostImage(post_image); "
+                          >コメントする</v-btn>
+                        </template>
+                        <v-card>
+                          <v-card-title>
+                            <span class="headline">コメント入力フォーム</span>
+                          </v-card-title>
+                          <v-card-text>
+                            <v-container>
+                              <v-row>
+                                <v-col cols="12" sm="6" md="4" lg="12">
+                                  <v-text-field label="Outlined" outlined v-model="post_comment"></v-text-field>
+                                </v-col>
+                              </v-row>
+                            </v-container>
+                            <small>*indicates required field</small>
+                          </v-card-text>
+                          <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn>
+                            <v-btn color="blue darken-1" text @click="saveComment()">Save</v-btn>
+                          </v-card-actions>
+                        </v-card>
+                      </v-dialog>
+                    </v-row>
+                  </v-card-actions>
+
+                  <v-col cols="12" lg="12" sm="6" md="3">
+                    <!-- <v-text-field label="Outlined" outlined></v-text-field> -->
+                  </v-col>
+                </v-card>
+              </div>
+            </div>
+          </v-lazy>
+        </v-responsive>
       </v-col>
+
       <v-col cols="1"></v-col>
       <v-col cols="4">
         <v-text-field
@@ -309,6 +326,8 @@
 import axios from "@/plugins/axios";
 import { mdiPound } from "@mdi/js";
 import { mdiPoundBoxOutline } from "@mdi/js";
+import { mdiThumbUp } from "@mdi/js";
+import { mdiThumbUpOutline } from "@mdi/js";
 // import Vuex from "vuex";
 // import commentForm from "@/components/commentForm";
 
@@ -326,7 +345,9 @@ export default {
       favoriteCheck: false,
       favorite_list: [],
       absolute: true,
-      overlay: false
+      overlay: false,
+      // v-lazy
+      isActive: false
     };
   },
   // components: {

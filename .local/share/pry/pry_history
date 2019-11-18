@@ -133,3 +133,12 @@ EndUser.all
 a = EndUser.all
 a.delete_all
 exit
+EndUser.first
+exit
+EndUser.first
+EndUser.first.notifications
+EndUser.first.passive_notifications
+EndUser.first.passive_notifications.visitor
+EndUser.first.passive_notifications.visitor_id
+EndUser.first.passive_notifications.first.visitor_id
+exit
