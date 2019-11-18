@@ -1,7 +1,9 @@
 const state = {
     user: {
     },
-    status: false
+    status: false,
+    search: [
+    ]
 }
 
 export default state;

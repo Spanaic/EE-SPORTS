@@ -115,6 +115,20 @@ const actions = {
             .catch(err => {
                 alert(err)
             });
+    },
+    async searchSubmit({ commit }, payload) {
+        try {
+            const res = await axios.get(
+                `/searches?search=${payload}`
+            );
+            const searchResult = [res.data, { keyword: payload }]
+            // &title=${payload}&profile_name=${payload}
+            console.log(searchResult);
+            commit('setSearchResult', searchResult);
+            this.$router.push("/post_Images")
+        } catch (err) {
+            alert(err);
+        }
     }
     // onAuth() {
     //     firebase.auth().onAuthStateChanged(user => {

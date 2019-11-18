@@ -497,6 +497,17 @@ export default {
           post_image.end_user.profile_name.includes(this.keyword)
         );
       });
+    },
+    searchResult() {
+      let vm = this.$store.search
+      debugger;
+      return vm.map(search_results => {
+        search_results.filter(search_result => {
+        return (
+          vm.keyword == search_result.title ||
+          vm.keyword == search_result.caption
+        )
+      });
     }
     // filterdPostImages: function() {
     //   let results = this.post_images;
@@ -569,7 +580,7 @@ export default {
         await this.updatePostImages();
         post_image.isFav = true;
       } catch (error) {
-        alert("");
+        alert(error);
       }
     },
     async destroyFavorite(post_image) {

@@ -4,19 +4,157 @@
     <h2>{{ this.end_user.name }}</h2>
     <h2>{{ this.end_user.profile_name}}</h2>
     <nuxt-link :to="`/end_users/${this.end_user.id}/edit`">プロフィール編集</nuxt-link>
-    <img :src="`http://localhost:3001/end_users/${this.end_user.profile_image_name}`" alt />
 
-    <!-- <div v-for="(follower,i) in followers" :key="i"> -->
-    <template v-if="!this.isFol">
-      <v-btn @click="createFollow(end_user)">フォロー</v-btn>
-    </template>
-    <template v-else>
-      <v-btn @click="destroyFollow(end_user)">フォローをやめる</v-btn>
-    </template>
-    <!-- </div> -->
-    <!-- <v-btn @click="destroyFollow(end_user)">フォローをやめる</v-btn> -->
+    <div v-if="currentUser">
+      <template v-if="!this.isFol">
+        <v-btn @click="createFollow(end_user)">フォロー</v-btn>
+      </template>
+      <template v-else>
+        <v-btn @click="destroyFollow(end_user)">フォローをやめる</v-btn>
+      </template>
+    </div>
+
+    <!-- <div v-for="(post_image, i) in this.end_user.post_images" :key="i">
+      <v-toolbar color="indigo" dark>
+        <v-list-item>
+          <v-list-item-avatar>
+            <v-img :src="'http://localhost:3001/end_users/' + `${post_image.profile_image_name}`"></v-img>
+          </v-list-item-avatar>
+          <v-list-item-content>
+            <v-list-item-title class="headline">{{ post_image.title }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-toolbar>
+
+      <v-card class="mx-auto mb-5" height="100%" max-width="800">
+        <v-img
+          class="white--text align-end"
+          height="400px"
+          :src="'http://localhost:3001/post_images/' + post_image.image_name"
+          @click="overlay =!overlay"
+        >
+          <v-card-title>Top 10 Australian beaches</v-card-title>
+        </v-img>
+        <v-overlay :value="overlay">
+          <v-btn icon @click="overlay = false">
+            <v-icon>mdi-close</v-icon>
+            <nuxt-link :to="`/post_images/${ post_image.id }`">
+              <v-img
+                class="white--text align-end"
+                height="480px"
+                width="720px"
+                :src="'http://localhost:3001/post_images/' + post_image.image_name"
+              ></v-img>
+            </nuxt-link>
+          </v-btn>
+        </v-overlay>
+
+        <v-card-subtitle class="pb-0">Number 10</v-card-subtitle>
+
+        <v-card-text class="text--primary">
+          <div v-for="(hashtag, i) in post_image.hashtags" :key="i">
+            <nuxt-link :to="`/post_Images/hashtag/${hashtag.hashname}`">
+              <v-chip class="ma-2" color="secondary">{{ hashtag.hashname }}</v-chip>
+            </nuxt-link>
+          </div>
+          <div>{{post_image.caption}}</div>
+
+          <div>Whitsunday Island, Whitsunday Islands</div>
+        </v-card-text>
+        <v-card-text
+          class="text--primary"
+          v-for="(post_comment, i) in post_image.post_comments"
+          :key="i"
+        >
+          <div>{{post_comment.comment}}</div>
+        </v-card-text>
+
+        <v-card-actions>
+          <v-btn color="orange" text>Share</v-btn>
+
+          <v-btn color="orange" text>Explore</v-btn>
+
+          <template v-if="!post_image.isFav">
+            <v-btn icon @click="createFavorite(post_image)">
+              <v-icon>mdi-thumb-up-outline</v-icon>
+            </v-btn>
+          </template>
+          <template v-else>
+            <v-btn text icon color="deep-orange" @click="destroyFavorite(post_image)">
+              <v-icon>mdi-thumb-up</v-icon>
+            </v-btn>
+          </template>
+
+          <v-row justify="center">
+            <v-dialog v-model="dialog" persistent max-width="600px">
+              <template v-slot:activator="{ on }">
+                <v-btn color="primary" dark v-on="on" @click="setPostImage(post_image); ">コメントする</v-btn>
+              </template>
+              <v-card>
+                <v-card-title>
+                  <span class="headline">コメント入力フォーム</span>
+                </v-card-title>
+                <v-card-text>
+                  <v-container>
+                    <v-row>
+                      <v-col cols="12" sm="6" md="4" lg="12">
+                        <v-text-field label="Outlined" outlined v-model="post_comment"></v-text-field>
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                  <small>*indicates required field</small>
+                </v-card-text>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn>
+                  <v-btn color="blue darken-1" text @click="saveComment()">Save</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </v-row>
+        </v-card-actions>
+
+        <v-col cols="12" lg="12" sm="6" md="3"></v-col>
+      </v-card>
+    </div>-->
+
+    <!-- サムネイル表示 -->
+    <v-row>
+      <v-col cols="12" sm="6" offset-sm="3">
+        <v-card>
+          <v-container fluid>
+            <v-row>
+              <v-col
+                v-for="(post_image, i) in this.end_user.post_images"
+                :key="i"
+                class="d-flex child-flex"
+                cols="4"
+              >
+                <nuxt-link :to="`/post_Images/${post_image.id}`">
+                  <v-card flat tile class="d-flex">
+                    <v-img
+                      :src="'http://localhost:3001/post_images/' + `${post_image.image_name}`"
+                      :lazy-src="'http://localhost:3001/post_images/' + `${post_image.image_name}`"
+                      aspect-ratio="1"
+                      class="grey lighten-2"
+                    >
+                      <template v-slot:placeholder>
+                        <v-row class="fill-height ma-0" align="center" justify="center">
+                          <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+                        </v-row>
+                      </template>
+                    </v-img>
+                  </v-card>
+                </nuxt-link>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card>
+      </v-col>
+    </v-row>
   </div>
 </template>
+
 <script>
 import axios from "@/plugins/axios";
 import Vuex from "vuex";
@@ -28,11 +166,13 @@ export default {
       followers: [],
       follower: "",
       follow_list: [],
-      isFol: false
+      isFol: false,
+
+      overlay: false
     };
   },
   computed: {
-    user() {
+    currentUser() {
       return this.$store.state.user;
     }
   },

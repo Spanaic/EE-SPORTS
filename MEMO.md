@@ -1424,6 +1424,16 @@ computed: {
 ```
 `class_nameオプションはアソシエーションを組むモデル名を記述している`
 
+## `【検索のクエリの投げ方】`
+
+```
+    const res = await axios.get(
+      `/searches?hashname=${this.keyword}&title=${this.keyword}`
+    );
+```
+
+【modelのカラム名=${keyword}`&`modelのカラム名=${keyword}】
+上記で投げると複数のカラムに検索を掛けることができる。
 
 
 

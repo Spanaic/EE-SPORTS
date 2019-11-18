@@ -180,7 +180,6 @@ import axios from "@/plugins/axios";
 export default {
   data() {
     return {
-      keyword: "",
       collapseOnScroll: true,
       clipped: false,
       drawer: false,
@@ -209,7 +208,11 @@ export default {
       messages: 0,
 
       // notification_list
-      notifications: []
+      notifications: [],
+
+      // 検索結果
+      keyword: "",
+      searchResults: []
     };
     // consol.log(this);
   },
@@ -218,11 +221,9 @@ export default {
       this.$store.dispatch("logOut");
       this.$router.push("/post_Images");
     },
-    // async searchSubmit () {
-    //   try {
-    //     await axios.get(`/post_images?`)
-    //   }
-    // }
+    searchSubmit() {
+      this.$store.dispatch("searchSubmit", this.keyword);
+    },
     async checkNotifications() {
       let vm = this.currentUser;
       try {

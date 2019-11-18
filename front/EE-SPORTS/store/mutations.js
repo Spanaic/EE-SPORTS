@@ -4,6 +4,9 @@ const mutations = {
     },
     onUserStatusChanged(state, payload) {
         state.status = payload;
+    },
+    setSearchResult(state, payload) {
+        state.search = payload;
     }
 };
 

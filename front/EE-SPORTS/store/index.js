@@ -15,6 +15,9 @@ const createStore = () => {
             },
             isSignedIn(state) {
                 return state.status;
+            },
+            search(state) {
+                return state.search
             }
         }
     })

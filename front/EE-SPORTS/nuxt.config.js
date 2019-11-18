@@ -10,7 +10,7 @@ const { MESSAGING_SENDER_ID } = process.env;
 const { APP_ID } = process.env;
 
 export default {
-  mode: 'universal',
+  mode: 'spa',
   env: {
     baseUrl: process.env.BASE_URL || 'http://localhost:3001',
     API_KEY,
