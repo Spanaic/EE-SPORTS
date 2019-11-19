@@ -48,7 +48,7 @@
         :collapse="!collapseOnScroll"
         :collapse-on-scroll="collapseOnScroll"
         absolute
-        color="deep-purple accent-4"
+        color="cyan darken-1"
         dark
         scroll-target="#scrolling-techniques-6"
       >
@@ -83,7 +83,7 @@
             </template>
 
             <v-list>
-              <template v-if="this.notifications == []">
+              <template v-if="this.notifications.length === 0">
                 <!-- {{ this.notifications }} -->
                 <v-list-item-title>
                   <span>新しい通知はありません。</span>
@@ -228,20 +228,34 @@ export default {
       let vm = this.currentUser;
       try {
         const res = await axios.get(`/notifications/${vm.id}`);
-        console.log(res.data);
+        console.log("res.data", res.data);
         // this.notifications = res.data;
         // this.notifications = res.data.map(notification => {
         //   notification.checked == false;
         // });
         this.notifications = res.data.filter(notification => {
-          console.log(notification.checked);
-          return (notification.checked = false);
+          // console.log("notification.checked", notification.checked);
+          return notification.checked === false;
         });
         // return notification;
-        console.log(this.notifications);
+
+        // ==================debag======================
+        // var toString = Object.prototype.toString;
+        console.log("this.notifications", this.notifications);
+        console.log("this.notifications.length", this.notifications.length);
+        console.log(
+          "this.notifications.length === 0",
+          this.notificaitons.length === 0
+        );
+        // console.log("type of this.notifications", typeof this.notifications);
+        // console.log(
+        //   "toString this.notifications",
+        //   toString.call(this.notifications)
+        // );
+        // ==================debag======================
       } catch (err) {
         // alert(err);
-        console.log(err);
+        console.log("err", err);
       }
     }
   },
@@ -306,7 +320,7 @@ export default {
 .bg {
   background-size: cover;
   background-position: top;
-  background: url("http://localhost:3001/performance-3110696_1920.jpg");
+  background: url("http://localhost:3001/301618-abstract.jpeg");
   background-attachment: fixed;
   background-repeat: no-repeat;
   /* opacity: 0.4; */

@@ -142,3 +142,11 @@ EndUser.first.passive_notifications.visitor
 EndUser.first.passive_notifications.visitor_id
 EndUser.first.passive_notifications.first.visitor_id
 exit
+a = Favorite.all
+a.delete_all
+Favorite.where(end_user_id: EndUser.find_by(profile_name: 'dododo').id)
+Favorite.where(end_user_id: EndUser.find_by(profile_name: 'dododo').id).delete_all
+Favorite.where(end_user_id: EndUser.find_by(profile_name: 'dododo').id)
+Favorite.where(end_user_id: EndUser.find_by(profile_name: 'dontdont').id)
+Favorite.where(end_user_id: EndUser.find_by(profile_name: 'dontdont').id).count
+Favorite.where(end_user_id: EndUser.find_by(profile_name: 'dontdont').id).delete_all

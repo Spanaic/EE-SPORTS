@@ -1,30 +1,33 @@
  <template>
-  <v-card class="pa-5 mt-5">
-    <form action>
-      <v-text-field
-        v-model="email"
-        :error-messages="emailErrors"
-        label="Email"
-        required
-        @input="$v.email.$touch()"
-        @blur="$v.email.$touch()"
-      ></v-text-field>
-      <v-text-field
-        v-model="password"
-        :error-messages="passwordErrors"
-        label="パスワード"
-        required
-        @input="$v.password.$touch()"
-        @blur="$v.password.$touch()"
-      ></v-text-field>
+  <div>
+    <v-card class="pa-5 mt-5">
+      <form action>
+        <v-text-field
+          v-model="email"
+          :error-messages="emailErrors"
+          label="Email"
+          required
+          @input="$v.email.$touch()"
+          @blur="$v.email.$touch()"
+        ></v-text-field>
+        <v-text-field
+          v-model="password"
+          :error-messages="passwordErrors"
+          label="パスワード"
+          required
+          @input="$v.password.$touch()"
+          @blur="$v.password.$touch()"
+        ></v-text-field>
 
-      <!-- <button type="button" @click="googleLogIn">Google認証</button>
-      <button type="button" @click="logOut">log out</button>-->
+        <!-- <button type="button" @click="googleLogIn">Google認証</button>
+        <button type="button" @click="logOut">log out</button>-->
 
-      <v-btn class="mr-4" @click="submit">submit</v-btn>
-      <v-btn @click="clear">clear</v-btn>
-    </form>
-  </v-card>
+        <v-btn class="mr-4" @click="submit">submit</v-btn>
+        <v-btn @click="clear">clear</v-btn>
+        <v-btn @click="testLogIn">テストユーザーで簡単ログイン</v-btn>
+      </form>
+    </v-card>
+  </div>
 </template>
 
 <script>
@@ -43,7 +46,9 @@ export default {
 
   data: () => ({
     email: "",
-    password: ""
+    password: "",
+    test_email: "test@gmail.com",
+    test_password: "password"
   }),
 
   computed: {
@@ -74,6 +79,10 @@ export default {
       // this.password = "";
       // this.name = "";
       // this.profile_name = "";
+    },
+    testLogIn() {
+      this.$store.dispatch("testLogIn", [this.test_email, this.test_password]);
+      this.$router.push("/post_Images");
     }
   }
 };

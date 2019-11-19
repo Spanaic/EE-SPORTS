@@ -1,18 +1,51 @@
 <template>
   <div>
-    <h1>{{ this.end_user.email }}</h1>
-    <h2>{{ this.end_user.name }}</h2>
-    <h2>{{ this.end_user.profile_name}}</h2>
-    <nuxt-link :to="`/end_users/${this.end_user.id}/edit`">プロフィール編集</nuxt-link>
+    <v-card class="mx-auto" max-width="600" tile>
+      <!-- <v-img height="100%" src="http://localhost:3001/gamer-background-2.png"> -->
+      <v-row align="end" class="fill-height">
+        <v-col align-self="start" class="pa-0" cols="3">
+          <v-avatar class="profile" color="grey" size="164" tile>
+            <v-img
+              :src="'http://localhost:3001/end_users/' + `${this.end_user.profile_image_name}`"
+            ></v-img>
+          </v-avatar>
+        </v-col>
 
-    <div v-if="currentUser">
-      <template v-if="!this.isFol">
-        <v-btn @click="createFollow(end_user)">フォロー</v-btn>
-      </template>
-      <template v-else>
-        <v-btn @click="destroyFollow(end_user)">フォローをやめる</v-btn>
-      </template>
-    </div>
+        <!-- <v-row class="py-0"> -->
+        <v-col>
+          <v-list-item color="rgba(0, 0, 0, .4)" dark>
+            <v-list-item-content>
+              <v-list-item-title class="title">{{ this.end_user.name }}</v-list-item-title>
+              <v-list-item-subtitle>{{ this.end_user.profile_name}}</v-list-item-subtitle>
+              <v-list-item-subtitle>{{ this.end_user.email}}</v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+        </v-col>
+
+        <v-col>
+          <v-list-item color="rgba(0, 0, 0, .4)" dark>
+            <v-list-item-content>
+              <v-list-item-title class="title">
+                <div v-if="this.currentUser.id !== this.end_user.id">
+                  <template v-if="!this.isFol">
+                    <v-btn @click="createFollow(end_user)">フォロー</v-btn>
+                  </template>
+                  <template v-else>
+                    <v-btn @click="destroyFollow(end_user)">フォローをやめる</v-btn>
+                  </template>
+                </div>
+              </v-list-item-title>
+
+              <v-list-item-subtitle>
+                <nuxt-link :to="`/end_users/${this.end_user.id}/edit`">プロフィール編集</nuxt-link>
+              </v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+        </v-col>
+      </v-row>
+      <!-- </v-row> -->
+      <!-- </v-img> -->
+    </v-card>
 
     <!-- <div v-for="(post_image, i) in this.end_user.post_images" :key="i">
       <v-toolbar color="indigo" dark>

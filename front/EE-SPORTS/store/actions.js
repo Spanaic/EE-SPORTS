@@ -1,4 +1,4 @@
-
+// firebaseにアクセスし、認証してオッケーだったらmutaions.jsのsetUserを(引数のpayloadにuserを代入しつつ)実行
 import firebase from "@/plugins/firebase"
 // import { executionAsyncId } from "async_hooks";
 import axios from '@/plugins/axios'
@@ -117,6 +117,7 @@ const actions = {
             });
     },
     async searchSubmit({ commit }, payload) {
+        firebase
         try {
             const res = await axios.get(
                 `/searches?search=${payload}`
@@ -129,6 +130,24 @@ const actions = {
         } catch (err) {
             alert(err);
         }
+    },
+    testLogIn({ commit }, payload) {
+        firebase.auth()
+            .signInWithEmailAndPassword(payload[0], payload[1])
+            // console.log(data)
+            .then(user => {
+                commit("setUser", user);
+                console.log('login success!')
+                // this.$router.go("/post_images");
+                // this.$router.push("/post_Images");
+            })
+            .catch(function (error) {
+                // Handle Errors here.
+                alert(error);
+                // var errorCode = error.code;
+                // var errorMessage = error.message;
+                // ...
+            });
     }
     // onAuth() {
     //     firebase.auth().onAuthStateChanged(user => {

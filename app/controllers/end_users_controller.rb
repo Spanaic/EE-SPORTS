@@ -1,5 +1,5 @@
 class EndUsersController < ApplicationController
-    protect_from_forgery :except => [:update]
+    protect_from_forgery :except => [:create, :update]
 
 
     def index

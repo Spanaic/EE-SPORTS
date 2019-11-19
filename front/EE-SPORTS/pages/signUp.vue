@@ -38,6 +38,7 @@
 
       <v-btn class="mr-4" @click="submit">submit</v-btn>
       <v-btn @click="clear">clear</v-btn>
+      <v-btn @click="testLogIn">テストユーザーで簡単ログイン</v-btn>
     </form>
   </v-card>
 </template>
@@ -67,7 +68,9 @@ export default {
     name: "",
     email: "",
     profile_name: "",
-    password: ""
+    password: "",
+    test_email: "test@gmail.com",
+    test_password: "password"
   }),
 
   computed: {
@@ -117,6 +120,10 @@ export default {
       // this.password = "";
       // this.name = "";
       // this.profile_name = "";
+    },
+    testLogIn() {
+      this.$store.dispatch("testLogIn", [this.test_email, this.test_password]);
+      this.$router.push("/post_Images");
     }
   }
 };
