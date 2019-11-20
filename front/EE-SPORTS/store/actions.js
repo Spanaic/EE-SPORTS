@@ -122,7 +122,7 @@ const actions = {
             const res = await axios.get(
                 `/searches?search=${payload}`
             );
-            const searchResult = [res.data, { keyword: payload }]
+            const searchResult = res.data
             // &title=${payload}&profile_name=${payload}
             console.log(searchResult);
             commit('setSearchResult', searchResult);

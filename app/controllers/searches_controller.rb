@@ -1,19 +1,19 @@
 class SearchesController < ApplicationController
   def index
     # hashtags = Hashtag.where("hashname LIKE ?", "%#{params[:search]}%")
-    post_image_titles = PostImage.where("title LIKE ?", "%#{params[:search]}%")
-    post_image_captions = PostImage.where("caption LIKE ?", "%#{params[:search]}%")
+    post_images = PostImage.where("title LIKE ?", "%#{params[:search]}%").or(PostImage.where("caption LIKE ?", "%#{params[:search]}%"))
+    # post_image_captions = PostImage
     # end_user_profile_names = EndUser.where("profile_name LIKE ?", "%#{params[:search]}%")
 
-    search_results = []
-    # search_results.push(hashtags)
-    search_results.push(post_image_titles)
-    search_results.push(post_image_captions)
+    search_results = post_images.to_json(include: [:post_comments, :favorites, :end_user, :hashtags, :notifications])
+    # # search_results.push(hashtags)
+    # search_results.push(post_image_titles)
+    # search_results.push(post_image_captions)
     # search_results.push(end_user_profile_names)
 
-    json = search_results.to_json
+    # json = search_results.to_json
     # (include: [:post_images])
-    render :json => json
+    render :json => search_results
   end
 end
 

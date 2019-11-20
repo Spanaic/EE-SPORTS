@@ -14,7 +14,10 @@
         >-->
         <div>
           <!-- 今まで動いてたやつ -->
-          <div v-for="(post_image, i) in filterdPostImages" :key="i">
+          <div
+            v-for="(post_image, i) in $store.state.search.length ?  $store.state.search : filterdPostImages"
+            :key="i"
+          >
             <!-- 投稿一覧のカード表示とオーバーレイの組み込み -->
 
             <!-- hashtag付きで、これから試すv-for -->
@@ -42,7 +45,7 @@
                 :src="'http://localhost:3001/post_images/' + post_image.image_name"
                 @click="overlay =!overlay"
               >
-                <v-card-title>Top 10 Australian beaches</v-card-title>
+                <v-card-title></v-card-title>
               </v-img>
               <v-overlay :absolute="absolute" :value="overlay">
                 <v-btn icon @click="overlay = false">
@@ -58,7 +61,7 @@
                 </v-btn>
               </v-overlay>
 
-              <v-card-subtitle class="pb-0">Number 10</v-card-subtitle>
+              <v-card-subtitle class="pb-0"></v-card-subtitle>
 
               <v-card-text class="text--primary">
                 <v-item-group multiple>
@@ -87,19 +90,10 @@
                       >{{ hashtag.hashname }}</v-chip>
                     </nuxt-link>
                   </v-item>
-                  <!-- <v-flex> -->
-                  <!-- <div> -->
-                  <!-- <v-chip class="ma-2" color="secondary">{{ hashtag.hashname }}</v-chip> -->
-                  <!-- </div> -->
-                  <!-- </v-flex> -->
-                  <!-- </div> -->
 
-                  <!-- </v-row> -->
-                  <!-- </nuxt-link> -->
+                  <v-divider class="my-4 info" style="opacity: 0.22"></v-divider>
                 </v-item-group>
                 <div>{{post_image.caption}}</div>
-
-                <div>Whitsunday Island, Whitsunday Islands</div>
               </v-card-text>
               <v-card-text
                 class="text--primary"
@@ -368,17 +362,17 @@ export default {
   //   commentForm
   // },
   async mounted() {
-    await firebase.auth().onAuthStateChanged(async user => {
-      console.log("firebase_user", user);
-      if (user) {
-        console.log("firebase", user);
-        const { data } = await axios.get(`/end_users?email=${user.email}`);
-        console.log("data", data[0]);
-        store.commit("setUser", data[0]);
-        this.current_user = data;
-        console.log("current_user", this.current_user);
-      }
-    });
+    // await firebase.auth().onAuthStateChanged(async user => {
+    //   console.log("firebase_user", user);
+    //   if (user) {
+    //     console.log("firebase", user);
+    //     const { data } = await axios.get(`/end_users?email=${user.email}`);
+    //     console.log("data", data[0]);
+    //     store.commit("setUser", data[0]);
+    //     this.current_user = data;
+    //     console.log("current_user", this.current_user);
+    //   }
+    // });
     const res = await axios.get(url);
     // for (this.post_images in { modal: false }) {
     let current_user_id = this.user.id;
@@ -521,12 +515,7 @@ export default {
   // ==============================ここ=============================
   computed: {
     user() {
-      console.log("this.$store", this.$store);
-      console.log("this.$store.getters", this.$store.getters);
-      console.log("this.$store.state", this.$store.state);
-      console.log("this.$store.getters.user", this.$store.getters.user);
-      console.log("this.$store.state.user", this.$store.state.user);
-      return this.$store.getters.user;
+      return this.$store.state.user;
     },
     filterdPostImages() {
       return this.post_images.filter(post_image => {

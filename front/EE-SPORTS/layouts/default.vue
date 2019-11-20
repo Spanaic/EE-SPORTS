@@ -72,21 +72,21 @@
         <!-- <v-menu top :close-on-content-click="closeOnContentClick"> -->
         <!-- notification表示候補2 -->
 
-        <div v-if="this.currentUser">
-          <v-menu top>
-            <v-badge color="purple" left overlap>
-              <template v-slot:badge>
-                <span v-if="this.notifications.length > 0">{{ this.notifications.length }}</span>
-              </template>
-            </v-badge>
+        <div v-if="currentUser">
+          <v-menu>
             <template v-slot:activator="{ on }">
-              <!-- <v-btn color="primary" dark v-on="on"> -->
-              <v-icon large v-on="on" @click="checkNotifications">mdi-bell</v-icon>
-              <!-- </v-btn> -->
+              <v-badge color="purple" left overlap>
+                <template v-slot:badge>
+                  <span v-if="notifications.length !== 0">{{notifications.length}}</span>
+                </template>
+                <!-- <v-btn color="primary" dark v-on="on"> -->
+                <v-icon large v-on="on">mdi-bell</v-icon>
+                <!-- </v-btn> -->
+              </v-badge>
             </template>
 
             <v-list>
-              <template v-if="this.notifications.length === 0">
+              <template v-if="notifications.length === 0">
                 <!-- {{ this.notifications }} -->
                 <v-list-item-title>
                   <span>新しい通知はありません。</span>
@@ -116,17 +116,6 @@
           </v-menu>
         </div>
 
-        <!-- こっちは表示されない、エラーになる -->
-        <!-- <v-badge color="purple" left overlap>
-          <template v-slot:badge>
-            <span v-if="this.notifications.length > 0">{{ this.notifications.length }}</span>
-          </template>
-        </v-badge>
-        <template v-slot:activator="{ on }">
-          <v-icon large v-on="on" @click="checkNotifications">mdi-bell</v-icon>
-        </template>-->
-        <!-- ここまで -->
-
         <!-- notifications.lengthを使用しなければ表示される -->
         <!-- <v-badge color="purple" left overlap>
           <template v-slot:badge>
@@ -134,8 +123,8 @@
           </template>
           <v-icon color="grey lighten-1" large>mdi-bell</v-icon>
         </v-badge>-->
-        <!-- ここまで -->
 
+        <!-- ここまで -->
         <v-form @submit.prevent="searchSubmit" class="pt-4">
           <v-container>
             <v-text-field v-model="keyword">
@@ -221,6 +210,7 @@ export default {
       ],
       left: false,
       overlap: true,
+      user: this.$store.state.user,
 
       // notification/badge
       show: false,
@@ -237,10 +227,11 @@ export default {
   },
   computed: {
     currentUser() {
-      console.log("---");
-      if (this.$store.state.user && this.$store.state.user.id != undefined) {
-        this.notifications = this.notificationFilter(this.$store.state.user);
-      }
+      // if (this.$store.state.user && this.$store.state.user.id != undefined) {
+      //   this.notifications = this.notificationFilter(this.$store.state.user);
+      //   console.log("kita2", this.notifications);
+      // }
+      // console.log("kita", this.notifications);
 
       return this.$store.state.user;
     },
@@ -295,16 +286,42 @@ export default {
       }
     }
   },
+  created() {
+    const unwatch = this.$store.watch(
+      state => state.user,
+      async (newUser, oldUser) => {
+        console.log("state1", newUser);
+
+        if (newUser.name) {
+          console.log("state2", newUser);
+          try {
+            const res = await axios.get(`/notifications/${newUser.id}`);
+            // console.log("resssssssss", res);
+            // return this.notificationsAsync(res);
+            this.notifications = res.data.filter(notification => {
+              // console.log("notification.checked", notification.checked);
+              return notification.checked === false;
+            });
+          } catch (err) {
+            // alert(err);
+            console.log("Notifications err", err);
+            return null;
+          }
+          unwatch();
+        }
+      }
+    );
+  },
   methods: {
     logOut() {
       this.$store.dispatch("logOut");
       this.$router.push("/post_Images");
     },
-    notificationFilter(currentUser) {
+    async notificationFilter(currentUser) {
       console.log("notifications");
       let vm = currentUser;
       try {
-        const res = axios.get(`/notifications/${vm.id}`);
+        const res = await axios.get(`/notifications/${vm.id}`);
         console.log("res", res);
         return this.notificationsAsync(res);
       } catch (err) {
@@ -313,10 +330,10 @@ export default {
         return null;
       }
     },
-    async notificationsAsync(res) {
+    notificationsAsync(res) {
       let notifications = null;
       try {
-        notifications = await res;
+        notifications = res;
         if (notifications != undefined) {
           console.log("notifications.data", notifications.data);
           // this.notifications = res.data;
@@ -351,44 +368,46 @@ export default {
       console.log("tes---t");
       return notifications;
     },
-
+    // mounted() {
+    //   console.log("aaaaaaa", this.notifications);
+    // },
     searchSubmit() {
       this.$store.dispatch("searchSubmit", this.keyword);
-    },
-    async checkNotifications() {
-      let vm = this.currentUser;
-      try {
-        const res = await axios.get(`/notifications/${vm.id}`);
-        console.log("res.data", res.data);
-        // this.notifications = res.data;
-        // this.notifications = res.data.map(notification => {
-        //   notification.checked == false;
-        // });
-        this.notifications = res.data.filter(notification => {
-          // console.log("notification.checked", notification.checked);
-          return notification.checked === false;
-        });
-        // return notification;
-
-        // ==================debag======================
-        // var toString = Object.prototype.toString;
-        console.log("this.notifications", this.notifications);
-        console.log("this.notifications.length", this.notifications.length);
-        console.log(
-          "this.notifications.length === 0",
-          this.notificaitons.length === 0
-        );
-        // console.log("type of this.notifications", typeof this.notifications);
-        // console.log(
-        //   "toString this.notifications",
-        //   toString.call(this.notifications)
-        // );
-        // ==================debag======================
-      } catch (err) {
-        // alert(err);
-        console.log("err", err);
-      }
     }
+    // async checkNotifications() {
+    //   let vm = this.currentUser;
+    //   try {
+    //     const res = await axios.get(`/notifications/${vm.id}`);
+    //     console.log("res.data", res.data);
+    //     // this.notifications = res.data;
+    //     // this.notifications = res.data.map(notification => {
+    //     //   notification.checked == false;
+    //     // });
+    //     this.notifications = res.data.filter(notification => {
+    //       // console.log("notification.checked", notification.checked);
+    //       return notification.checked === false;
+    //     });
+    //     // return notification;
+
+    //     // ==================debag======================
+    //     // var toString = Object.prototype.toString;
+    //     console.log("this.notifications", this.notifications);
+    //     console.log("this.notifications.length", this.notifications.length);
+    //     console.log(
+    //       "this.notifications.length === 0",
+    //       this.notificaitons.length === 0
+    //     );
+    //     // console.log("type of this.notifications", typeof this.notifications);
+    //     // console.log(
+    //     //   "toString this.notifications",
+    //     //   toString.call(this.notifications)
+    //     // );
+    //     // ==================debag======================
+    //   } catch (err) {
+    //     // alert(err);
+    //     console.log("err", err);
+    //   }
+    // }
   }
 };
 </script>

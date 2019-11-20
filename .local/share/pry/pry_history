@@ -161,3 +161,8 @@ Favorite.all
 Notification.last
 exit
 Hashtag.all
+a = PostImage.where(title: "a").where(title: "c")
+a
+a = PostImage.where(title: "a").or.where(title: "c")
+a = PostImage.where(title: "a").or(PostImage.where(caption: "a"))
+a = PostImage.where(title: "a").or(PostImage.where(caption: "d"))

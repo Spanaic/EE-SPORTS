@@ -1557,4 +1557,136 @@ let end_users_list = this.end_users.filter(user => {
 5. forEach関数でで各要素にpushでobjectを挿入している
 6. 別のオブジェクトを配列として入れる({},{})場合は、もう一度pushする
 
+## `【ハッシュタグにリンクを付ける方法】`
+
+0. 前準備(全て同じ関数内の処理)
+
+```
+const res = await axios.get(url);
+    let current_user_id = this.user.id;
+    this.post_images = res.data.map(post_image => {
+      post_image.isFav = post_image.favorites.some(fav =>
+        console.log(
+          "fav.end_user_id === current_user_id",
+          fav.end_user_id === current_user_id,
+          "fav",
+          fav,
+          "current_user_id",
+          current_user_id
+        )
+      );
+```
+
+1. mapしてきたpost_imageをしようして,captionのhashを置換する
+
+```
+      post_image.caption = post_image.caption.replace(
+        /[#＃][\w\p{Han}ぁ-ヶｦ-ﾟー]+/,
+        this.post_image.hashtag.hashname
+      );
+```
+
+2. 受け取ったhashnameを<a>タグのリンクに変換
+
+```
+      post_image.hashtag_list = post_image.hashtags.map(hashtag => {
+        hashtag.hashname = hashtag.hashname
+          .split(["#", "＃"])
+          .join("")
+          .link(`/post/hashtag/${hashtag.hashname}`);
+        return hashtag;
+      });
+```
+
+## `【watchを使ったstateの管理】`
+
+* `値が変更されたら処理を実行させる`
+* `stateの値がsetされてから処理を実行させるために,if文で「値があったら」の条件を付ける`
+* `watchは値が変更される度に処理が繰り返さえる。`
+* `if文内の処理が終われば、unwatch();でwatch処理をストップさせる`
+
+```
+created() {
+    const unwatch = this.$store.watch(
+      state => state.user,
+      async (newUser, oldUser) => {
+        console.log("state1", newUser);
+
+        if (newUser.name) {
+          console.log("state2", newUser);
+          try {
+            const res = await axios.get(`/notifications/${newUser.id}`);
+            // console.log("resssssssss", res);
+            // return this.notificationsAsync(res);
+            this.notifications = res.data.filter(notification => {
+              // console.log("notification.checked", notification.checked);
+              return notification.checked === false;
+            });
+          } catch (err) {
+            // alert(err);
+            console.log("Notifications err", err);
+            return null;
+          }
+          unwatch();
+        }
+      }
+    );
+  },
+```
+
+## `【秦さん流、asyncで処理を遅らせて値をセットする方法】`
+
+```
+  computed: {
+    currentUser() {
+       if (this.$store.state.user && this.$store.state.user.id != undefined) {
+         this.notifications = this.notificationFilter(this.$store.state.user);
+       }
+      },
+
+  methods: {
+    async notificationFilter(currentUser) {
+      let vm = currentUser;
+      try {
+        const res = await axios.get(`/notifications/${vm.id}`);
+        return this.notificationsAsync(res);
+      } catch (err) {
+        return null;
+      }
+    },
+    notificationsAsync(res) {
+      let notifications = null;
+      try {
+        notifications = res;
+        if (notifications != undefined) {
+          notifications = notifications.data.filter(notification => {
+            return notification.checked === false;
+          });
+          return notification;
+        }
+      } catch (err) {
+         alert(err);
+      }
+      return notifications;
+    }
+  }
+```
+
+
+## `【型変換のdebug方法】`
+
+```
+    console.log("type of this.notifications", typeof this.notifications);
+    console.log("toString this.notifications",toString.call(this.notifications));
+```
+
+## `【whereのチェーンメソッド　"or"　の使い方】`
+
+```
+post_images = PostImage.where("title LIKE ?", "%#{params[:search]}%").or(PostImage.where("caption LIKE ?", "%#{params[:search]}%"))
+```
+
+* .orを使うとメソッドチェーンとなり、一つの変数(配列)に.whereで検索してきた値（オブジェクト）を挿入してまとめることが出来る。
+* .jsonで返す時に値を取りやすい。このあたりの工夫はapi側で行うこと。
+
 
