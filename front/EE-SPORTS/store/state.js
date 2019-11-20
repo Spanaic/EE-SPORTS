@@ -2,6 +2,7 @@
 const state = {
     user: {
         // profile_name: ""
+        id: 0
     },
     status: false,
     search: [

@@ -82,7 +82,7 @@ export default {
     },
     testLogIn() {
       this.$store.dispatch("testLogIn", [this.test_email, this.test_password]);
-      this.$router.push("/post_Images");
+      // this.$router.push("/post_Images");
     }
   }
 };

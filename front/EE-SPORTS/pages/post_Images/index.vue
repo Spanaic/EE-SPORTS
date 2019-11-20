@@ -25,17 +25,19 @@
             <!-- 投稿一覧のカード表示とオーバーレイの組み込み -->
 
             <v-toolbar color="indigo" dark>
-              <v-list-item>
-                <v-list-item-avatar>
-                  <v-img
-                    :src="'http://localhost:3001/end_users/' + `${post_image.end_user.profile_image_name}`"
-                  ></v-img>
-                </v-list-item-avatar>
-                <v-list-item-content>
-                  <v-list-item-title class="headline">{{ post_image.title }}</v-list-item-title>
-                  <v-list-item-subtitle>by {{ post_image.end_user.profile_name }}</v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
+              <nuxt-link :to="`/end_images/${post_image.end_user.id}`">
+                <v-list-item>
+                  <v-list-item-avatar>
+                    <v-img
+                      :src="'http://localhost:3001/end_users/' + `${post_image.end_user.profile_image_name}`"
+                    ></v-img>
+                  </v-list-item-avatar>
+                  <v-list-item-content>
+                    <v-list-item-title class="headline">{{ post_image.title }}</v-list-item-title>
+                    <v-list-item-subtitle>by {{ post_image.end_user.profile_name }}</v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+              </nuxt-link>
             </v-toolbar>
 
             <v-card class="mx-auto mb-5" height="100%" max-width="800">
@@ -93,20 +95,22 @@
 
                   <v-divider class="my-4 info" style="opacity: 0.22"></v-divider>
                 </v-item-group>
+                <v-subheader>説明</v-subheader>
                 <div>{{post_image.caption}}</div>
+                <v-divider class="my-4 info" style="opacity: 0.22"></v-divider>
               </v-card-text>
               <v-card-text
                 class="text--primary"
                 v-for="(post_comment, i) in post_image.post_comments"
                 :key="i"
               >
-                <div>{{post_comment.comment}}</div>
+                <div align="center">{{post_comment.comment}}</div>
               </v-card-text>
 
               <v-card-actions>
-                <v-btn color="orange" text>Share</v-btn>
+                <v-btn color="orange" text></v-btn>
 
-                <v-btn color="orange" text>Explore</v-btn>
+                <v-btn color="orange" text></v-btn>
 
                 <!-- お気に入り機能ボタンボタン（作りかけ） -->
                 <template v-if="!post_image.isFav">
@@ -151,7 +155,8 @@
                             </v-col>
                           </v-row>
                         </v-container>
-                        <small>*indicates required field</small>
+                        <!-- <small>"#"を付ければハッシュタグも入力出来るよ！</small> -->
+                        <medium>とてもポジティブなコメントで応援してあげよう！</medium>
                       </v-card-text>
                       <v-card-actions>
                         <v-spacer></v-spacer>
@@ -225,10 +230,10 @@
 
         <!-- サイドバーのプロフィール画面 -->
         <!-- {{ this.user }} -->
-        <div v-if="this.$store.state.user">
+        <div v-if="$store.state.user.id">
           <v-card max-width="375" class="mx-auto">
             <v-img
-              :src="'http://localhost:3001/end_users/' + `${this.$store.state.user.profile_image_name}`"
+              :src="'http://localhost:3001/end_users/' + `${$store.state.user.profile_image_name}`"
               height="auto"
               dark
             >
@@ -649,3 +654,9 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+a {
+  text-decoration: none;
+}
+</style>

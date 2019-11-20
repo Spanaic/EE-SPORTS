@@ -41,8 +41,8 @@ const actions = {
             .then(user => {
                 commit("setUser", user);
                 console.log('login success!')
-                this.$router.go("/post_images");
-                // this.$router.push("/post_Images");
+                // this.$router.go("/post_Images");
+                this.$router.push("/post_Images");
             })
             .catch(function (error) {
                 // Handle Errors here.
@@ -76,8 +76,9 @@ const actions = {
             .signOut()
             .then(user => {
                 console.log(user);
-                commit("setUser", user);
+                commit("setUser", { id: 0 });
                 console.log('logout success!')
+                this.$router.push("/post_Images")
             })
             .catch(function (error) {
                 console.log("An error happened.");
@@ -127,6 +128,7 @@ const actions = {
             console.log(searchResult);
             commit('setSearchResult', searchResult);
             this.$router.push("/post_Images")
+            this.keyword = "";
         } catch (err) {
             alert(err);
         }
@@ -138,8 +140,8 @@ const actions = {
             .then(user => {
                 commit("setUser", user);
                 console.log('login success!')
+                this.$router.push("/post_Images");
                 // this.$router.go("/post_images");
-                // this.$router.push("/post_Images");
             })
             .catch(function (error) {
                 // Handle Errors here.

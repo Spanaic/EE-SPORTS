@@ -72,7 +72,7 @@
         <!-- <v-menu top :close-on-content-click="closeOnContentClick"> -->
         <!-- notification表示候補2 -->
 
-        <div v-if="currentUser">
+        <div v-if="currentUser.id">
           <v-menu>
             <template v-slot:activator="{ on }">
               <v-badge color="purple" left overlap>
@@ -130,7 +130,7 @@
             <v-text-field v-model="keyword">
               <template v-slot:label>
                 <strong>"#"</strong> or
-                <strong>ユーザー名</strong>
+                <strong>画像タイトル</strong>
                 <v-icon style="vertical-align: middle">find_in_page</v-icon>
               </template>
             </v-text-field>
@@ -237,7 +237,7 @@ export default {
     },
     items() {
       console.log("test");
-      if (this.currentUser && this.currentUser.id != undefined) {
+      if (this.currentUser.id) {
         return [
           {
             icon: "mdi-apps",
@@ -292,7 +292,7 @@ export default {
       async (newUser, oldUser) => {
         console.log("state1", newUser);
 
-        if (newUser.name) {
+        if (newUser.id) {
           console.log("state2", newUser);
           try {
             const res = await axios.get(`/notifications/${newUser.id}`);
@@ -315,64 +315,65 @@ export default {
   methods: {
     logOut() {
       this.$store.dispatch("logOut");
-      this.$router.push("/post_Images");
+      // this.$router.push("/post_Images");
     },
-    async notificationFilter(currentUser) {
-      console.log("notifications");
-      let vm = currentUser;
-      try {
-        const res = await axios.get(`/notifications/${vm.id}`);
-        console.log("res", res);
-        return this.notificationsAsync(res);
-      } catch (err) {
-        // alert(err);
-        console.log("Notifications err", err);
-        return null;
-      }
-    },
-    notificationsAsync(res) {
-      let notifications = null;
-      try {
-        notifications = res;
-        if (notifications != undefined) {
-          console.log("notifications.data", notifications.data);
-          // this.notifications = res.data;
-          // this.notifications = res.data.map(notification => {
-          //   notification.checked == false;
-          // });
-          notifications = notifications.data.filter(notification => {
-            // console.log("notification.checked", notification.checked);
-            return notification.checked === false;
-          });
-          // return notification;
-          // ==================debag======================
-          // var toString = Object.prototype.toString;
-          console.log("this.notifications", notifications);
-          console.log("this.notifications.length", notifications.length);
-          console.log(
-            "this.notifications.length === 0",
-            notificaitons.length === 0
-          );
-        }
+    // async notificationFilter(currentUser) {
+    //   console.log("notifications");
+    //   let vm = currentUser;
+    //   try {
+    //     const res = await axios.get(`/notifications/${vm.id}`);
+    //     console.log("res", res);
+    //     return this.notificationsAsync(res);
+    //   } catch (err) {
+    //     // alert(err);
+    //     console.log("Notifications err", err);
+    //     return null;
+    //   }
+    // },
+    // notificationsAsync(res) {
+    //   let notifications = null;
+    //   try {
+    //     notifications = res;
+    //     if (notifications != undefined) {
+    //       console.log("notifications.data", notifications.data);
+    //       // this.notifications = res.data;
+    //       // this.notifications = res.data.map(notification => {
+    //       //   notification.checked == false;
+    //       // });
+    //       notifications = notifications.data.filter(notification => {
+    //         // console.log("notification.checked", notification.checked);
+    //         return notification.checked === false;
+    //       });
+    //       // return notification;
+    //       // ==================debag======================
+    //       // var toString = Object.prototype.toString;
+    //       console.log("this.notifications", notifications);
+    //       console.log("this.notifications.length", notifications.length);
+    //       console.log(
+    //         "this.notifications.length === 0",
+    //         notificaitons.length === 0
+    //       );
+    //     }
 
-        // console.log("type of this.notifications", typeof this.notifications);
-        // console.log(
-        //   "toString this.notifications",
-        //   toString.call(this.notifications)
-        // );
-        // ==================debag======================
-      } catch (err) {
-        // alert(err);
-        console.log("err", err);
-      }
-      console.log("tes---t");
-      return notifications;
-    },
+    //     // console.log("type of this.notifications", typeof this.notifications);
+    //     // console.log(
+    //     //   "toString this.notifications",
+    //     //   toString.call(this.notifications)
+    //     // );
+    //     // ==================debag======================
+    //   } catch (err) {
+    //     // alert(err);
+    //     console.log("err", err);
+    //   }
+    //   console.log("tes---t");
+    //   return notifications;
+    // },
     // mounted() {
     //   console.log("aaaaaaa", this.notifications);
     // },
     searchSubmit() {
       this.$store.dispatch("searchSubmit", this.keyword);
+      // this.keyword = "";
     }
     // async checkNotifications() {
     //   let vm = this.currentUser;

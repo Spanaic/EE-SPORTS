@@ -1390,6 +1390,9 @@ computed: {
     }
   }
 ```
+
+---
+
 ### `自分の記述`
 
 ```
@@ -1416,6 +1419,8 @@ computed: {
 
 5. v-forに渡していたdataをfilter関数を通した戻り値の入ったcomputedプロパティの値と差し替える。（元はpost_images）
 
+---
+
 ## `【自己結合のclass_nameオプションについて】`
 
 ```
@@ -1423,6 +1428,8 @@ computed: {
     belongs_to :visited, class_name: 'EndUser', foreign_key: :visited_id, optional: true
 ```
 `class_nameオプションはアソシエーションを組むモデル名を記述している`
+
+---
 
 ## `【検索のクエリの投げ方】`
 
@@ -1434,6 +1441,8 @@ computed: {
 
 【modelのカラム名=${keyword}`&`modelのカラム名=${keyword}】
 上記で投げると複数のカラムに検索を掛けることができる。
+
+---
 
 ## `【pushとappendの違いについて】`
 
@@ -1503,6 +1512,8 @@ computed: {
         this.$router.push(`/post_Images/${res.data.id}`);
 ```
 
+---
+
 ## `【filter関数で「◯◯以外」の値を取得する】`
 
 1. currentUser以外の値を取得したい場合
@@ -1557,6 +1568,8 @@ let end_users_list = this.end_users.filter(user => {
 5. forEach関数でで各要素にpushでobjectを挿入している
 6. 別のオブジェクトを配列として入れる({},{})場合は、もう一度pushする
 
+---
+
 ## `【ハッシュタグにリンクを付ける方法】`
 
 0. 前準備(全て同じ関数内の処理)
@@ -1597,7 +1610,7 @@ const res = await axios.get(url);
         return hashtag;
       });
 ```
-
+---
 ## `【watchを使ったstateの管理】`
 
 * `値が変更されたら処理を実行させる`
@@ -1633,7 +1646,7 @@ created() {
     );
   },
 ```
-
+---
 ## `【秦さん流、asyncで処理を遅らせて値をセットする方法】`
 
 ```
@@ -1671,7 +1684,7 @@ created() {
     }
   }
 ```
-
+---
 
 ## `【型変換のdebug方法】`
 
@@ -1679,6 +1692,7 @@ created() {
     console.log("type of this.notifications", typeof this.notifications);
     console.log("toString this.notifications",toString.call(this.notifications));
 ```
+---
 
 ## `【whereのチェーンメソッド　"or"　の使い方】`
 
@@ -1689,4 +1703,78 @@ post_images = PostImage.where("title LIKE ?", "%#{params[:search]}%").or(PostIma
 * .orを使うとメソッドチェーンとなり、一つの変数(配列)に.whereで検索してきた値（オブジェクト）を挿入してまとめることが出来る。
 * .jsonで返す時に値を取りやすい。このあたりの工夫はapi側で行うこと。
 
+---
 
+## `【javascript　vue.js state管理 nullと{}や[]の値、条件分岐の返り値について】`
+
+1. コンポーネントのdataと同じように初期値を入れておくことが出来る
+
+```
+<state.js>
+
+user: {}
+
+if(user) => true
+
+{{ user.id }} =>　undefined
+```
+
+2. 空の初期値を入れておくと、ifで条件分岐を行った際に、その値を指定することが出来る
+3. その場合は,stateの値をzeroにするcommitを行う際に,null & undefined & emptyではなく、初期値に戻すための値をpayloadに入れる(commit, payload)
+4. id: 0という組み合わせはfalseを返す（下の表を参照）
+
+```
+<state.js>
+
+const state = {
+    user: {id: 0},
+
+if(user) => true
+if(user.id) => false
+
+```
+4. 最初からnullを入れておく方法もある
+5. nullを入れておく場合、nullを考慮に入れた条件分岐を掛ける必要がある.
+```
+<state.js>
+
+user: null
+
+if(user) => false
+
+```
+6. vuexの`this.$store.state`を使用した値でundefinedが出る場合は、`vuexの初期値に何をsetしているか`しっかり確認する
+7. 静的型付け言語では,初期値を空にして置いておくと怒られる。型は今から気をつけておくと、怒りっぽい言語に行っても頑張れそう...
+
+---
+## `【pushさせるタイミングについて】`
+
+1. Vuexのaction.jsを経由する場合、axiosなどの非同期通信が発生する。
+2. dispatchの後にpushを記述すると、axiosなどの非同期通信を待たずにpushしてしまうため、push先でresを必要としている場合エラーがでる。
+
+```
+<悪い例>
+    logOut() {
+      this.$store.dispatch("logOut");
+      this.$router.push("/post_Images");
+```
+
+3. action.jsで axios -> commit -> push のような流れでresを受け取るのをasyncで待った後にpushすることで値を持ったまま遷移できてエラーも起きない...はず。
+
+```
+<良い例>
+logOut({ commit }) {
+  firebase
+      .auth()
+      .signOut()
+      .then(user => {
+          console.log(user);
+          commit("setUser", { id: 0 });
+          console.log('logout success!')
+          this.$router.push("/post_Images")
+      })
+      .catch(function (error) {
+          console.log("An error happened.");
+      });
+    },
+```

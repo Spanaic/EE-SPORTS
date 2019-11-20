@@ -44,24 +44,25 @@ export default {
       return this.$store.state.user;
     },
     items() {
-      if (this.$store.state.user && this.$store.state.user != undefined);
-      console.log("currentUser", this.currentUser);
-      let itemsArray = [{ header: "ユーザーリスト" }];
-      let end_users_list = this.end_users.filter(user => {
-        return user.id !== this.currentUser.id;
-      });
-      console.log("end_users_list", end_users_list);
-      end_users_list.forEach(user => {
-        itemsArray.push({
-          avatar: `http://localhost:3001/end_users/${user.profile_image_name}`,
-          title: user.profile_name,
-          subtitle: user.email,
-          id: user.id
+      if (this.currentUser) {
+        console.log("currentUser", this.currentUser);
+        let itemsArray = [{ header: "ユーザーリスト" }];
+        let end_users_list = this.end_users.filter(user => {
+          return user.id !== this.currentUser.id;
         });
-        itemsArray.push({ divider: true, inset: true });
-      });
-      console.log(itemsArray);
-      return itemsArray;
+        console.log("end_users_list", end_users_list);
+        end_users_list.forEach(user => {
+          itemsArray.push({
+            avatar: `http://localhost:3001/end_users/${user.profile_image_name}`,
+            title: user.profile_name,
+            subtitle: user.email,
+            id: user.id
+          });
+          itemsArray.push({ divider: true, inset: true });
+        });
+        console.log(itemsArray);
+        return itemsArray;
+      }
     }
   }
 };
