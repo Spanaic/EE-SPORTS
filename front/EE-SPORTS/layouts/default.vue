@@ -71,11 +71,14 @@
         <!-- <v-switch v-model="closeOnContentClick" label="Close on content click"></v-switch> -->
         <!-- <v-menu top :close-on-content-click="closeOnContentClick"> -->
         <!-- notification表示候補2 -->
+
         <div v-if="this.currentUser">
           <v-menu top>
-            <template v-slot:badge>
-              <span v-if="messages > 0">{{ messages }}</span>
-            </template>
+            <v-badge color="purple" left overlap>
+              <template v-slot:badge>
+                <span v-if="this.notifications.length > 0">{{ this.notifications.length }}</span>
+              </template>
+            </v-badge>
             <template v-slot:activator="{ on }">
               <!-- <v-btn color="primary" dark v-on="on"> -->
               <v-icon large v-on="on" @click="checkNotifications">mdi-bell</v-icon>
@@ -88,35 +91,50 @@
                 <v-list-item-title>
                   <span>新しい通知はありません。</span>
                 </v-list-item-title>
-                <v-else>
-                  <v-list-item v-for="(notification, index) in notifications" :key="index" @click>
-                    <v-list-item-title>
-                      <span v-if="notification.action == follow">
-                        <nuxt-link
-                          :to="`/end_users/${notification.visitor_id}`"
-                        >{{ notification.visitor.profile_name }}</nuxt-link>さんがあなたをフォローしました。
-                      </span>
-                      <span v-else-if="notification.action == favorite">
-                        さんが
-                        <nuxt-link :to="`post_Images/${notification.post_image._id}`">あなたの投稿</nuxt-link>にいいねしました。
-                      </span>
-                      <span v-else-if="notification.action = comment">
-                        さんが
-                        <nuxt-link :to="`post_Images/${notification.post_image._id}`">あなたの投稿</nuxt-link>にコメントしました。
-                      </span>
-                      <span v-else>新しい通知はありません。</span>
-                    </v-list-item-title>
-                  </v-list-item>
-                </v-else>
+              </template>
+              <template v-else>
+                <v-list-item v-for="(notification, index) in notifications" :key="index" @click>
+                  <v-list-item-title>
+                    <span v-if="notification.action == follow">
+                      <nuxt-link
+                        :to="`/end_users/${notification.visitor_id}`"
+                      >{{ notification.visitor.profile_name }}</nuxt-link>さんがあなたをフォローしました。
+                    </span>
+                    <span v-else-if="notification.action == favorite">
+                      さんが
+                      <nuxt-link :to="`post_Images/${notification.post_image._id}`">あなたの投稿</nuxt-link>にいいねしました。
+                    </span>
+                    <span v-else-if="notification.action = comment">
+                      さんが
+                      <nuxt-link :to="`post_Images/${notification.post_image._id}`">あなたの投稿</nuxt-link>にコメントしました。
+                    </span>
+                    <span v-else>新しい通知はありません。</span>
+                  </v-list-item-title>
+                </v-list-item>
               </template>
             </v-list>
           </v-menu>
         </div>
 
-        <!-- <template v-slot:badge>
-          <span v-if="messages > 0">{{ messages }}</span>
-        </template>
-        <v-icon large>mdi-bell</v-icon>-->
+        <!-- こっちは表示されない、エラーになる -->
+        <!-- <v-badge color="purple" left overlap>
+          <template v-slot:badge>
+            <span v-if="this.notifications.length > 0">{{ this.notifications.length }}</span>
+          </template>
+        </v-badge>
+        <template v-slot:activator="{ on }">
+          <v-icon large v-on="on" @click="checkNotifications">mdi-bell</v-icon>
+        </template>-->
+        <!-- ここまで -->
+
+        <!-- notifications.lengthを使用しなければ表示される -->
+        <!-- <v-badge color="purple" left overlap>
+          <template v-slot:badge>
+            <v-icon dark>1</v-icon>
+          </template>
+          <v-icon color="grey lighten-1" large>mdi-bell</v-icon>
+        </v-badge>-->
+        <!-- ここまで -->
 
         <v-form @submit.prevent="searchSubmit" class="pt-4">
           <v-container>
@@ -176,6 +194,7 @@
 import { mdiLogout } from "@mdi/js";
 import { mdiBell } from "@mdi/js";
 import axios from "@/plugins/axios";
+// import firebase from "@/plugins/firebase";
 
 export default {
   data() {
@@ -216,55 +235,18 @@ export default {
     };
     // consol.log(this);
   },
-  methods: {
-    logOut() {
-      this.$store.dispatch("logOut");
-      this.$router.push("/post_Images");
-    },
-    searchSubmit() {
-      this.$store.dispatch("searchSubmit", this.keyword);
-    },
-    async checkNotifications() {
-      let vm = this.currentUser;
-      try {
-        const res = await axios.get(`/notifications/${vm.id}`);
-        console.log("res.data", res.data);
-        // this.notifications = res.data;
-        // this.notifications = res.data.map(notification => {
-        //   notification.checked == false;
-        // });
-        this.notifications = res.data.filter(notification => {
-          // console.log("notification.checked", notification.checked);
-          return notification.checked === false;
-        });
-        // return notification;
-
-        // ==================debag======================
-        // var toString = Object.prototype.toString;
-        console.log("this.notifications", this.notifications);
-        console.log("this.notifications.length", this.notifications.length);
-        console.log(
-          "this.notifications.length === 0",
-          this.notificaitons.length === 0
-        );
-        // console.log("type of this.notifications", typeof this.notifications);
-        // console.log(
-        //   "toString this.notifications",
-        //   toString.call(this.notifications)
-        // );
-        // ==================debag======================
-      } catch (err) {
-        // alert(err);
-        console.log("err", err);
-      }
-    }
-  },
   computed: {
     currentUser() {
+      console.log("---");
+      if (this.$store.state.user && this.$store.state.user.id != undefined) {
+        this.notifications = this.notificationFilter(this.$store.state.user);
+      }
+
       return this.$store.state.user;
     },
     items() {
-      if (this.currentUser) {
+      console.log("test");
+      if (this.currentUser && this.currentUser.id != undefined) {
         return [
           {
             icon: "mdi-apps",
@@ -310,6 +292,101 @@ export default {
             to: "/login"
           }
         ];
+      }
+    }
+  },
+  methods: {
+    logOut() {
+      this.$store.dispatch("logOut");
+      this.$router.push("/post_Images");
+    },
+    notificationFilter(currentUser) {
+      console.log("notifications");
+      let vm = currentUser;
+      try {
+        const res = axios.get(`/notifications/${vm.id}`);
+        console.log("res", res);
+        return this.notificationsAsync(res);
+      } catch (err) {
+        // alert(err);
+        console.log("Notifications err", err);
+        return null;
+      }
+    },
+    async notificationsAsync(res) {
+      let notifications = null;
+      try {
+        notifications = await res;
+        if (notifications != undefined) {
+          console.log("notifications.data", notifications.data);
+          // this.notifications = res.data;
+          // this.notifications = res.data.map(notification => {
+          //   notification.checked == false;
+          // });
+          notifications = notifications.data.filter(notification => {
+            // console.log("notification.checked", notification.checked);
+            return notification.checked === false;
+          });
+          // return notification;
+          // ==================debag======================
+          // var toString = Object.prototype.toString;
+          console.log("this.notifications", notifications);
+          console.log("this.notifications.length", notifications.length);
+          console.log(
+            "this.notifications.length === 0",
+            notificaitons.length === 0
+          );
+        }
+
+        // console.log("type of this.notifications", typeof this.notifications);
+        // console.log(
+        //   "toString this.notifications",
+        //   toString.call(this.notifications)
+        // );
+        // ==================debag======================
+      } catch (err) {
+        // alert(err);
+        console.log("err", err);
+      }
+      console.log("tes---t");
+      return notifications;
+    },
+
+    searchSubmit() {
+      this.$store.dispatch("searchSubmit", this.keyword);
+    },
+    async checkNotifications() {
+      let vm = this.currentUser;
+      try {
+        const res = await axios.get(`/notifications/${vm.id}`);
+        console.log("res.data", res.data);
+        // this.notifications = res.data;
+        // this.notifications = res.data.map(notification => {
+        //   notification.checked == false;
+        // });
+        this.notifications = res.data.filter(notification => {
+          // console.log("notification.checked", notification.checked);
+          return notification.checked === false;
+        });
+        // return notification;
+
+        // ==================debag======================
+        // var toString = Object.prototype.toString;
+        console.log("this.notifications", this.notifications);
+        console.log("this.notifications.length", this.notifications.length);
+        console.log(
+          "this.notifications.length === 0",
+          this.notificaitons.length === 0
+        );
+        // console.log("type of this.notifications", typeof this.notifications);
+        // console.log(
+        //   "toString this.notifications",
+        //   toString.call(this.notifications)
+        // );
+        // ==================debag======================
+      } catch (err) {
+        // alert(err);
+        console.log("err", err);
       }
     }
   }

@@ -340,6 +340,7 @@ import { mdiPound } from "@mdi/js";
 import { mdiPoundBoxOutline } from "@mdi/js";
 import { mdiThumbUp } from "@mdi/js";
 import { mdiThumbUpOutline } from "@mdi/js";
+import firebase from "@/plugins/firebase";
 // import Vuex from "vuex";
 // import commentForm from "@/components/commentForm";
 
@@ -358,14 +359,26 @@ export default {
       favorite_list: [],
       absolute: true,
       overlay: false,
-      // v-lazy
-      isActive: false
+      isActive: false,
+      // end_users_list
+      current_user: []
     };
   },
   // components: {
   //   commentForm
   // },
   async mounted() {
+    await firebase.auth().onAuthStateChanged(async user => {
+      console.log("firebase_user", user);
+      if (user) {
+        console.log("firebase", user);
+        const { data } = await axios.get(`/end_users?email=${user.email}`);
+        console.log("data", data[0]);
+        store.commit("setUser", data[0]);
+        this.current_user = data;
+        console.log("current_user", this.current_user);
+      }
+    });
     const res = await axios.get(url);
     // for (this.post_images in { modal: false }) {
     let current_user_id = this.user.id;

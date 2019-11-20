@@ -150,3 +150,14 @@ Favorite.where(end_user_id: EndUser.find_by(profile_name: 'dododo').id)
 Favorite.where(end_user_id: EndUser.find_by(profile_name: 'dontdont').id)
 Favorite.where(end_user_id: EndUser.find_by(profile_name: 'dontdont').id).count
 Favorite.where(end_user_id: EndUser.find_by(profile_name: 'dontdont').id).delete_all
+a = Favorite.aa
+b = Favorite.all
+Favorite.all
+Favorite.where(end_user_id: EndUser.find_by(profile_name: 'dontdont').id).count
+a = Favorite.all
+a.delete_all
+Favorite.al
+Favorite.all
+Notification.last
+exit
+Hashtag.all

@@ -280,18 +280,17 @@ export default {
     },
     async createFollow(end_user) {
       const vm = { id: this.user.id };
-      console.log(vm);
+      console.log("vm", vm);
       try {
         // let vm = this.follow_list.push(`${this.end_user}, ${this.user}`);
         // vm.push(this.user);
-        console.log("--------------");
         // console.log(vm[0]);
-        console.log("--------------");
-        console.log(this.end_user.passive_relationships);
-        console.log("--------------");
+        console.log(
+          "this.end_user.passive_relationships",
+          this.end_user.passive_relationships
+        );
         // console.log(this.end_user.passive_relationships.following_id);
-        console.log("--------------");
-        console.log(this.user.id);
+        console.log("this.user.id", this.user.id);
         await axios.post(`/end_users/${this.end_user.id}/relationships`, vm);
         await this.updateFollowers();
         this.followers = this.followers.map(follower => {
@@ -300,12 +299,18 @@ export default {
             follower.follower_id === parseInt(`${this.end_user.id}`);
           this.isFol = true;
 
-          console.log(follower);
-          console.log(follower.following_id === vm.id);
-          console.log(follower.follower_id === parseInt(`${this.end_user.id}`));
+          console.log("follower", follower);
+          console.log(
+            "follower.following_id === vm.id",
+            follower.following_id === vm.id
+          );
+          console.log(
+            "follower.follower_id === parseInt(`${this.end_user.id}`)",
+            follower.follower_id === parseInt(`${this.end_user.id}`)
+          );
           return follower;
         });
-        console.log(this.followers);
+        console.log("this.followers", this.followers);
 
         //follower.isFol = true;
       } catch (err) {

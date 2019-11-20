@@ -1435,5 +1435,126 @@ computed: {
 【modelのカラム名=${keyword}`&`modelのカラム名=${keyword}】
 上記で投げると複数のカラムに検索を掛けることができる。
 
+## `【pushとappendの違いについて】`
+
+* pushは配列にオブジェクトを挿入する時に使用する.
+
+```
+[] <= {key: value}
+[] <= {key: value, key: value, key: value}
+複数のハッシュを挿入することも可能
+```
+```
+[{},{}] <= 複数のオブジェクトを配列にpushしたい場合は、処理を分ける
+[{},{}].push({key: value, key: value}) => [{}, {}, {}]
+[{},{},{}].push({key: value}) => [{},{},{},{}]
+という感じになる
+```
+例)
+
+```
+computed: {
+    items() {
+      let itemsArray = [{ header: "ユーザーリスト" }];
+      this.end_users.forEach(user => {
+        itemsArray.push({
+          avatar: `http://localhost:3001/end_users/${user.profile_image_name}`,
+          title: user.profile_name,
+          subtitle: user.email
+        });
+        itemsArray.push({ divider: true, inset: true });
+      });
+      return itemsArray;
+
+      // return [
+      //   { header: "ユーザーリスト" },
+      //   {
+      //     avatar: "https://cdn.vuetifyjs.com/images/lists/1.jpg",
+      //     title: "Brunch this weekend?",
+      //     subtitle:
+      //       "<span class='text--primary'>Ali Connors</span> &mdash; I'll be in your neighborhood doing errands this weekend. Do you want to hang out?"
+      //   },
+      //   { divider: true, inset: true },
+```
+
+* appendはオブジェクトにオブジェクトを足していくときに使用する。
+* * これを`連想配列`と呼ぶ
+
+```
+{key: value}.append({key2: value2}) => {key: value, key2: value2}
+```
+例）
+
+```
+ handleSubmit() {
+      const formData = new FormData();
+      var timestamp = new Date().getTime();
+      var filename = "file" + timestamp + ".jpg";
+      console.log(this.uploadFile);
+      formData.append("post_image[image]", this.file);
+      formData.append("post_image[caption]", this.caption);
+      formData.append("post_image[title]", this.title);
+      formData.append("post_image[image_name]", filename);
+      formData.append("post_image[end_user_id]", this.$store.state.user.id);
+      this.loading = true;
+      var vm = this;
+      axios.post("http://localhost:3001/post_images", formData).then(res => {
+        // console.log(res);
+        this.$router.push(`/post_Images/${res.data.id}`);
+```
+
+## `【filter関数で「◯◯以外」の値を取得する】`
+
+1. currentUser以外の値を取得したい場合
+
+```
+    items() {
+      if (this.$store.state.user && this.$store.state.user != undefined);
+      console.log("currentUser", this.currentUser);
+      let itemsArray = [{ header: "ユーザーリスト" }];
+      let end_users_list = this.end_users.filter(user => {
+        return user.id !== this.currentUser.id;
+      });
+      console.log("end_users_list", end_users_list);
+      end_users_list.forEach(user => {
+        itemsArray.push({
+          avatar: `http://localhost:3001/end_users/${user.profile_image_name}`,
+          title: user.profile_name,
+          subtitle: user.email,
+          id: user.id
+        });
+        itemsArray.push({ divider: true, inset: true });
+      });
+      console.log(itemsArray);
+      return itemsArray;
+```
+
+2. filter関数を実行している部分
+
+```
+let end_users_list = this.end_users.filter(user => {
+        return user.id !== this.currentUser.id;
+      });
+```
+
+3. 各要素のidを比較演算子でcurrentUser.idと比較する
+4. !==なのでcurrentUser.idとmatchしなかったものを戻り値としてreturnする。
+
+```
+      end_users_list.forEach(user => {
+        itemsArray.push({
+          avatar: `http://localhost:3001/end_users/${user.profile_image_name}`,
+          title: user.profile_name,
+          subtitle: user.email,
+          id: user.id
+        });
+        itemsArray.push({ divider: true, inset: true });
+      });
+      console.log(itemsArray);
+      return itemsArray;
+```
+
+5. forEach関数でで各要素にpushでobjectを挿入している
+6. 別のオブジェクトを配列として入れる({},{})場合は、もう一度pushする
 
 
