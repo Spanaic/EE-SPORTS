@@ -48,8 +48,12 @@ export default {
   /*
   ** Plugins to load before mounting the App
   */
+  router: {
+    // middleware: ['notifications']
+  },
   plugins: [
-    '@/plugins/authCheck'
+    // { src: '~/plugins/router', ssr: false },
+    '@/plugins/authCheck',
   ],
   /*
   ** Nuxt.js dev-modules

@@ -360,13 +360,15 @@ export default {
       overlay: false,
       isActive: false,
       // end_users_list
-      current_user: []
+      current_user: [],
+      // fav判定用
+      isFav: false
     };
   },
   // components: {
   //   commentForm
   // },
-  async mounted() {
+  async created() {
     // await firebase.auth().onAuthStateChanged(async user => {
     //   console.log("firebase_user", user);
     //   if (user) {

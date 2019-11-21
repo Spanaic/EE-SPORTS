@@ -6,7 +6,8 @@ const state = {
     },
     status: false,
     search: [
-    ]
+    ],
+    notifications: []
 }
 
 export default state;

@@ -8,6 +8,9 @@ const mutations = {
     },
     setSearchResult(state, payload) {
         state.search = payload;
+    },
+    setNotifications(state, payload) {
+        state.notifications = payload;
     }
 };
 

@@ -18,6 +18,9 @@ const store = () => {
             },
             search(state) {
                 return state.search;
+            },
+            notifications(state) {
+                return state.notifications;
             }
         }
     })

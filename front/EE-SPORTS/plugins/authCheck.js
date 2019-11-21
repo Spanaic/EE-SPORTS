@@ -14,9 +14,6 @@ export default (context) => {
             store.commit('setUser', data[0])
             console.log(data);
         }
-
-        // axios.post("/end_users/")
-
     })
 }
 

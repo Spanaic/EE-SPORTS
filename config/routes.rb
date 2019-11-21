@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   # get '/users/:profile_name/follows' + '.json', to: "users#follows", as: 'follows_user_json'
   # get '/users/:profile_name/explore' + '.json', to: "users#explore", as: 'explore_users_json'
   get 'notifications/:id' => 'notifications#index', as: 'notifications'
+  put 'notifications/:id' => 'notifications#update', as: 'notification'
 
 
   resources :post_images do

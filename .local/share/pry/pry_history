@@ -168,3 +168,4 @@ a = PostImage.where(title: "a").or(PostImage.where(caption: "a"))
 a = PostImage.where(title: "a").or(PostImage.where(caption: "d"))
 Notification.last
 Notification.first
+exit 

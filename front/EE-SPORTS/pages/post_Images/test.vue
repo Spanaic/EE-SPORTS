@@ -2,20 +2,42 @@
   <v-container>
     <v-row>
       <v-col cols="7">
+        <!-- メインコンテンツのスクロール化 -->
+        <!-- <v-responsive class="overflow-y-auto" max-height="600">
+          <v-lazy
+            v-model="isActive"
+            :options="{
+          threshold: .5
+        }"
+            min-height="200"
+            transition="fade-transition"
+        >-->
         <div>
-          <div v-for="(post_image, i) in filterdPostImages" :key="i">
+          <!-- 今まで動いてたやつ -->
+          <div
+            v-for="(post_image, i) in $store.state.search.length ?  $store.state.search : filterdPostImages"
+            :key="i"
+          >
+            <!-- 投稿一覧のカード表示とオーバーレイの組み込み -->
+
+            <!-- hashtag付きで、これから試すv-for -->
+            <!-- <div v-for="(post_image, i) in post_images" :key="i"> -->
+            <!-- 投稿一覧のカード表示とオーバーレイの組み込み -->
+
             <v-toolbar color="indigo" dark>
-              <v-list-item>
-                <v-list-item-avatar>
-                  <v-img
-                    :src="'http://localhost:3001/end_users/' + `${post_image.end_user.profile_image_name}`"
-                  ></v-img>
-                </v-list-item-avatar>
-                <v-list-item-content>
-                  <v-list-item-title class="headline">{{ post_image.title }}</v-list-item-title>
-                  <v-list-item-subtitle>by {{ post_image.end_user.profile_name }}</v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
+              <nuxt-link :to="`/end_images/${post_image.end_user.id}`">
+                <v-list-item>
+                  <v-list-item-avatar>
+                    <v-img
+                      :src="'http://localhost:3001/end_users/' + `${post_image.end_user.profile_image_name}`"
+                    ></v-img>
+                  </v-list-item-avatar>
+                  <v-list-item-content>
+                    <v-list-item-title class="headline">{{ post_image.title }}</v-list-item-title>
+                    <v-list-item-subtitle>by {{ post_image.end_user.profile_name }}</v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+              </nuxt-link>
             </v-toolbar>
 
             <v-card class="mx-auto mb-5" height="100%" max-width="800">
@@ -25,7 +47,7 @@
                 :src="'http://localhost:3001/post_images/' + post_image.image_name"
                 @click="overlay =!overlay"
               >
-                <v-card-title>Top 10 Australian beaches</v-card-title>
+                <v-card-title></v-card-title>
               </v-img>
               <v-overlay :absolute="absolute" :value="overlay">
                 <v-btn icon @click="overlay = false">
@@ -41,10 +63,21 @@
                 </v-btn>
               </v-overlay>
 
-              <v-card-subtitle class="pb-0">Number 10</v-card-subtitle>
+              <v-card-subtitle class="pb-0"></v-card-subtitle>
 
               <v-card-text class="text--primary">
                 <v-item-group multiple>
+                  <!-- <nuxt-link :to="`/post_Images/hashtag/${hashtag.hashname}`"> -->
+                  <!-- <div class="text-left">
+                    <v-badge color="teal" left>
+                      <template v-slot:badge>
+                        <v-icon dark>mdi-pound</v-icon>
+                      </template>
+                      <span>{{ hashtag.hashname }}</span>
+                    </v-badge>
+                  </div>-->
+                  <!-- <v-row> -->
+                  <!-- <div class="d-flex"> -->
                   <v-subheader>ハッシュタグ</v-subheader>
                   <v-item
                     v-for="(hashtag, i) in post_image.hashtags"
@@ -59,40 +92,50 @@
                       >{{ hashtag.hashname }}</v-chip>
                     </nuxt-link>
                   </v-item>
-                </v-item-group>
-                <div>{{post_image.caption}}</div>
 
-                <div>Whitsunday Island, Whitsunday Islands</div>
+                  <v-divider class="my-4 info" style="opacity: 0.22"></v-divider>
+                </v-item-group>
+                <v-subheader>説明</v-subheader>
+                <div>{{post_image.caption}}</div>
+                <v-divider class="my-4 info" style="opacity: 0.22"></v-divider>
               </v-card-text>
               <v-card-text
                 class="text--primary"
                 v-for="(post_comment, i) in post_image.post_comments"
                 :key="i"
               >
-                <div>{{post_comment.comment}}</div>
+                <div align="center">{{post_comment.comment}}</div>
               </v-card-text>
 
               <v-card-actions>
-                <v-btn color="orange" text>Share</v-btn>
+                <v-btn color="orange" text></v-btn>
 
-                <v-btn color="orange" text>Explore</v-btn>
+                <v-btn color="orange" text></v-btn>
 
                 <!-- お気に入り機能ボタンボタン（作りかけ） -->
                 <template v-if="!post_image.isFav">
+                  <!-- <div>{{post_image.id}}</div> -->
                   <v-btn icon @click="createFavorite(post_image)">
+                    <!-- <v-icon>mdi-heart-outline</v-icon> -->
                     <v-icon>mdi-thumb-up-outline</v-icon>
                   </v-btn>
                 </template>
                 <template v-else>
+                  <!-- <v-btn icon @click="destroyFavorite(post_image)">
+                        <v-icon>mdi-heart</v-icon>
+                  </v-btn>-->
                   <v-btn text icon color="deep-orange" @click="destroyFavorite(post_image)">
                     <v-icon>mdi-thumb-up</v-icon>
                   </v-btn>
                 </template>
 
+                <!-- <comment-form></comment-form> -->
                 <!-- コメント入力のダイアログ -->
                 <v-row justify="center">
                   <v-dialog v-model="dialog" persistent max-width="600px">
                     <template v-slot:activator="{ on }">
+                      <!-- <div>{{post_image.id}}</div> -->
+                      <!-- {{i}} -->
                       <v-btn
                         color="primary"
                         dark
@@ -112,7 +155,8 @@
                             </v-col>
                           </v-row>
                         </v-container>
-                        <small>*indicates required field</small>
+                        <!-- <small>"#"を付ければハッシュタグも入力出来るよ！</small> -->
+                        <medium>とてもポジティブなコメントで応援してあげよう！</medium>
                       </v-card-text>
                       <v-card-actions>
                         <v-spacer></v-spacer>
@@ -124,10 +168,14 @@
                 </v-row>
               </v-card-actions>
 
-              <v-col cols="12" lg="12" sm="6" md="3"></v-col>
+              <v-col cols="12" lg="12" sm="6" md="3">
+                <!-- <v-text-field label="Outlined" outlined></v-text-field> -->
+              </v-col>
             </v-card>
           </div>
         </div>
+        <!-- </v-lazy>
+        </v-responsive>-->
       </v-col>
 
       <v-col cols="1"></v-col>
@@ -140,13 +188,52 @@
           rounded
           dense
           outlined
-        ></v-text-field>
+        >
+          <!-- <input type="text" v-model="keyword" /> -->
+        </v-text-field>
+
+        <!-- <v-card class="mx-auto" max-width="434" tile>
+          <v-img height="100%" src="https://cdn.vuetifyjs.com/images/cards/server-room.jpg">
+            <v-row align="end" class="fill-height">
+              <v-col align-self="start" class="pa-0" cols="12">
+                <v-avatar class="profile" color="grey" size="164" tile>
+                  <v-img src="https://cdn.vuetifyjs.com/images/profiles/marcus.jpg"></v-img>
+                </v-avatar>
+              </v-col>
+              <v-col class="py-0">
+                <v-list-item color="rgba(0, 0, 0, .4)" dark>
+                  <v-list-item-content>
+                    <v-list-item-title class="title">Marcus Obrien</v-list-item-title>
+                    <v-list-item-subtitle>Network Engineer</v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-col>
+            </v-row>
+          </v-img>
+        </v-card>-->
+
+        <!-- <v-card class="mx-auto" max-width="300" tile>
+          <v-list rounded>
+            <v-subheader>REPORTS</v-subheader>
+            <v-list-item-group v-model="item" color="primary">
+              <v-list-item v-for="(item, i) in items" :key="i">
+                <v-list-item-icon>
+                  <v-icon v-text="item.icon"></v-icon>
+                </v-list-item-icon>
+                <v-list-item-content>
+                  <v-list-item-title v-text="item.text"></v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list-item-group>
+          </v-list>
+        </v-card>-->
 
         <!-- サイドバーのプロフィール画面 -->
-        <div v-if="this.$store.state.user">
+        <!-- {{ this.user }} -->
+        <div v-if="$store.state.user.id">
           <v-card max-width="375" class="mx-auto">
             <v-img
-              :src="'http://localhost:3001/end_users/' + `${this.$store.state.user.profile_image_name}`"
+              :src="'http://localhost:3001/end_users/' + `${$store.state.user.profile_image_name}`"
               height="auto"
               dark
             >
@@ -168,6 +255,10 @@
                 </v-card-title>
 
                 <v-spacer></v-spacer>
+
+                <!-- <v-card-title class="white--text pl-12 pt-12">
+                <div class="display-1 pl-12 pt-12">Ali Conners</div>
+                </v-card-title>-->
               </v-row>
             </v-img>
 
@@ -249,6 +340,8 @@ import { mdiPoundBoxOutline } from "@mdi/js";
 import { mdiThumbUp } from "@mdi/js";
 import { mdiThumbUpOutline } from "@mdi/js";
 import firebase from "@/plugins/firebase";
+// import Vuex from "vuex";
+// import commentForm from "@/components/commentForm";
 
 const url = "http://localhost:3001/post_images";
 
@@ -267,60 +360,50 @@ export default {
       overlay: false,
       isActive: false,
       // end_users_list
-      current_user: []
+      current_user: [],
+      // fav判定用
+      isFav: false
     };
   },
-
-  async mounted() {
-    await firebase.auth().onAuthStateChanged(async user => {
-      console.log("firebase_user", user);
-      if (user) {
-        console.log("firebase", user);
-        const { data } = await axios.get(`/end_users?email=${user.email}`);
-        console.log("data", data[0]);
-        store.commit("setUser", data[0]);
-        this.current_user = data;
-        console.log("current_user", this.current_user);
-      }
-    });
+  async created() {
     const res = await axios.get(url);
     let current_user_id = this.user.id;
+    console.log("current_user_id", current_user_id);
     this.post_images = res.data.map(post_image => {
-      post_image.isFav = post_image.favorites.some(fav =>
-        console.log(
-          "fav.end_user_id === current_user_id",
-          fav.end_user_id === current_user_id,
-          "fav",
-          fav,
-          "current_user_id",
-          current_user_id
-        )
+      console.log("post_image.favorites", post_image.favorites);
+      post_image.isFav = post_image.favorites.map(
+        fav => {
+          fav.end_user_id === current_user_id;
+          console.log("fav", fav);
+          return fav;
+          console.log("return_fav", fav);
+        }
+        // console.log(
+        //   "fav.end_user_id === current_user_id",
+        //   fav.end_user_id === current_user_id,
+        //   "fav",
+        //   fav,
+        //   "current_user_id",
+        //   current_user_id
+        // )
       );
-      console.log("post_image.isFavpost_image.isFav", post_image.isFav);
-
+      // console.log("post_image.isFavpost_image.isFav", post_image.isFav);
       post_image.caption = post_image.caption.replace(
         /[#＃][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー._-]+/gm,
         ""
       );
-
       post_image.hashtags.map(hashtag => {
         hashtag.hashname.replace(/[#＃]/gm, "");
       });
-
       return post_image;
     });
-    console.log(this.post_images);
-    console.log(this.$store.state.user.profile_image_name);
+    // console.log(this.post_images);
+    // console.log(this.$store.state.user.profile_image_name);
   },
   // ==============================ここ=============================
   computed: {
     user() {
-      console.log("this.$store", this.$store);
-      console.log("this.$store.getters", this.$store.getters);
-      console.log("this.$store.state", this.$store.state);
-      console.log("this.$store.getters.user", this.$store.getters.user);
-      console.log("this.$store.state.user", this.$store.state.user);
-      return this.$store.getters.user;
+      return this.$store.state.user;
     },
     filterdPostImages() {
       return this.post_images.filter(post_image => {
@@ -337,24 +420,40 @@ export default {
       console.log("-------------");
       console.log(vm);
       console.log("-------------");
-      return vm.map(search_results => {
-        console.log("-------------");
-        console.log(search_results);
-        console.log("-------------");
-        search_results.filter(search_result => {
+      return vm.map(
+        search_results => {
           console.log("-------------");
-          console.log(search_result);
+          console.log(search_results);
           console.log("-------------");
-          console.log("-------------");
-          console.log(vm.keyword == search_result.title);
-          console.log(vm.keyword == search_result.caption);
-          console.log("-------------");
-          return (
-            vm.keyword == search_result.title ||
-            vm.keyword == search_result.caption
-          );
-        });
-      });
+          search_results.filter(search_result => {
+            console.log("-------------");
+            console.log(search_result);
+            console.log("-------------");
+            console.log("-------------");
+            console.log(vm.keyword == search_result.title);
+            console.log(vm.keyword == search_result.caption);
+            console.log("-------------");
+            return (
+              vm.keyword == search_result.title ||
+              vm.keyword == search_result.caption
+            );
+          });
+        }
+        // filterdPostImages: function() {
+        //   let results = this.post_images;
+        //   for (let i in this.results) {
+        //     let result = this.results[i];
+        //     console.log(this.results);
+        //     if (
+        //       result.title.indexOf(this.keyword) !== -1 ||
+        //       result.caption.indexOf(this.keyword) !== -1
+        //     ) {
+        //       results.push(result);
+        //     }
+        //   }
+        //   return results;
+        // }
+      );
     }
   },
   methods: {
@@ -402,6 +501,10 @@ export default {
       } catch (error) {
         alert(error);
       }
+
+      // .then(res => {
+      //   this.post_comment = res.data.post_comment;
+      // });
     },
     async createFavorite(post_image) {
       try {
@@ -419,6 +522,7 @@ export default {
           return fav;
         }
       });
+      // debugger;
       console.log({ ps });
       try {
         await axios.delete(
@@ -433,3 +537,9 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+a {
+  text-decoration: none;
+}
+</style>

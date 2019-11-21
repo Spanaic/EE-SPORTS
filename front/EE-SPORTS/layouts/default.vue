@@ -373,7 +373,7 @@ export default {
     // },
     searchSubmit() {
       this.$store.dispatch("searchSubmit", this.keyword);
-      // this.keyword = "";
+      this.keyword = "";
     }
     // async checkNotifications() {
     //   let vm = this.currentUser;
