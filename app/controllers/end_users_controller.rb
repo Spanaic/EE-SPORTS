@@ -83,7 +83,11 @@ class EndUsersController < ApplicationController
     end
 
     def follows
+        @user = EndUser.find(params[:id])
+        @follows = @user.followings.all
 
+        follows = @follows.to_json(include: [:favorites, :post_images, :post_comments, :active_relationships, :passive_relationships, :followings, :followers, :active_notifications, :passive_notifications])
+        render :json => follows
     end
 
     def followers

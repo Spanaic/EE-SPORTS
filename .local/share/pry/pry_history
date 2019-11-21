@@ -176,3 +176,5 @@ Favorite.all
 a =Favorite.aa
 a =Favorite.all
 a.delete_all
+exit
+Relationship.all

@@ -586,9 +586,4 @@ export default {
 a {
   text-decoration: none;
 }
-.searchText {
-  size: 40px;
-  text-align: center;
-  margin-bottom: 30px;
-}
 </style>

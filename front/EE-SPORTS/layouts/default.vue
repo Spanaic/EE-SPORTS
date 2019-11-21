@@ -53,8 +53,9 @@
         scroll-target="#scrolling-techniques-6"
       >
         <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-
-        <v-toolbar-title>Collapsing Bar</v-toolbar-title>
+        <nuxt-link to="/post_Images">
+          <v-toolbar-title>Collapsing Bar</v-toolbar-title>
+        </nuxt-link>
 
         <v-spacer></v-spacer>
 
@@ -422,5 +423,9 @@ export default {
   background-attachment: fixed;
   background-repeat: no-repeat;
   /* opacity: 0.4; */
+}
+a {
+  text-decoration: none;
+  /* color: #fff; */
 }
 </style>

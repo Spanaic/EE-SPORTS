@@ -39,6 +39,14 @@
               <v-list-item-subtitle>
                 <nuxt-link :to="`/end_users/${this.end_user.id}/edit`">プロフィール編集</nuxt-link>
               </v-list-item-subtitle>
+
+              <v-list-item-subtitle>
+                <nuxt-link :to="`/end_users/${this.end_user.id}/followers`">フォロワーリスト</nuxt-link>
+              </v-list-item-subtitle>
+
+              <v-list-item-subtitle>
+                <nuxt-link :to="`/end_users/${this.end_user.id}/follows`">フォローリスト</nuxt-link>
+              </v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
         </v-col>
@@ -279,7 +287,7 @@ export default {
       });
     },
     async createFollow(end_user) {
-      const vm = { id: this.user.id };
+      const vm = { id: this.currentUser.id };
       console.log("vm", vm);
       try {
         // let vm = this.follow_list.push(`${this.end_user}, ${this.user}`);
@@ -290,7 +298,8 @@ export default {
           this.end_user.passive_relationships
         );
         // console.log(this.end_user.passive_relationships.following_id);
-        console.log("this.user.id", this.user.id);
+        console.log("this.user.id", vm);
+        console.log("this.end_user.id", this.end_user.id);
         await axios.post(`/end_users/${this.end_user.id}/relationships`, vm);
         await this.updateFollowers();
         this.followers = this.followers.map(follower => {
@@ -318,7 +327,8 @@ export default {
       }
     },
     async destroyFollow(end_user) {
-      const vm = { id: this.user.id };
+      const vm = { id: this.currentUser.id };
+      console.log("this.currentUser.id = vm", vm);
       const ps = end_user.passive_relationships.map(fol => {
         if (fol.following_id === vm.id) {
           return fol;
