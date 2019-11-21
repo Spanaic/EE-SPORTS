@@ -18,6 +18,7 @@
             v-for="(post_image, i) in $store.state.search.length ?  $store.state.search : filterdPostImages"
             :key="i"
           >
+            {{ post_image.isFav }}
             <!-- 投稿一覧のカード表示とオーバーレイの組み込み -->
 
             <!-- hashtag付きで、これから試すv-for -->
@@ -113,7 +114,7 @@
                 <v-btn color="orange" text></v-btn>
 
                 <!-- お気に入り機能ボタンボタン（作りかけ） -->
-                <template v-if="!post_image.isFav">
+                <template v-if="post_image.isFav !== true || undefined">
                   <!-- <div>{{post_image.id}}</div> -->
                   <v-btn icon @click="createFavorite(post_image)">
                     <!-- <v-icon>mdi-heart-outline</v-icon> -->
@@ -340,8 +341,6 @@ import { mdiPoundBoxOutline } from "@mdi/js";
 import { mdiThumbUp } from "@mdi/js";
 import { mdiThumbUpOutline } from "@mdi/js";
 import firebase from "@/plugins/firebase";
-// import Vuex from "vuex";
-// import commentForm from "@/components/commentForm";
 
 const url = "http://localhost:3001/post_images";
 
@@ -375,8 +374,9 @@ export default {
         fav => {
           fav.end_user_id === current_user_id;
           console.log("fav", fav);
-          return fav;
-          console.log("return_fav", fav);
+          console.log("current_user", current_user_id);
+          // return fav;
+          console.log("return_fav", post_image.isFav);
         }
         // console.log(
         //   "fav.end_user_id === current_user_id",
@@ -397,6 +397,7 @@ export default {
       });
       return post_image;
     });
+    // console.log("return_post_images", post_images);
     // console.log(this.post_images);
     // console.log(this.$store.state.user.profile_image_name);
   },
@@ -508,9 +509,15 @@ export default {
     },
     async createFavorite(post_image) {
       try {
-        await axios.post(`/post_images/${post_image.id}/favorites`, post_image);
+        let vm = {
+          post_image_id: post_image.id,
+          end_user_id: this.user.id
+        };
+        console.log("favorite_vm", vm)
+        await axios.post(`/post_images/${post_image.id}/favorites`, vm);
         await this.updatePostImages();
         post_image.isFav = true;
+        console.log("post_image.isFav", post_image.isFav);
       } catch (error) {
         alert(error);
       }
@@ -534,6 +541,9 @@ export default {
         alert(error);
       }
     }
+  },
+  async fetch({ store }) {
+    await store.dispatch("authCheck");
   }
 };
 </script>

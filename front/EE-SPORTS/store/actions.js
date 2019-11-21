@@ -150,6 +150,17 @@ const actions = {
                 // var errorMessage = error.message;
                 // ...
             });
+    },
+    authCheck({ commit }) {
+        firebase.auth().onAuthStateChanged(async user => {
+            if (user) {
+                // console.log(user)
+                const { data } =
+                    await axios.get(`/end_users?email=${user.email}`)
+                commit('setUser', data[0])
+                console.log(data);
+            }
+        })
     }
     // onAuth() {
     //     firebase.auth().onAuthStateChanged(user => {

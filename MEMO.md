@@ -1778,3 +1778,43 @@ logOut({ commit }) {
       });
     },
 ```
+
+## `【asyncData & fetchの使い方】`
+
+### `fetchとは？`
+
+1. コンポーネントがレンダリングされる前に呼び出される。
+2. async await dispatchを駆使することで、promiseを受け取ってからコンポーネントをレンダリングさせることが可能
+3. fetchはVuexのstoreにstateをセットするために使う。その値をthisなどで参照することは出来ない。あくまでstore経由で呼び出して使う
+
+```
+<コンポーネント側>
+
+  async fetch({ store }) {
+    await store.dispatch("authCheck");
+  }
+```
+
+```
+<actions.js側>
+
+authCheck({ commit }) {
+        firebase.auth().onAuthStateChanged(async user => {
+            if (user) {
+                // console.log(user)
+                const { data } =
+                    await axios.get(`/end_users?email=${user.email}`)
+                commit('setUser', data[0])
+                console.log(data);
+            }
+        })
+    }
+```
+
+4. fetch => stateに値をset => computedに値を格納 => computed経由でstoreの値を参照して、コンポーネント内で処理をさせる
+
+### asyncDataとは？
+
+1. コンポーネントがレンダリングされる前にdataに値をセットするために使用する
+2. セットした値はstoreに格納することなく、参照することが出来る。
+3. ※まだ実際に使ったことがないので,使ったらメモします！
