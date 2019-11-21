@@ -528,6 +528,7 @@ export default {
         );
         console.log({ data });
         this.post_image.post_comments = data;
+        this.post_comment = "";
       } catch (error) {
         alert(error);
       }

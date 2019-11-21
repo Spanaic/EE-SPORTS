@@ -1847,3 +1847,10 @@ let byeFav = ps[ps.length - 1];
 ```
 
 `配列の最後を取り除くより確実なのでこちらを採用します`index/post_images
+
+## `【ネストされた this.$route.params のidについて】`
+
+```
+console.log("this.$route.params.id", this.$route.params.userId);
+```
+`ネストされた場合だとparamsの取得pathが変更されているので注意が必要`

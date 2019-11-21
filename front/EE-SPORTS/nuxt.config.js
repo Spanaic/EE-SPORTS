@@ -12,7 +12,7 @@ const { APP_ID } = process.env;
 export default {
   mode: 'spa',
   env: {
-    baseUrl: process.env.BASE_URL || 'http://localhost:3001',
+    baseUrl: process.env.BASE_URL,
     API_KEY,
     AUTH_DOMAIN,
     DATABASE_URL,

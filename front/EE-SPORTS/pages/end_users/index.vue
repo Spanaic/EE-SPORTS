@@ -51,9 +51,11 @@ export default {
           return user.id !== this.currentUser.id;
         });
         console.log("end_users_list", end_users_list);
+        console.log("BASE_URL", process.env.baseUrl);
         end_users_list.forEach(user => {
           itemsArray.push({
-            avatar: `http://localhost:3001/end_users/${user.profile_image_name}`,
+            avatar:
+              process.env.baseUrl + `/end_users/${user.profile_image_name}`,
             title: user.profile_name,
             subtitle: user.email,
             id: user.id
