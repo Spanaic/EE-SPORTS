@@ -123,6 +123,7 @@
           </template>
           <v-icon color="grey lighten-1" large>mdi-bell</v-icon>
         </v-badge>-->
+        <nuxt-link to="/post_Images/test">てすと</nuxt-link>
 
         <!-- ここまで -->
         <v-form @submit.prevent="searchSubmit" class="pt-4">

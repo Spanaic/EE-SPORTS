@@ -127,7 +127,7 @@ const actions = {
             // &title=${payload}&profile_name=${payload}
             console.log(searchResult);
             commit('setSearchResult', searchResult);
-            this.$router.push("/post_Images")
+            this.$router.push("/post_Images/")
             this.keyword = "";
         } catch (err) {
             alert(err);

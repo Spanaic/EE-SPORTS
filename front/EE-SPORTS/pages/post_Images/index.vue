@@ -18,12 +18,15 @@
             v-for="(post_image, i) in $store.state.search.length ?  $store.state.search : filterdPostImages"
             :key="i"
           >
+            {{ post_image.isFav }}
             <!-- 投稿一覧のカード表示とオーバーレイの組み込み -->
 
             <!-- hashtag付きで、これから試すv-for -->
             <!-- <div v-for="(post_image, i) in post_images" :key="i"> -->
             <!-- 投稿一覧のカード表示とオーバーレイの組み込み -->
-
+            <!-- <template v-if="$store.state.search.length">
+              <v-text>検索結果</v-text>
+            </template>-->
             <v-toolbar color="indigo" dark>
               <nuxt-link :to="`/end_images/${post_image.end_user.id}`">
                 <v-list-item>
@@ -113,7 +116,7 @@
                 <v-btn color="orange" text></v-btn>
 
                 <!-- お気に入り機能ボタンボタン（作りかけ） -->
-                <template v-if="!post_image.isFav">
+                <template v-if="post_image.isFav !== true || undefined">
                   <!-- <div>{{post_image.id}}</div> -->
                   <v-btn icon @click="createFavorite(post_image)">
                     <!-- <v-icon>mdi-heart-outline</v-icon> -->
@@ -340,8 +343,6 @@ import { mdiPoundBoxOutline } from "@mdi/js";
 import { mdiThumbUp } from "@mdi/js";
 import { mdiThumbUpOutline } from "@mdi/js";
 import firebase from "@/plugins/firebase";
-// import Vuex from "vuex";
-// import commentForm from "@/components/commentForm";
 
 const url = "http://localhost:3001/post_images";
 
@@ -360,164 +361,90 @@ export default {
       overlay: false,
       isActive: false,
       // end_users_list
-      current_user: [],
+      current_user: []
       // fav判定用
-      isFav: false
+      // isFav: false
     };
   },
-  // components: {
-  //   commentForm
-  // },
   async created() {
-    // await firebase.auth().onAuthStateChanged(async user => {
-    //   console.log("firebase_user", user);
-    //   if (user) {
-    //     console.log("firebase", user);
-    //     const { data } = await axios.get(`/end_users?email=${user.email}`);
-    //     console.log("data", data[0]);
-    //     store.commit("setUser", data[0]);
-    //     this.current_user = data;
-    //     console.log("current_user", this.current_user);
-    //   }
-    // });
-    const res = await axios.get(url);
-    // for (this.post_images in { modal: false }) {
-    let current_user_id = this.user.id;
-    // これは動くやーつ
-    // this.post_images = res.data.map(post_image => {
-    //   post_image.isFav = post_image.favorites.some(
-    //     fav => fav.end_user_id === favorite.end_user_id
-    //   );
-    //   return post_image;
-    //   debugger;
-    // });
-    // ここまで動くやーつ
-
-    // ここからhashtagを処理して返すやーつ
-    // res.dataにpost_imagesがはいっているので、mapでばらし、
-    // isFavというぷろぱてぃを定義
-    // そこにpolst_image一つ一つに対するfavoritesをみて、someメソッドを使い、
-    // そのfavoriteの中に一つでも自分のfavがあればtrueをかえし、isFavに代入
-    this.post_images = res.data.map(post_image => {
-      post_image.isFav = post_image.favorites.some(fav =>
-        console.log(
-          "fav.end_user_id === current_user_id",
-          fav.end_user_id === current_user_id,
-          "fav",
-          fav,
-          "current_user_id",
-          current_user_id
-        )
-      );
-      console.log("post_image.isFavpost_image.isFav", post_image.isFav);
-
-      // post_image.caption = post_image.caption.replace(
-      //   /[#＃][\w\p{Han}ぁ-ヶｦ-ﾟー]+/,
-      //   this.post_image.hashtag.hashname
-      // );
-      // console.log(post_image);
-
-      // 受け取ったhashnameを<a>タグのリンクに変換完了
-      // post_image.hashtag_list = post_image.hashtags.map(hashtag => {
-      //   console.log("----------");
-      //   console.log(post_image.hashtags);
-      //   console.log("----------");
-      //   hashtag.hashname = hashtag.hashname
-      //     .split(["#", "＃"])
-      //     // FIXME:rails側で修正するか、js側でsplit&joinする際に除外するか..(#記号の話)
-      //     // 全角と半角をsplitする方法とは？
-      //     .join("")
-      //     .link(`/post/hashtag/${hashtag.hashname}`);
-      //   return hashtag;
-      //   console.log(hashtag);
-      // });
-
-      post_image.caption = post_image.caption.replace(
-        /[#＃][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー._-]+/gm,
-        ""
-      );
-
-      post_image.hashtags.map(hashtag => {
-        hashtag.hashname.replace(/[#＃]/gm, "");
-      });
-
-      // // captionからhashtagを覗いた文字列を返すことに成功。
-      // // これをcaptionに表示して、hashtagsをv-forで回して,aタグ付きのhashnameを表示すれば完成。
-      // let only_caption = post_image.caption.replace(
-      //   /[#＃][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー._-]+/gm,
-      //   ""
-      // );
-
-      // console.log("yyyyyyyyyy");
-      // console.log(only_caption);
-      // console.log("yyyyyyyyyy");
-
-      // // 変換したhashnameでcaptionに検索を掛けて、replaceする必要があり...
-      // // リレーションで降りていくことはできるけど、リレーションを戻ることは出来ない？
-
-      // let vms = post_image.caption.match(
-      //   /[#＃][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー._-]+/gm
-      // );
-      // // captionからhashtagを一つずつ抜き出すことに成功
-
-      // // let vm = post_image.caption.match(/[#＃][\w\p{Han}ぁ-ヶｦ-ﾟー]+/);
-      // console.log("gggggggggg");
-      // console.log(vms);
-      // console.log("gggggggggg");
-
-      // // post_image.hashtag = post_image.hashtags.map(hashtag => {
-      // //   hashtag.post_image.caption.replace(
-      // //     /[#＃][\w\p{Han}ぁ-ヶｦ-ﾟー]+/,
-      // //     this.post_image.hashtag.hashname
-      // //   );
-      // //   return hashtag;
-      // // });
-
-      return post_image;
-      // debugger;
-    });
-    // ここまで
-    console.log(this.post_images);
-    // this.favorite_list = res.data.favorites;
-    console.log(this.$store.state.user.profile_image_name);
-    // if this.post-images.end_user_id = this.$store.state.user.id;
-
-    // hashtag機能ために追記した部分
-    // const post_images_with_hashtags = this.post_images.map(
-    //   post_image => {
-    //     debugger;
-    //     post_image.hashtag_list = post_image.hashtags.map(hashtag => {
-    //       console.log("----------");
-    //       console.log(post_image);
-    //       console.log("----------");
-    //       post_image_hashname = hashtag
-    //         .replace("#", "")
-    //         .link(`/post/hashtag/${hashtag.hashname}`);
-    //       return hashtag;
-    //     });
-    //     return post_image;
-    //     // post_image.link = this.post_image.caption.replace(/[#＃][\w\p{Han}ぁ-ヶｦ-ﾟー]+/).link(`/post/hashtag/${this.post_image.caption.delete("#")}`)
-    //   }
-    //   // this.post_images_with_links = this.post_images.map(post_image => {
-    //   //   post_image.link = this.post_image.hashtags.map(hashtag => {
-    //   //     hashtag.replace()
-    //   // })
-    //   // })
-    // );
-    // // return post_image;
-    // const post_images_with_links = this.post_images_with_hashtags.map(
-    //   post_image => {
-    //     post_image.hashtag = post_image.hashtags.map(hashtag => {
-    //       hashtag.post_image.caption.replace(
-    //         /[#＃][\w\p{Han}ぁ-ヶｦ-ﾟー]+/,
-    //         this.post_image.hashtag.hashname
-    //       );
-    //       return hashtag;
-    //     });
-    //     return post_image;
-    //   }
-    // );
-    // hashtagここまで
+    const unwatch = this.$store.watch(
+      state => state.user,
+      async (newUser, oldUser) => {
+        console.log("state2", newUser);
+        if (newUser.id) {
+          try {
+            const res = await axios.get(url);
+            let current_user_id = this.user.id;
+            console.log("current_user_id", current_user_id);
+            this.post_images = res.data.map(post_image => {
+              console.log("post_image.favorites", post_image.favorites);
+              post_image.favorites.forEach(fav => {
+                if (fav.end_user_id === current_user_id) {
+                  return (post_image.isFav = true);
+                } else {
+                  return (post_image.isFav = false);
+                }
+              });
+              // post_image.isFav = post_image.favorites.map(fav => {
+              //   // if (fav.end_user_id) {
+              //   fav.end_user_id === current_user_id;
+              //   console.log("fav", fav);
+              //   console.log("current_user", current_user_id);
+              //   return fav;
+              //   // }
+              // });
+              post_image.caption = post_image.caption.replace(
+                /[#＃][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー._-]+/gm,
+                ""
+              );
+              post_image.hashtags.map(hashtag => {
+                hashtag.hashname.replace(/[#＃]/gm, "");
+                // debugger;
+              });
+              return post_image;
+              console.log("fav_post_image", post_image);
+            });
+          } catch (err) {
+            console.log("err", err);
+          }
+        }
+      }
+      //   const res = await axios.get(url);
+      //   let current_user_id = this.user.id;
+      //   console.log("current_user_id", current_user_id);
+      //   this.post_images = res.data.map(post_image => {
+      //     console.log("post_image.favorites", post_image.favorites);
+      //     post_image.isFav = post_image.favorites.map(
+      //       fav => {
+      //         fav.end_user_id === current_user_id;
+      //         console.log("fav", fav);
+      //         console.log("current_user", current_user_id);
+      //         // return fav;
+      //         console.log("return_fav", post_image.isFav);
+      //       }
+      //       // console.log(
+      //       //   "fav.end_user_id === current_user_id",
+      //       //   fav.end_user_id === current_user_id,
+      //       //   "fav",
+      //       //   fav,
+      //       //   "current_user_id",
+      //       //   current_user_id
+      //       // )
+      //     );
+      //     // console.log("post_image.isFavpost_image.isFav", post_image.isFav);
+      //     post_image.caption = post_image.caption.replace(
+      //       /[#＃][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー._-]+/gm,
+      //       ""
+      //     );
+      //     post_image.hashtags.map(hashtag => {
+      //       hashtag.hashname.replace(/[#＃]/gm, "");
+      //     });
+      //     return post_image;
+      //   });
+      //   // console.log("return_post_images", post_images);
+      //   // console.log(this.post_images);
+      //   // console.log(this.$store.state.user.profile_image_name);
+    );
   },
   // ==============================ここ=============================
   computed: {
@@ -537,42 +464,26 @@ export default {
     searchResults() {
       let vm = this.$store.state.search;
       console.log("-------------");
-      console.log(vm);
+      console.log("search_vm", vm);
       console.log("-------------");
-      return vm.map(
-        search_results => {
+      return vm.map(search_results => {
+        console.log("-------------");
+        console.log(search_results);
+        console.log("-------------");
+        search_results.filter(search_result => {
           console.log("-------------");
-          console.log(search_results);
+          console.log(search_result);
           console.log("-------------");
-          search_results.filter(search_result => {
-            console.log("-------------");
-            console.log(search_result);
-            console.log("-------------");
-            console.log("-------------");
-            console.log(vm.keyword == search_result.title);
-            console.log(vm.keyword == search_result.caption);
-            console.log("-------------");
-            return (
-              vm.keyword == search_result.title ||
-              vm.keyword == search_result.caption
-            );
-          });
-        }
-        // filterdPostImages: function() {
-        //   let results = this.post_images;
-        //   for (let i in this.results) {
-        //     let result = this.results[i];
-        //     console.log(this.results);
-        //     if (
-        //       result.title.indexOf(this.keyword) !== -1 ||
-        //       result.caption.indexOf(this.keyword) !== -1
-        //     ) {
-        //       results.push(result);
-        //     }
-        //   }
-        //   return results;
-        // }
-      );
+          console.log("-------------");
+          console.log(vm.keyword == search_result.title);
+          console.log(vm.keyword == search_result.caption);
+          console.log("-------------");
+          return (
+            vm.keyword == search_result.title ||
+            vm.keyword == search_result.caption
+          );
+        });
+      });
     }
   },
   methods: {
@@ -627,25 +538,36 @@ export default {
     },
     async createFavorite(post_image) {
       try {
-        await axios.post(`/post_images/${post_image.id}/favorites`, post_image);
+        let vm = {
+          post_image_id: post_image.id,
+          end_user_id: this.user.id
+        };
+        console.log("favorite_vm", vm);
+        await axios.post(`/post_images/${post_image.id}/favorites`, vm);
         await this.updatePostImages();
         post_image.isFav = true;
+        console.log("post_image.isFav", post_image.isFav);
       } catch (error) {
         alert(error);
       }
     },
     async destroyFavorite(post_image) {
       let that = this;
+      // debugger;
       const ps = post_image.favorites.map(fav => {
         if (fav.end_user_id === that.user.id) {
           return fav;
         }
       });
-      // debugger;
       console.log({ ps });
       try {
+        // let byeFav = ps.slice(-1)[0];
+        // let byeFav = ps[ps.length - 1];
+        let byeFav = ps.filter(Boolean);
+        // debugger;
+        console.log("byeFav", byeFav);
         await axios.delete(
-          `/post_images/${post_image.id}/favorites/${ps[0].id}`
+          `/post_images/${post_image.id}/favorites/${byeFav[0].id}`
         );
         this.updatePostImages();
         post_image.isFav = false;
@@ -653,6 +575,9 @@ export default {
         alert(error);
       }
     }
+  },
+  async fetch({ store }) {
+    await store.dispatch("authCheck");
   }
 };
 </script>
@@ -660,5 +585,10 @@ export default {
 <style scoped>
 a {
   text-decoration: none;
+}
+.searchText {
+  size: 40px;
+  text-align: center;
+  margin-bottom: 30px;
 }
 </style>

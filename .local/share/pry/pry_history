@@ -173,3 +173,6 @@ a = Favorite.all
 a.delete_all
 a = Favorite.all
 Favorite.all
+a =Favorite.aa
+a =Favorite.all
+a.delete_all

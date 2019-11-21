@@ -24,7 +24,9 @@
             <!-- hashtag付きで、これから試すv-for -->
             <!-- <div v-for="(post_image, i) in post_images" :key="i"> -->
             <!-- 投稿一覧のカード表示とオーバーレイの組み込み -->
-
+            <!-- <template v-if="$store.state.search.length">
+              <v-text>検索結果</v-text>
+            </template>-->
             <v-toolbar color="indigo" dark>
               <nuxt-link :to="`/end_images/${post_image.end_user.id}`">
                 <v-list-item>
@@ -359,47 +361,90 @@ export default {
       overlay: false,
       isActive: false,
       // end_users_list
-      current_user: [],
+      current_user: []
       // fav判定用
-      isFav: false
+      // isFav: false
     };
   },
   async created() {
-    const res = await axios.get(url);
-    let current_user_id = this.user.id;
-    console.log("current_user_id", current_user_id);
-    this.post_images = res.data.map(post_image => {
-      console.log("post_image.favorites", post_image.favorites);
-      post_image.isFav = post_image.favorites.map(
-        fav => {
-          fav.end_user_id === current_user_id;
-          console.log("fav", fav);
-          console.log("current_user", current_user_id);
-          // return fav;
-          console.log("return_fav", post_image.isFav);
+    const unwatch = this.$store.watch(
+      state => state.user,
+      async (newUser, oldUser) => {
+        console.log("state2", newUser);
+        if (newUser.id) {
+          try {
+            const res = await axios.get(url);
+            let current_user_id = this.user.id;
+            console.log("current_user_id", current_user_id);
+            this.post_images = res.data.map(post_image => {
+              console.log("post_image.favorites", post_image.favorites);
+              post_image.favorites.forEach(fav => {
+                if (fav.end_user_id === current_user_id) {
+                  return (post_image.isFav = true);
+                } else {
+                  return (post_image.isFav = false);
+                }
+              });
+              // post_image.isFav = post_image.favorites.map(fav => {
+              //   // if (fav.end_user_id) {
+              //   fav.end_user_id === current_user_id;
+              //   console.log("fav", fav);
+              //   console.log("current_user", current_user_id);
+              //   return fav;
+              //   // }
+              // });
+              post_image.caption = post_image.caption.replace(
+                /[#＃][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー._-]+/gm,
+                ""
+              );
+              post_image.hashtags.map(hashtag => {
+                hashtag.hashname.replace(/[#＃]/gm, "");
+                // debugger;
+              });
+              return post_image;
+              console.log("fav_post_image", post_image);
+            });
+          } catch (err) {
+            console.log("err", err);
+          }
         }
-        // console.log(
-        //   "fav.end_user_id === current_user_id",
-        //   fav.end_user_id === current_user_id,
-        //   "fav",
-        //   fav,
-        //   "current_user_id",
-        //   current_user_id
-        // )
-      );
-      // console.log("post_image.isFavpost_image.isFav", post_image.isFav);
-      post_image.caption = post_image.caption.replace(
-        /[#＃][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー._-]+/gm,
-        ""
-      );
-      post_image.hashtags.map(hashtag => {
-        hashtag.hashname.replace(/[#＃]/gm, "");
-      });
-      return post_image;
-    });
-    // console.log("return_post_images", post_images);
-    // console.log(this.post_images);
-    // console.log(this.$store.state.user.profile_image_name);
+      }
+      //   const res = await axios.get(url);
+      //   let current_user_id = this.user.id;
+      //   console.log("current_user_id", current_user_id);
+      //   this.post_images = res.data.map(post_image => {
+      //     console.log("post_image.favorites", post_image.favorites);
+      //     post_image.isFav = post_image.favorites.map(
+      //       fav => {
+      //         fav.end_user_id === current_user_id;
+      //         console.log("fav", fav);
+      //         console.log("current_user", current_user_id);
+      //         // return fav;
+      //         console.log("return_fav", post_image.isFav);
+      //       }
+      //       // console.log(
+      //       //   "fav.end_user_id === current_user_id",
+      //       //   fav.end_user_id === current_user_id,
+      //       //   "fav",
+      //       //   fav,
+      //       //   "current_user_id",
+      //       //   current_user_id
+      //       // )
+      //     );
+      //     // console.log("post_image.isFavpost_image.isFav", post_image.isFav);
+      //     post_image.caption = post_image.caption.replace(
+      //       /[#＃][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー._-]+/gm,
+      //       ""
+      //     );
+      //     post_image.hashtags.map(hashtag => {
+      //       hashtag.hashname.replace(/[#＃]/gm, "");
+      //     });
+      //     return post_image;
+      //   });
+      //   // console.log("return_post_images", post_images);
+      //   // console.log(this.post_images);
+      //   // console.log(this.$store.state.user.profile_image_name);
+    );
   },
   // ==============================ここ=============================
   computed: {
@@ -419,42 +464,26 @@ export default {
     searchResults() {
       let vm = this.$store.state.search;
       console.log("-------------");
-      console.log(vm);
+      console.log("search_vm", vm);
       console.log("-------------");
-      return vm.map(
-        search_results => {
+      return vm.map(search_results => {
+        console.log("-------------");
+        console.log(search_results);
+        console.log("-------------");
+        search_results.filter(search_result => {
           console.log("-------------");
-          console.log(search_results);
+          console.log(search_result);
           console.log("-------------");
-          search_results.filter(search_result => {
-            console.log("-------------");
-            console.log(search_result);
-            console.log("-------------");
-            console.log("-------------");
-            console.log(vm.keyword == search_result.title);
-            console.log(vm.keyword == search_result.caption);
-            console.log("-------------");
-            return (
-              vm.keyword == search_result.title ||
-              vm.keyword == search_result.caption
-            );
-          });
-        }
-        // filterdPostImages: function() {
-        //   let results = this.post_images;
-        //   for (let i in this.results) {
-        //     let result = this.results[i];
-        //     console.log(this.results);
-        //     if (
-        //       result.title.indexOf(this.keyword) !== -1 ||
-        //       result.caption.indexOf(this.keyword) !== -1
-        //     ) {
-        //       results.push(result);
-        //     }
-        //   }
-        //   return results;
-        // }
-      );
+          console.log("-------------");
+          console.log(vm.keyword == search_result.title);
+          console.log(vm.keyword == search_result.caption);
+          console.log("-------------");
+          return (
+            vm.keyword == search_result.title ||
+            vm.keyword == search_result.caption
+          );
+        });
+      });
     }
   },
   methods: {
@@ -513,7 +542,7 @@ export default {
           post_image_id: post_image.id,
           end_user_id: this.user.id
         };
-        console.log("favorite_vm", vm)
+        console.log("favorite_vm", vm);
         await axios.post(`/post_images/${post_image.id}/favorites`, vm);
         await this.updatePostImages();
         post_image.isFav = true;
@@ -524,16 +553,20 @@ export default {
     },
     async destroyFavorite(post_image) {
       let that = this;
+      // debugger;
       const ps = post_image.favorites.map(fav => {
         if (fav.end_user_id === that.user.id) {
           return fav;
         }
       });
-      // debugger;
       console.log({ ps });
       try {
+        // let byeFav = ps.slice(-1)[0];
+        let byeFav = ps[ps.length - 1];
+        // debugger;
+        console.log("byeFav", byeFav);
         await axios.delete(
-          `/post_images/${post_image.id}/favorites/${ps[0].id}`
+          `/post_images/${post_image.id}/favorites/${byeFav.id}`
         );
         this.updatePostImages();
         post_image.isFav = false;
@@ -551,5 +584,10 @@ export default {
 <style scoped>
 a {
   text-decoration: none;
+}
+.searchText {
+  size: 40px;
+  text-align: center;
+  margin-bottom: 30px;
 }
 </style>

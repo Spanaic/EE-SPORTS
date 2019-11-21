@@ -53,7 +53,7 @@ export default {
   },
   plugins: [
     // { src: '~/plugins/router', ssr: false },
-    // '@/plugins/authCheck',
+    '@/plugins/authCheck',
   ],
   /*
   ** Nuxt.js dev-modules

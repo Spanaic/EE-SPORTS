@@ -1778,6 +1778,7 @@ logOut({ commit }) {
       });
     },
 ```
+---
 
 ## `【asyncData & fetchの使い方】`
 
@@ -1818,3 +1819,31 @@ authCheck({ commit }) {
 1. コンポーネントがレンダリングされる前にdataに値をセットするために使用する
 2. セットした値はstoreに格納することなく、参照することが出来る。
 3. ※まだ実際に使ったことがないので,使ったらメモします！
+
+---
+
+## `【配列の一番最後を取り出す方法】`
+
+[参考Qiita](https://qiita.com/DecoratedKnight/items/aa2522d6f6291cac8961)
+
+```
+  let byeFav = ps.slice(-1)[0];
+```
+1. .slice(-1)[0]を指定すると取得した配列の一番最後のみ変数へと入れる事ができる。
+
+```
+let byeFav = ps[ps.length - 1];
+```
+
+2. 配列の最後の要素のみを取り出すなら、関数を使うより配列の一番最後を指定したほうが処理が走らず、早い。（こっちがおすすめ）
+
+## `【空要素(undefined, null等)を取り除く方法】`
+
+[参考Qiita](https://qiita.com/akameco/items/1636e0448e81e17e3646)
+[シンプルな記事](http://www.irohabook.com/js-array-filter-undefined)
+
+```
+    let byeFav = ps.filter(Boolean);
+```
+
+`配列の最後を取り除くより確実なのでこちらを採用します`index/post_images
