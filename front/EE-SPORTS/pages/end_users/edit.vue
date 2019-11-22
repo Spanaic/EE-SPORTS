@@ -1,6 +1,6 @@
 <template>
   <div>
-    <form action @submit.prevent="hundleSubmit">
+    <form action @submit.prevent="handleSubmit">
       <input type="text" v-model="end_user.email" />
       <input type="text" v-model="end_user.name" />
       <input type="text" v-model="end_user.profile_name" />

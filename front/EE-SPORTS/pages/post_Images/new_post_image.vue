@@ -206,7 +206,7 @@ export default {
 //   }
 // };
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .preview-item {
   width: 500px;
   height: 500px;

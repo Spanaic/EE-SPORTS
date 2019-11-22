@@ -1910,3 +1910,101 @@ function(){
 
 }
 ```
+
+---
+
+## `【複数画像のアップロード】`
+
+```
+<template>
+   <form action @submit.prevent="handleSubmit" enctype="multipart/form-data">
+      <!-- <input type="text" v-model="end_user.email" /> -->
+      <input type="text" v-model="end_user.name" />
+      <input type="text" v-model="end_user.profile_name" />
+      <img :src="`http://localhost:3001/end_users/${this.end_user.profile_image_name}`" alt />
+      <!-- <input type="submit" /> -->
+
+      <label v-show="!uploadedImage" class="input-item__label">画像を選択</label>
+      <input type="file" @change="onFileChange" />
+
+      <div class="preview-item">
+        <img v-show="uploadedImage" class="preview-item-file" :src="uploadedImage" alt />
+        <div v-show="uploadedImage" class="preview-item-btn" @click="remove">
+          <p class="preview-item-name">{{ img_name }}</p>
+        </div>
+      </div>
+      <input type="submit" id="apply-upload" v-show="uploadedImage" />
+    </form>
+</template>
+
+<script>
+
+data() {
+    return {
+      end_user: {},
+      uploadedImage: "",
+      img_name: "",
+      files: [],
+      itemLength: 0,
+      loading: false
+      // name: "",
+      // profile_name: ""
+    };
+  },
+methods: {
+    onFileChange(e) {
+      console.log(e);
+      const files = e.target.files;
+      this.createImage(files[0]);
+      console.log(files[0]);
+      this.files = files;
+      this.img_name = files[0].name;
+    },
+    // アップロードした画像を表示
+    createImage(file) {
+      const reader = new FileReader();
+      console.log(reader);
+      reader.onload = e => {
+        console.log(e);
+        this.uploadedImage = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    },
+    remove() {
+      this.uploadedImage = false;
+    },
+    handleSubmit() {
+      const formData = new FormData();
+      var timestamp = new Date().getTime();
+      var filename = "file" + timestamp + ".jpg";
+      //   console.log(this.uploadFile);
+      formData.append("end_user[image]", this.files[0]);
+      formData.append("end_user[name]", this.end_user.name);
+      formData.append("end_user[profile_image_name]", filename);
+      formData.append("end_user[profile_name]", this.end_user.profile_name);
+      //   formData.append("end_user[email", this.end_user.email);
+      //   TODO:emailの変更を行う場合は、firebaseも一緒に変更しないとならない
+      this.loading = true;
+      var vm = this;
+      console.log("----------------");
+      console.log(...formData.entries());
+      axios
+        .put(
+          `http://localhost:3001/end_users/${this.$route.params.userId}`,
+          formData
+        )
+        .then(res => {
+          console.log(res);
+          this.$router.push({
+            name: "end_users-id",
+            params: { id: res.data.id }
+          });
+        });
+    }
+  }
+
+</script>
+```
+
+
+

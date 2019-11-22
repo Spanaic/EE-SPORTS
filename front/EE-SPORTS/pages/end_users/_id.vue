@@ -26,7 +26,7 @@
           <v-list-item color="rgba(0, 0, 0, .4)" dark>
             <v-list-item-content>
               <v-list-item-title class="title">
-                <div v-if="this.currentUser.id !== this.end_user.id">
+                <div v-if="this.currentUser.id !== end_user.id">
                   <template v-if="!this.isFol">
                     <v-btn @click="createFollow(end_user)">フォロー</v-btn>
                   </template>
@@ -36,7 +36,8 @@
                 </div>
               </v-list-item-title>
 
-              <v-list-item-subtitle>
+              <v-list-item-subtitle v-if="currentUser.id === end_user.id">
+                <!-- <v-list-item-subtitle> -->
                 <nuxt-link :to="`/end_users/${this.end_user.id}/edit`">プロフィール編集</nuxt-link>
               </v-list-item-subtitle>
 
