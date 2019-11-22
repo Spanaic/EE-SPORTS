@@ -7,24 +7,7 @@
         v-for="(post_image, i) in $store.state.search.length ?  $store.state.search : filterdPostImages"
         :key="i"
       >-->
-
-      {{ post_image }}
       <v-card class="mx-auto mb-5" height="100%" max-width="800">
-        <v-toolbar color="indigo" dark>
-          <nuxt-link :to="`/end_users/${post_image.end_user.id}`">
-            <v-list-item>
-              <v-list-item-avatar>
-                <v-img
-                  :src="'http://localhost:3001/end_users/' + post_image.end_user.profile_image_name"
-                ></v-img>
-              </v-list-item-avatar>
-              <v-list-item-content>
-                <v-list-item-title class="headline">{{ post_image.title }}</v-list-item-title>
-                <v-list-item-subtitle>by {{ post_image.end_user.profile_name }}</v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-          </nuxt-link>
-        </v-toolbar>
         <v-img
           class="white--text align-end"
           height="400px"
@@ -46,6 +29,22 @@
             </nuxt-link>
           </v-btn>
         </v-overlay>
+
+        <!-- <v-toolbar color="indigo" dark>
+          <nuxt-link :to="`/end_users/${post_image.end_user.id}`">
+            <v-list-item>
+              <v-list-item-avatar>
+                <v-img
+                  :src="'http://localhost:3001/end_users/' + post_image.end_user.profile_image_name"
+                ></v-img>
+              </v-list-item-avatar>
+              <v-list-item-content>
+                <v-list-item-title class="headline">{{ post_image.title }}</v-list-item-title>
+                <v-list-item-subtitle>by {{ post_image.end_user.profile_name }}</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+          </nuxt-link>
+        </v-toolbar>-->
 
         <v-card-subtitle class="pb-0"></v-card-subtitle>
 
@@ -252,20 +251,31 @@ export default {
       const favorite = {
         end_user_id: this.user.id
       };
-      this.post_images = res.data.map(post_image => {
-        post_image.isFav = post_image.favorites.some(
-          fav => fav.end_user_id === favorite.end_user_id
-        );
-        post_image.caption = post_image.caption.replace(
-          /[#＃][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー._-]+/gm,
-          ""
-        );
-        post_image.hashtags.map(hashtag => {
-          hashtag.hashname.replace(/[#＃]/gm, "");
-        });
-        return post_image;
+      this.post_image = res.data;
+      this.post_image.isFav = this.post_image.favorites.some(
+        fav => fav.end_user_id === favorite.end_user_id
+      );
+      this.post_image.caption.replace(
+        /[#＃][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー._-]+/gm,
+        ""
+      );
+      this.post_image.hashtags.map(hashtag => {
+        hashtag.hashname.replace(/[#＃]/gm, "");
       });
     },
+    // this.post_images = res.data.map(post_image => {
+    //   post_image.isFav = post_image.favorites.some(
+    //     fav => fav.end_user_id === favorite.end_user_id
+    //   );
+    //   post_image.caption = post_image.caption.replace(
+    //     /[#＃][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー._-]+/gm,
+    //     ""
+    //   );
+    //   post_image.hashtags.map(hashtag => {
+    //     hashtag.hashname.replace(/[#＃]/gm, "");
+    //   });
+    //   return post_image;
+    // });
     async saveComment() {
       console.log("-----------------------");
       console.log("id:" + this.post_image.id);

@@ -1894,3 +1894,19 @@ methods: {
 
 ---
 
+## `【TypeError: _vm.destroyFavorite is not a function / Vue warn]: Property or method “name” is not defined on the instance but referenced during render】`
+
+[is not a function](https://teratail.com/questions/193004)
+[is not defined on the instance](https://forum.vuejs.org/t/vue-warn-property-or-method-name-is-not-defined-on-the-instance-but-referenced-during-render/34887)
+
+* 解決方法は、methodsの外側に定義されていた関数を内側に戻すだけ。インデントをあわせる時にミスをした模様。
+```
+methods: {
+  function(){
+
+  }
+}
+function(){
+
+}
+```
