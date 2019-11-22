@@ -1862,3 +1862,35 @@ console.log("this.$route.params.id", this.$route.params.userId);
 ## `【関数内の変数について】`
 
 関数内の変数を使う際は`this`を付けない！逆に値が取れない！
+
+---
+
+## `【日本語のデコード処理】`
+
+[参考記事](https://javascript.programmer-reference.com/js-url-encode-decode/)
+
+```
+<template>
+  <div>
+    <v-text>{{ decodeHashtag($route.hash) }}</v-text>
+  </div>
+</template>
+
+<script>
+
+methods: {
+    decodeHashtag(hashtag) {
+    let japaneseTag = decodeURIComponent(hashtag);
+    return japaneseTag;
+  }
+}
+
+</script>
+```
+
+1. ハッシュタグのようにエンコードされた日本語が含まれている場合はdecode関数を用いて日本語変換することが可能
+2. メソッド化して、変換したいtagを引数として渡してあげるだけ。返り値を返すのを忘れずに！
+3. template内で、methodで処理した返り値を受け取って{{マスタッシュ内}}で【値】として表示してあげる。
+
+---
+

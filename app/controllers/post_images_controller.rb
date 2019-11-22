@@ -126,8 +126,8 @@ class PostImagesController < ApplicationController
         # @tag = Hashtag.find_by(hashname: params[:name])
         @tag = PostImage.where("caption LIKE ?", "%#{params[:name]}%")
 
-        @tag.to_json(include: [:post_comments, :favorites, :end_user, :hashtags, :notifications])
-        render :json => @tag
+        tag = @tag.to_json(include: [:post_comments, :favorites, :end_user, :hashtags, :notifications])
+        render :json => tag
 
         # @user = current_user
         # @tag = Hashtag.find_by(hashname: params[:name])

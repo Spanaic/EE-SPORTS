@@ -89,9 +89,11 @@
                   >
                     <nuxt-link :to="`/post_Images/hashtag/${hashtag.hashname}`">
                       <v-chip
+                        class="ma-1"
                         active-class="purple--text"
                         :input-value="active"
                         @click="toggle"
+                        color="teal"
                       >{{ hashtag.hashname }}</v-chip>
                     </nuxt-link>
                   </v-item>
