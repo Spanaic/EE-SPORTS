@@ -2006,5 +2006,46 @@ methods: {
 </script>
 ```
 
+## `【pluginsにおけるbeforeEachについて（大形さん）】`
+
+1. plugins内でbeforeEachをしても、処理を待ってくれない。
+2. firebase.auth().onAuthStateChangedはなぜかpromiseを返してくれないため,古い技術であるpromise関数を用いている
+3. promise関数はasync前の技術でpromise内の処理が完了してresloveを返すまで待ってくれる。
+4. SSRの場合は、公式が推奨しているのはサーバ側へ処理を投げて、処理されたものをクライアント側に投げつける流れ
+5. 各ページで認証をベタ書きする場合も多い
+6. 今回はSPAなのでpluginsにpromiseを返す記述をした。
+
+```
+import firebase from '@/plugins/firebase';
+import axios from '@/plugins/axios';
+// import { functions } from 'firebase';
+
+export default async (context, inject) => {
+    const {
+        store
+    } = context
+
+    await new Promise(async (resolve, reject) => {
+        firebase.auth().onAuthStateChanged(async user => {
+            // console.log("test")
+            if (user) {
+                // console.log(user)
+                // const { data } =
+                const res = await axios.get(`/end_users?email=${user.email}`)
+                store.commit('setUser', res.data[0])
+                console.log("setUser", res.data[0]);
+
+                const notification_res = await axios.get(`/notifications/${res.data[0].id}`)
+                store.commit('setNotifications', notification_res)
+                console.log("serNotifications", notification_res)
+            }
+
+            resolve();
+        });
+    });
+}
+```
+
+
 
 

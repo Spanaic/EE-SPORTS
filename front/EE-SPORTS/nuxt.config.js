@@ -52,8 +52,9 @@ export default {
     // middleware: ['notifications']
   },
   plugins: [
+    { src: '~/plugins/router' },
     // { src: '~/plugins/router', ssr: false },
-    '@/plugins/authCheck',
+    // '@/plugins/authCheck',
   ],
   /*
   ** Nuxt.js dev-modules

@@ -1,35 +1,66 @@
 <template>
-  <form @submit.prevent="handleSubmit" enctype="multipart/form-data">
-    <v-text-field
-      v-model="title"
-      :error-messages="titleErrors"
-      :counter="30"
-      label="title"
-      required
-      @input="$v.title.$touch()"
-      @blur="$v.title.$touch()"
-    ></v-text-field>
-    <v-text-field
-      v-model="caption"
-      :error-messages="captionErrors"
-      :counter="300"
-      label="caption"
-      required
-      @input="$v.caption.$touch()"
-      @blur="$v.caption.$touch()"
-    ></v-text-field>
-    <!-- <label v-show="!uploadedImage" class="input-item__label">画像を選択</label> -->
+  <v-card class="mx-auto" color="#26c6da" dark max-width="400">
+    <v-card-title>
+      <v-icon large left>mdi-folder-upload-outline</v-icon>
+      <span class="title font-weight-light">新規投稿</span>
+    </v-card-title>
+    <form @submit.prevent="handleSubmit" enctype="multipart/form-data">
+      <v-text-field
+        class="ma-5"
+        v-model="title"
+        :error-messages="titleErrors"
+        :counter="30"
+        label="title"
+        required
+        @input="$v.title.$touch()"
+        @blur="$v.title.$touch()"
+      ></v-text-field>
+      <v-text-field
+        class="ma-5"
+        v-model="caption"
+        :error-messages="captionErrors"
+        :counter="300"
+        label="caption"
+        required
+        @input="$v.caption.$touch()"
+        @blur="$v.caption.$touch()"
+      ></v-text-field>
+      <v-file-input class="ma-5" label="File input" outlined dense @change="onFileChange"></v-file-input>
 
-    <v-file-input label="File input" outlined dense @change="onFileChange"></v-file-input>
+      <v-card-actions class="justify-center">
+        <v-btn>Signup</v-btn>
+      </v-card-actions>
 
-    <!-- <label v-show="!uploadedImage" class="input-item__label">画像を選択</label>
-    <input type="file" @change="onFileChange" />-->
+      <v-col cols="12" :justify="justify-center">
+        <v-btn class="btn" round outline color="primary" dark>
+          <input type="submit" id="apply-upload" />
+        </v-btn>
+      </v-col>
+    </form>
 
-    <v-btn class="mr-4">
-      <input type="submit" id="apply-upload" />
-    </v-btn>
-    <!-- <v-btn @click="clear">clear</v-btn> -->
-  </form>
+    <v-card-actions>
+      <v-list-item class="grow">
+        <v-list-item-avatar color="grey darken-3">
+          <v-img
+            class="elevation-6"
+            src="https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortCurly&accessoriesType=Prescription02&hairColor=Black&facialHairType=Blank&clotheType=Hoodie&clotheColor=White&eyeType=Default&eyebrowType=DefaultNatural&mouthType=Default&skinColor=Light"
+          ></v-img>
+        </v-list-item-avatar>
+
+        <v-list-item-content>
+          <v-list-item-title>Evan You</v-list-item-title>
+        </v-list-item-content>
+
+        <v-row align="center" justify="end">
+          <v-icon class="mr-1">mdi-heart</v-icon>
+          <span class="subheading mr-2">256</span>
+          <span class="mr-1">·</span>
+          <v-icon class="mr-1">mdi-share-variant</v-icon>
+          <span class="subheading">45</span>
+        </v-row>
+      </v-list-item>
+    </v-card-actions>
+  </v-card>
 </template>
 
 <script>
@@ -37,6 +68,7 @@ import { validationMixin } from "vuelidate";
 import { required, maxLength, minLength } from "vuelidate/lib/validators";
 import firebase from "@/plugins/firebase";
 import axios from "@/plugins/axios";
+import { mdiFolderUploadOutline } from "@mdi/js";
 
 export default {
   mixins: [validationMixin],

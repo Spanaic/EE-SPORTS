@@ -370,6 +370,7 @@ export default {
     };
   },
   async created() {
+    console.log("created1");
     const unwatch = this.$store.watch(
       state => state.user,
       async (newUser, oldUser) => {
