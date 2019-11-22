@@ -102,6 +102,7 @@
                 <div>{{post_image.caption}}</div>
                 <v-divider class="my-4 info" style="opacity: 0.22"></v-divider>
               </v-card-text>
+              <v-subheader>コメント</v-subheader>
               <v-card-text
                 class="text--primary"
                 v-for="(post_comment, i) in post_image.post_comments"
