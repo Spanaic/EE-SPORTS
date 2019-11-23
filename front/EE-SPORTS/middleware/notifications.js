@@ -1,34 +1,28 @@
+import firebase from '@/plugins/firebase';
 import axios from '@/plugins/axios';
+// import { functions } from 'firebase';
 
+export default async (context) => {
+    const {
+        store
+    } = context
 
-export default function (context) {
-    if (process.server) {
-        console.log(`---------middleware(SSR)_${Date.now()}----------`)
-    } else {
-        if (context.store.state.user.id !== 0) {
-            axios.get(`/notifications/${context.store.state.user.id}`)
-                .then(res => { context.store.commit('setNotifications', res); });
-            console.log("middleware_notice", res)
-        }
-        //     const {
-        //         store
-        //     } = context;
-        //     axios.get(`/notifications/${context.store.state.user.id}`)
-        //         .then(res => { store.commit('setNotifications', res); });
-        //     console.log("middleware_notice", res)
-        //         // console.log("resssssssss", res);
-        //         // return this.notificationsAsync(res);
-        //         // this.notifications = res.data.filter(notification => {
-        //         //     // console.log("notification.checked", notification.checked);
-        //         //     return notification.checked === false;
-        //         // });
-        //         .catch(err => {
-        //             // alert(err);
-        //             console.log("Notifications err", err);
-        //             return null;
-        //         })
-        // }
-        console.log(`---------middleware(CSR)_${Date.now()}----------`)
-        console.log("middleware_context", context.store.state.user)
-    }
+    await new Promise(async (resolve, reject) => {
+        firebase.auth().onAuthStateChanged(async user => {
+            // console.log("test")
+            if (user) {
+                // console.log(user)
+                // const { data } =
+                const res = await axios.get(`/end_users?email=${user.email}`)
+                store.commit('setUser', res.data[0])
+                console.log("setUser", res.data[0]);
+
+                const notification_res = await axios.get(`/notifications/${res.data[0].id}`)
+                store.commit('setNotifications', notification_res.data)
+                console.log("serNotifications", notification_res.data)
+            }
+
+            resolve();
+        });
+    });
 }

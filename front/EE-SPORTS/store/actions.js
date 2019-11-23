@@ -161,6 +161,25 @@ const actions = {
                 console.log(data);
             }
         })
+    },
+    async notificationsCheck({ commit }, payload) {
+        try {
+            console.log("notificationsCheck")
+            const res = await axios.get(`/notifications/${payload[0].id}`);
+            commit('setNotifications', res.data);
+        } catch (err) {
+            alert(err)
+        }
+    },
+    async showNotifications({ commit }, payload) {
+        try {
+            console.log("showNotifications")
+            console.log("payload", payload)
+            const res = await axios.put(`/notifications/${payload[0]}`, { id: payload[0], end_user_id: payload[1] })
+            commit('setNotifications', res.data);
+        } catch (err) {
+            alert(err)
+        }
     }
     // onAuth() {
     //     firebase.auth().onAuthStateChanged(user => {

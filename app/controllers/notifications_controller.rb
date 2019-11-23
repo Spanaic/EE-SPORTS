@@ -1,4 +1,6 @@
 class NotificationsController < ApplicationController
+    protect_from_forgery :except => [:update]
+
     def index
         end_user = EndUser.find(params[:id])
         notifications = end_user.passive_notifications.all.order("id DESC")
@@ -8,14 +10,24 @@ class NotificationsController < ApplicationController
     end
 
     def update
-        end_user = EndUser.find(params[:id])
 
-        notifications = end_user.passive_notifications.all.order("id DESC")
+        notification = Notification.find(params[:id])
 
-        notifications.where(checked: false).each do |notification|
-            notification.update(checked: true)
+        if notification.update(checked: true)
+            end_user = EndUser.find(params[:end_user_id])
+            notifications = end_user.passive_notifications.all.order("id DESC")
+            notifications_list = notifications.to_json(include: [:visitor, :visited, :post_image, :post_comment])
+            render :json => notifications_list
         end
-        @notifications = notifications.to_json(include: [:visitor, :visited, :post_image, :post_comment])
-        render :json => @notifications
+
+        # end_user = EndUser.find(params[:id])
+
+        # notifications = end_user.passive_notifications.all.order("id DESC")
+
+        # notifications.where(checked: false).each do |notification|
+        #     notification.update(checked: true)
+        # end
+        # @notifications = notifications.to_json(include: [:visitor, :visited, :post_image, :post_comment])
+        # render :json => @notifications
     end
 end

@@ -2046,6 +2046,9 @@ export default async (context, inject) => {
 }
 ```
 
+## `【middlewareとpluginsの違い】`
 
+1. middlewareはrouterを通る度に処理を行う
+2. pluginsはリロードなど、最初に処理を行った後はコンポーネント間を移動しても処理されない。
 
 

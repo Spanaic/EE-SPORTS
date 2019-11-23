@@ -28,7 +28,7 @@
               <v-text>検索結果</v-text>
             </template>-->
             <v-toolbar color="indigo" dark>
-              <nuxt-link :to="`/end_images/${post_image.end_user.id}`">
+              <nuxt-link :to="`/end_users/${post_image.end_user.id}`">
                 <v-list-item>
                   <v-list-item-avatar>
                     <v-img
@@ -449,6 +449,9 @@ export default {
       //   // console.log(this.post_images);
       //   // console.log(this.$store.state.user.profile_image_name);
     );
+  },
+  mounted () {
+      this.$store.dispatch('checkNotifications', this.$store.state.user)
   },
   // ==============================ここ=============================
   computed: {

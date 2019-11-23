@@ -73,22 +73,19 @@
         <!-- <v-menu top :close-on-content-click="closeOnContentClick"> -->
         <!-- notification表示候補2 -->
 
-        <div v-if="currentUser.id">
+        <!-- <div v-if="currentUser.id">
           <v-menu>
             <template v-slot:activator="{ on }">
               <v-badge color="purple" left overlap>
                 <template v-slot:badge>
                   <span v-if="notifications.length !== 0">{{notifications.length}}</span>
                 </template>
-                <!-- <v-btn color="primary" dark v-on="on"> -->
                 <v-icon large v-on="on">mdi-bell</v-icon>
-                <!-- </v-btn> -->
               </v-badge>
             </template>
 
             <v-list>
               <template v-if="notifications.length === 0">
-                <!-- {{ this.notifications }} -->
                 <v-list-item-title>
                   <span>新しい通知はありません。</span>
                 </v-list-item-title>
@@ -115,7 +112,9 @@
               </template>
             </v-list>
           </v-menu>
-        </div>
+        </div>-->
+
+        <notifications />
 
         <!-- notifications.lengthを使用しなければ表示される -->
         <!-- <v-badge color="purple" left overlap>
@@ -185,9 +184,13 @@
 import { mdiLogout } from "@mdi/js";
 import { mdiBell } from "@mdi/js";
 import axios from "@/plugins/axios";
+import Notifications from "@/components/Notifications";
 // import firebase from "@/plugins/firebase";
 
 export default {
+  components: {
+    Notifications
+  },
   data() {
     return {
       collapseOnScroll: true,

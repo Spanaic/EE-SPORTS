@@ -178,3 +178,11 @@ a =Favorite.all
 a.delete_all
 exit
 Relationship.all
+Notification.all
+Notification.where(checked: false).count
+Notification.end_users.find(1).where(checked: false).count
+a = EndUser.find(1)
+a.notifications.all
+exit
+Notification.find(71)
+Notification.first
