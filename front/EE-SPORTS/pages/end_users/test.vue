@@ -1,127 +1,90 @@
 <template>
-  <div>
-    <!-- {{ end_user.name }} -->
+  <v-container>
+    <v-layout justify-center>
+      <v-flex xs12 sm8>
+        <v-toolbar color="primary" dark>
+          <v-toolbar-title>ログイン</v-toolbar-title>
+        </v-toolbar>
 
-    <!-- いいね一覧 or フォロワー一覧用 -->
+        <v-card>
+          <v-container fluid>
+            <v-form ref="form">
+              <v-layout row wrap>
+                <v-text-field
+                  type="email"
+                  v-model="$v.email.$model"
+                  label="メールアドレス"
+                  required
+                  :error-messages="emailErrors"
+                ></v-text-field>
+              </v-layout>
 
-    <template>
-      <v-timeline>
-        <v-timeline-item v-for="(end_user, i) in end_users" :key="i" large>
-          <template v-slot:icon>
-            <v-avatar>
-              <img src="http://i.pravatar.cc/64" />
-            </v-avatar>
-          </template>
-          <template v-slot:opposite>
-            <span>{{ }}</span>
-          </template>
+              <v-layout row wrap>
+                <v-text-field
+                  type="password"
+                  v-model="$v.password.$model"
+                  label="パスワード"
+                  required
+                  :error-messages="passwordErrors"
+                ></v-text-field>
+              </v-layout>
 
-          <v-card max-width="344" class="mx-auto">
-            <v-list-item>
-              <v-list-item-avatar color="grey"></v-list-item-avatar>
-              <v-list-item-content>
-                <v-list-item-title class="headline">Our Changing Planet</v-list-item-title>
-                <v-list-item-subtitle>by Kurt Wagner</v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-
-            <v-img src="https://cdn.vuetifyjs.com/images/cards/mountain.jpg" height="194"></v-img>
-
-            <v-card-text>Visit ten places on our planet that are undergoing the biggest changes today.</v-card-text>
-
-            <v-card-actions>
-              <v-btn text color="deep-purple accent-4">Read</v-btn>
-              <v-btn text color="deep-purple accent-4">Bookmark</v-btn>
-              <v-spacer></v-spacer>
-              <v-btn icon>
-                <v-icon>mdi-heart</v-icon>
-              </v-btn>
-              <v-btn icon>
-                <v-icon>mdi-share-variant</v-icon>
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-timeline-item>
-      </v-timeline>
-    </template>
-  </div>
-</template>
-
-<!-- ユーザー一覧用 -->
-    <v-card max-width="400" class="mx-auto">
-      <v-container>
-        <v-row dense>
-          <v-col cols="12">
-            <v-card color="#385F73" dark>
-              <v-card-title class="headline">Unlimited music now</v-card-title>
-
-              <v-card-subtitle>Listen to your favorite artists and albums whenever and wherever, online and offline.</v-card-subtitle>
-
-              <v-card-actions>
-                <v-btn text>Listen Now</v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-col>
-
-          <v-col v-for="(end_user, i) in this.end_users_list" :key="i" cols="12">
-            <v-card dark>
-              <!-- <v-card :color="end_user.color" dark> -->
-              <div class="d-flex flex-no-wrap justify-space-between">
-                <div>
-                  <v-card-title class="headline" v-text="end_user.title"></v-card-title>
-
-                  <v-card-subtitle v-text="end_user.artist"></v-card-subtitle>
-                </div>
-
-                <v-avatar class="ma-3" size="125" tile>
-                  <v-img :src="end_user.src"></v-img>
-                </v-avatar>
-              </div>
-            </v-card>
-          </v-col>
-        </v-row>
-      </v-container>
-    </v-card>
-
-    <!-- <nuxt-link :to="`/end_users/${end_user.id}`">{{ end_user.name }}</nuxt-link> -->
-  </div>
+              <v-layout row wrap justify-center>
+                <v-btn block color="success" @click="signIn()">ログイン</v-btn>
+              </v-layout>
+            </v-form>
+          </v-container>
+        </v-card>
+      </v-flex>
+    </v-layout>
+  </v-container>
 </template>
 
 <script>
-import axios from "@/plugins/axios";
-
+import { required, email } from "vuelidate/lib/validators";
+import { validateEmail, validatePassword } from "@/plugins/validations";
+// import { validationMixin } from "vuelidate";
 export default {
-  data() {
+  head() {
     return {
-      end_users: []
+      title: "ログイン"
     };
   },
-  created: async function() {
-    const res = await axios.get("/end_users");
-    this.end_users = res.data[1];
-    console.log(res.data[1]);
+
+  data: () => ({
+    email: "",
+    password: ""
+  }),
+
+  validations: {
+    email: {
+      required,
+      email
+    },
+    password: {
+      required
+    }
   },
+
   computed: {
-    // いい感じのユーザリスト用(ロジックがうまく組めず...)
-    // end_users_list() {
-    //   var randomColor = "#";
-    //   for (var i = 0; i < 6; i++) {
-    //     randomColor += ((16 * Math.random()) | 0).toString(16);
-    //   }
-    //   return this.end_users.map(end_user => {
-    //     end_user = end_user.append({
-    //       color: randomColor,
-    //       src:
-    //         "http://localhost:3001/end_users/" +
-    //         `${end_user.profile_image_name}`,
-    //       title: `${end_user.profile_name}`,
-    //       artist: `${end_user.name}`
-    //     });
-    //   });
-    // }
+    emailErrors() {
+      console.log(this.$v);
+      return validateEmail(this.$v.email);
+    },
+
+    passwordErrors() {
+      return validatePassword(this.$v.password);
+    }
+  },
+
+  methods: {
+    async signIn() {
+      // validation発火
+      this.$v.$touch();
+      // validationに引っかかってるか検査
+      if (this.$v.$invalid) return;
+      // このあとサインイン処理
+    }
   }
 };
 </script>
-
-<style>
-</style>

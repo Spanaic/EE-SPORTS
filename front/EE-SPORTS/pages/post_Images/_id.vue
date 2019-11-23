@@ -16,6 +16,23 @@
         >
           <v-card-title></v-card-title>
         </v-img>
+
+        <v-card-title>
+          <!-- <v-btn dark icon>
+            <v-icon>mdi-chevron-left</v-icon>
+          </v-btn>-->
+
+          <v-spacer></v-spacer>
+
+          <!-- <v-btn dark icon class="mr-4">
+            <v-icon>mdi-pencil</v-icon>
+          </v-btn>-->
+
+          <v-btn dark icon>
+            <v-icon>mdi-dots-vertical</v-icon>
+          </v-btn>
+        </v-card-title>
+
         <v-overlay :absolute="absolute" :value="overlay">
           <v-btn icon @click="overlay = false">
             <v-icon>mdi-close</v-icon>

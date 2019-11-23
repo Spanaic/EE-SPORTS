@@ -60,7 +60,7 @@ import firebase from "@/plugins/firebase";
 export default {
   mixins: [validationMixin],
   validations: {
-    name: { required, maxLength: maxLength(30) },
+    name: { maxLength: maxLength(30) },
     profile_name: { required, maxLength: maxLength(50) }
   },
   data() {
@@ -77,20 +77,20 @@ export default {
   },
   computed: {
     nameErrors() {
-      const errors = [];
-      if (!this.$v.name.$dirty) return errors;
-      !this.$v.name.maxLength &&
-        errors.push("名前は30文字以内で入力して下さい");
-      !this.$v.name.required && errors.push("名前は入力必須です");
-      return errors;
+      // const errors = [];
+      // if (!this.$v.name.$dirty) return errors;
+      // !this.$v.name.maxLength &&
+      //   errors.push("名前は30文字以内で入力して下さい");
+      // !this.$v.name.required && errors.push("名前は入力必須です");
+      // return errors;
     },
     profileNameErrors() {
-      const errors = [];
-      if (!this.$v.profile_name.$dirty) return errors;
-      !this.$v.profile_name.maxLength &&
-        errors.push("ユーザー名は50以内で入力して下さい");
-      !this.$v.profile_name.required && errors.push("ユーザー名は入力必須です");
-      return errors;
+      // const errors = [];
+      // if (!this.$v.profile_name.$dirty) return errors;
+      // // !this.$v.profile_name.maxLength &&
+      // //   errors.push("ユーザー名は50以内で入力して下さい");
+      // !this.$v.profile_name.required && errors.push("ユーザー名は入力必須です");
+      // return errors;
     }
   },
   created() {
@@ -154,10 +154,14 @@ export default {
         )
         .then(res => {
           console.log(res);
-          this.$router.push({
-            name: "end_users-id",
-            params: { id: res.data.id }
-          });
+          this.$router.push(
+            `/end_users/${this.$route.params.userId}`,
+            this.$store.state.user
+          );
+          // this.$router.push({
+          //   name: "end_users-id",
+          //   params: { id: res.data.id }
+          // });
         });
     }
   }

@@ -105,13 +105,31 @@
                 <v-divider class="my-4 info" style="opacity: 0.22"></v-divider>
               </v-card-text>
               <v-subheader>コメント</v-subheader>
-              <v-card-text
-                class="text--primary"
-                v-for="(post_comment, i) in post_image.post_comments"
-                :key="i"
-              >
-                <div align="center">{{post_comment.comment}}</div>
-              </v-card-text>
+              <div :class="{ maxHeight: post_image.isActive}">
+                <!-- <v-transition name:"fade"> -->
+                <v-card-text
+                  class="text--primary"
+                  v-for="(post_comment, i) in post_image.post_comments"
+                  :key="i"
+                >
+                  <div align="center">{{post_comment.comment}}</div>
+                </v-card-text>
+                <!-- </v-transition> -->
+              </div>
+
+              <v-btn
+                v-if="post_image.isActive === true"
+                @click="showComments(post_image)"
+                :class="{ showBtn: post_image.showBtn }"
+              >続きを読む</v-btn>
+
+              <v-btn v-if="post_image.showBtn === true" @click="closeComments(post_image)">コメントを閉じる</v-btn>
+
+              <!-- <v-btn
+                v-if="post_image.isActive === true"
+                @click="showComments(post_image)"
+                :class="{ showBtn: post_image.showBtn }"
+              >続きを読む</v-btn>-->
 
               <v-card-actions>
                 <v-btn color="orange" text></v-btn>
@@ -365,8 +383,6 @@ export default {
       isActive: false,
       // end_users_list
       current_user: []
-      // fav判定用
-      // isFav: false
     };
   },
   async created() {
@@ -405,6 +421,8 @@ export default {
                 hashtag.hashname.replace(/[#＃]/gm, "");
                 // debugger;
               });
+              post_image.isActive = true;
+              post_image.showBtn = false;
               return post_image;
               console.log("fav_post_image", post_image);
             });
@@ -583,6 +601,14 @@ export default {
       } catch (error) {
         alert(error);
       }
+    },
+    showComments(post_image) {
+      post_image.isActive = false;
+      post_image.showBtn = true;
+    },
+    closeComments(post_image) {
+      post_image.isActive = true;
+      post_image.showBtn = false;
     }
   },
   async fetch({ store }) {
@@ -594,5 +620,12 @@ export default {
 <style scoped>
 a {
   text-decoration: none;
+}
+.maxHeight {
+  max-height: 300px;
+  overflow: hidden;
+}
+.showBtn {
+  display: none;
 }
 </style>

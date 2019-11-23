@@ -5,9 +5,7 @@
       <v-row align="end" class="fill-height">
         <v-col align-self="start" class="pa-0" cols="3">
           <v-avatar class="profile" color="grey" size="164" tile>
-            <v-img
-              :src="'http://localhost:3001/end_users/' + `${this.end_user.profile_image_name}`"
-            ></v-img>
+            <v-img :src="'http://localhost:3001/end_users/' + `${end_user.profile_image_name}`"></v-img>
           </v-avatar>
         </v-col>
 
@@ -15,9 +13,9 @@
         <v-col>
           <v-list-item color="rgba(0, 0, 0, .4)" dark>
             <v-list-item-content>
-              <v-list-item-title class="title">{{ this.end_user.name }}</v-list-item-title>
-              <v-list-item-subtitle>{{ this.end_user.profile_name}}</v-list-item-subtitle>
-              <v-list-item-subtitle>{{ this.end_user.email}}</v-list-item-subtitle>
+              <v-list-item-title class="title">{{ end_user.name }}</v-list-item-title>
+              <v-list-item-subtitle>{{ end_user.profile_name}}</v-list-item-subtitle>
+              <v-list-item-subtitle>{{ end_user.email}}</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
         </v-col>

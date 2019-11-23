@@ -1,7 +1,7 @@
 class EndUser < ApplicationRecord
 
-        validates :name, presence: true, length: {minimum: 1, maximum: 20}
-        validates :profile_name, presence: true, length: {minimum: 1, maximum: 100}
+        # validates :name, presence: true, length: {minimum: 1, maximum: 20}
+        # validates :profile_name, presence: true, length: {minimum: 1, maximum: 100}
         # validates :profile_name, presence: true, format: { with: /\A[a-zA-Z\d]+\z/ }, length: {minimum: 1, maximum: 100}
 
   has_and_belongs_to_many :post_comments
