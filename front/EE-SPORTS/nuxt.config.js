@@ -53,7 +53,7 @@ export default {
   },
   plugins: [
     { src: '~/plugins/router' },
-    "@/plugins/vuelidate"
+    // "@/plugins/vuelidate"
     // { src: '~/plugins/router', ssr: false },
     // '@/plugins/authCheck',
   ],

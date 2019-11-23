@@ -103,7 +103,6 @@ export default {
     axios
       .get(`/end_users/${this.$route.params.userId}`)
       .then(res => {
-        console.log(res);
         this.end_user = res.data;
         this.$store.dispatch("notificationsCheck", this.$store.state.user);
       })
@@ -113,7 +112,6 @@ export default {
   },
   methods: {
     onFileChange(e) {
-      console.log(e);
       // const files = e.target.files;
       this.createImage(e);
       this.file = e;
@@ -122,7 +120,6 @@ export default {
     // アップロードした画像を表示
     createImage(file) {
       const reader = new FileReader();
-      console.log(reader);
       reader.onload = e => {
         console.log(e);
         this.uploadedImage = e.target.result;
@@ -145,15 +142,12 @@ export default {
       //   TODO:emailの変更を行う場合は、firebaseも一緒に変更しないとならない
       this.loading = true;
       var vm = this;
-      console.log("----------------");
-      console.log(...formData.entries());
       axios
         .put(
           `http://localhost:3001/end_users/${this.$route.params.userId}`,
           formData
         )
         .then(res => {
-          console.log(res);
           this.$router.push(
             `/end_users/${this.$route.params.userId}`,
             this.$store.state.user

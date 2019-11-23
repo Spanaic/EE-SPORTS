@@ -14,6 +14,7 @@
         >-->
         <div>
           <!-- 今まで動いてたやつ -->
+          {{ this.filteredPostImages }}
           <div
             v-for="(post_image, i) in $store.state.search.length ?  $store.state.search : filterdPostImages"
             :key="i"
@@ -104,34 +105,8 @@
                 <div>{{post_image.caption}}</div>
                 <v-divider class="my-4 info" style="opacity: 0.22"></v-divider>
               </v-card-text>
-              <v-subheader>コメント</v-subheader>
-              <div :class="{ maxHeight: post_image.isActive}">
-                <!-- <v-transition name:"fade"> -->
-                <v-card-text
-                  class="text--primary"
-                  v-for="(post_comment, i) in post_image.post_comments"
-                  :key="i"
-                >
-                  <div align="center">{{post_comment.comment}}</div>
-                </v-card-text>
-                <!-- </v-transition> -->
-              </div>
 
-              <v-btn
-                v-if="post_image.isActive === true"
-                @click="showComments(post_image)"
-                :class="{ showBtn: post_image.showBtn }"
-              >続きを読む</v-btn>
-
-              <v-btn v-if="post_image.showBtn === true" @click="closeComments(post_image)">コメントを閉じる</v-btn>
-
-              <!-- <v-btn
-                v-if="post_image.isActive === true"
-                @click="showComments(post_image)"
-                :class="{ showBtn: post_image.showBtn }"
-              >続きを読む</v-btn>-->
-
-              <v-card-actions>
+              <v-card-actions v-if="$store.state.user.id !== 0 ">
                 <v-btn color="orange" text></v-btn>
 
                 <v-btn color="orange" text></v-btn>
@@ -191,6 +166,33 @@
                   </v-dialog>
                 </v-row>
               </v-card-actions>
+
+              <v-subheader>コメント</v-subheader>
+              <div :class="{ maxHeight: post_image.isActive}">
+                <!-- <v-transition name:"fade"> -->
+                <v-card-text
+                  class="text--primary"
+                  v-for="(post_comment, i) in post_image.post_comments"
+                  :key="i"
+                >
+                  <div align="center">{{post_comment.comment}}</div>
+                </v-card-text>
+                <!-- </v-transition> -->
+              </div>
+
+              <v-btn
+                v-if="post_image.isActive === true"
+                @click="showComments(post_image)"
+                :class="{ showBtn: post_image.showBtn }"
+              >続きを読む</v-btn>
+
+              <v-btn v-if="post_image.showBtn === true" @click="closeComments(post_image)">コメントを閉じる</v-btn>
+
+              <!-- <v-btn
+                v-if="post_image.isActive === true"
+                @click="showComments(post_image)"
+                :class="{ showBtn: post_image.showBtn }"
+              >続きを読む</v-btn>-->
 
               <v-col cols="12" lg="12" sm="6" md="3">
                 <!-- <v-text-field label="Outlined" outlined></v-text-field> -->
@@ -386,12 +388,37 @@ export default {
     };
   },
   async created() {
+    // if (this.$store.state.user.id === 0)
+    // {
     console.log("created1");
+
+    try {
+      const res = await axios.get(url);
+      console.log("res", res);
+      this.post_images = res.data.map(post_image => {
+        post_image.caption = post_image.caption.replace(
+          /[#＃][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー._-]+/gm,
+          ""
+        );
+        post_image.hashtags.map(hashtag => {
+          hashtag.hashname.replace(/[#＃]/gm, "");
+          // debugger;
+        });
+        post_image.isActive = true;
+        post_image.showBtn = false;
+        return post_image;
+      });
+      console.log("this.post_images", this.post_images);
+    } catch (err) {
+      console.log(err);
+    }
+
     const unwatch = this.$store.watch(
       state => state.user,
       async (newUser, oldUser) => {
-        console.log("state2", newUser);
-        if (newUser.id) {
+        console.log("あああああd1");
+
+        if (newUser && newUser.id != 0) {
           try {
             const res = await axios.get(url);
             let current_user_id = this.user.id;
@@ -426,51 +453,39 @@ export default {
               return post_image;
               console.log("fav_post_image", post_image);
             });
+            console.log("this.post_images", this.post_images);
           } catch (err) {
             console.log("err", err);
           }
+        } else {
+          try {
+            const res = await axios.get(url);
+            console.log("res", res);
+            this.post_images = res.data.map(post_image => {
+              post_image.caption = post_image.caption.replace(
+                /[#＃][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー._-]+/gm,
+                ""
+              );
+              post_image.hashtags.map(hashtag => {
+                hashtag.hashname.replace(/[#＃]/gm, "");
+                // debugger;
+              });
+              return post_image;
+            });
+            console.log("this.post_images", this.post_images);
+          } catch (err) {
+            console.log(err);
+          }
         }
+        console.log("his.post_images", this.post_images);
       }
-      //   const res = await axios.get(url);
-      //   let current_user_id = this.user.id;
-      //   console.log("current_user_id", current_user_id);
-      //   this.post_images = res.data.map(post_image => {
-      //     console.log("post_image.favorites", post_image.favorites);
-      //     post_image.isFav = post_image.favorites.map(
-      //       fav => {
-      //         fav.end_user_id === current_user_id;
-      //         console.log("fav", fav);
-      //         console.log("current_user", current_user_id);
-      //         // return fav;
-      //         console.log("return_fav", post_image.isFav);
-      //       }
-      //       // console.log(
-      //       //   "fav.end_user_id === current_user_id",
-      //       //   fav.end_user_id === current_user_id,
-      //       //   "fav",
-      //       //   fav,
-      //       //   "current_user_id",
-      //       //   current_user_id
-      //       // )
-      //     );
-      //     // console.log("post_image.isFavpost_image.isFav", post_image.isFav);
-      //     post_image.caption = post_image.caption.replace(
-      //       /[#＃][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー._-]+/gm,
-      //       ""
-      //     );
-      //     post_image.hashtags.map(hashtag => {
-      //       hashtag.hashname.replace(/[#＃]/gm, "");
-      //     });
-      //     return post_image;
-      //   });
-      //   // console.log("return_post_images", post_images);
-      //   // console.log(this.post_images);
-      //   // console.log(this.$store.state.user.profile_image_name);
     );
   },
   async mounted() {
-    console.log("notificationsCheck", this.$store.state.user);
-    await this.$store.dispatch("notificationsCheck", this.$store.state.user);
+    if (this.$store.state.user.id !== 0) {
+      console.log("notificationsCheck", this.$store.state.user);
+      await this.$store.dispatch("notificationsCheck", this.$store.state.user);
+    }
   },
   // ==============================ここ=============================
   computed: {
@@ -478,6 +493,7 @@ export default {
       return this.$store.state.user;
     },
     filterdPostImages() {
+      console.log("filtered");
       return this.post_images.filter(post_image => {
         return (
           post_image.title.includes(this.keyword) ||

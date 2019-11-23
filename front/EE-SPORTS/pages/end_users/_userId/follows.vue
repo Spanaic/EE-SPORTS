@@ -58,7 +58,6 @@ export default {
   },
   async created() {
     try {
-      console.log("this.$route.params.id", this.$route.params.userId);
       const res = await axios.get(
         `/end_users/${this.$route.params.userId}/follows`,
         this.$route.params.userId

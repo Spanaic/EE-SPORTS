@@ -75,18 +75,6 @@ export default {
         }
       );
     }
-  },
-  async mounted() {
-    console.log("iine!");
-    // if (this.$store.state.user.id !== 0) {
-    //   await this.$store.dispatch("notificationsCheck", this.$store.state.user);
-    //   this.notifications = this.$store.state.notifications.filter(
-    //     notification => {
-    //       return notification.checked === false;
-    //     }
-    //   );
-    // }
-    console.log("this.notifications", this.notifications);
   }
 };
 </script>

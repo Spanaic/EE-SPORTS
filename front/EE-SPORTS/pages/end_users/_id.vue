@@ -288,18 +288,11 @@ export default {
     },
     async createFollow(end_user) {
       const vm = { id: this.currentUser.id };
-      console.log("vm", vm);
       try {
         // let vm = this.follow_list.push(`${this.end_user}, ${this.user}`);
         // vm.push(this.user);
         // console.log(vm[0]);
-        console.log(
-          "this.end_user.passive_relationships",
-          this.end_user.passive_relationships
-        );
         // console.log(this.end_user.passive_relationships.following_id);
-        console.log("this.user.id", vm);
-        console.log("this.end_user.id", this.end_user.id);
         await axios.post(`/end_users/${this.end_user.id}/relationships`, vm);
         await this.updateFollowers();
         this.followers = this.followers.map(follower => {
@@ -307,19 +300,8 @@ export default {
             follower.following_id === vm.id &&
             follower.follower_id === parseInt(`${this.end_user.id}`);
           this.isFol = true;
-
-          console.log("follower", follower);
-          console.log(
-            "follower.following_id === vm.id",
-            follower.following_id === vm.id
-          );
-          console.log(
-            "follower.follower_id === parseInt(`${this.end_user.id}`)",
-            follower.follower_id === parseInt(`${this.end_user.id}`)
-          );
           return follower;
         });
-        console.log("this.followers", this.followers);
 
         //follower.isFol = true;
       } catch (err) {
@@ -328,15 +310,11 @@ export default {
     },
     async destroyFollow(end_user) {
       const vm = { id: this.currentUser.id };
-      console.log("this.currentUser.id = vm", vm);
       const ps = end_user.passive_relationships.map(fol => {
         if (fol.following_id === vm.id) {
           return fol;
-          console.log(fol);
         }
       });
-      console.log("--------------");
-      console.log({ ps });
       try {
         await axios.delete(
           `/end_users/${this.end_user.id}/relationships/${ps[0].id}`

@@ -37,10 +37,8 @@ export default {
   created: async function() {
     const res = await axios.get("/end_users");
     this.end_users = res.data[1];
-    console.log(res.data[1]);
   },
   async mounted() {
-    console.log("notificationsCheck", this.$store.state.user);
     await this.$store.dispatch("notificationsCheck", this.$store.state.user);
   },
   computed: {
@@ -49,13 +47,10 @@ export default {
     },
     items() {
       if (this.currentUser) {
-        console.log("currentUser", this.currentUser);
         let itemsArray = [{ header: "ユーザーリスト" }];
         let end_users_list = this.end_users.filter(user => {
           return user.id !== this.currentUser.id;
         });
-        console.log("end_users_list", end_users_list);
-        console.log("BASE_URL", process.env.baseUrl);
         end_users_list.forEach(user => {
           itemsArray.push({
             avatar:
@@ -66,7 +61,6 @@ export default {
           });
           itemsArray.push({ divider: true, inset: true });
         });
-        console.log(itemsArray);
         return itemsArray;
       }
     }

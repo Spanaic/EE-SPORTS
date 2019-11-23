@@ -28,7 +28,6 @@ export default {
   //   this.end_user = res.data;
   // },
   async mounted() {
-    console.log("notificationsCheck", this.$store.state.user);
     await this.$store.dispatch("notificationsCheck", this.$store.state.user);
   }
 };

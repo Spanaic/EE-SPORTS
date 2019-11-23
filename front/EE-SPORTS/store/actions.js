@@ -174,7 +174,7 @@ const actions = {
             console.log("res.data", res.data);
             commit('setNotifications', notifications);
         } catch (err) {
-            alert(err)
+            console.log("setNotifications_err", err)
         }
     },
     async showNotifications({ commit }, payload) {
@@ -187,7 +187,7 @@ const actions = {
             });
             commit('setNotifications', notifications);
         } catch (err) {
-            alert(err)
+            console.log("setNotifications_err", err)
         }
     }
     // onAuth() {
