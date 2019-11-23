@@ -64,6 +64,7 @@ export default {
         this.$route.params.userId
       );
       this.follows = res.data;
+      await this.$store.dispatch("notificationsCheck", this.$store.state.user);
     } catch (err) {
       console.log("err", err);
     }

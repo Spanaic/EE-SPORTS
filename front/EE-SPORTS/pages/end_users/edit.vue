@@ -18,9 +18,18 @@ export default {
       end_user: {}
     };
   },
-  mounted: async function() {
+  async created() {
     const res = await axios.get(`/end_users/${this.$route.params.id}`);
     this.end_user = res.data;
+    await this.$store.dispatch("notificationsCheck", this.$store.state.user);
+  },
+  // mounted: async function() {
+  //   const res = await axios.get(`/end_users/${this.$route.params.id}`);
+  //   this.end_user = res.data;
+  // },
+  async mounted() {
+    console.log("notificationsCheck", this.$store.state.user);
+    await this.$store.dispatch("notificationsCheck", this.$store.state.user);
   }
 };
 </script>

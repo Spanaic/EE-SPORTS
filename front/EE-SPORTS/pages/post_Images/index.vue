@@ -450,8 +450,9 @@ export default {
       //   // console.log(this.$store.state.user.profile_image_name);
     );
   },
-  mounted () {
-      this.$store.dispatch('checkNotifications', this.$store.state.user)
+  async mounted() {
+    console.log("notificationsCheck", this.$store.state.user);
+    await this.$store.dispatch("notificationsCheck", this.$store.state.user);
   },
   // ==============================ここ=============================
   computed: {

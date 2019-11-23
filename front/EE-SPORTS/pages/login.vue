@@ -1,6 +1,6 @@
  <template>
   <div>
-    <v-container>
+    <!-- <v-container>
       <v-layout row class="text-xs-center">
         <v-flex xs3 style="background-image: url('http://cdn.wallpapersafari.com/7/86/gqiGH7.jpg')">
           <v-card height="500px"></v-card>
@@ -22,7 +22,7 @@
           </v-container>
         </v-flex>
       </v-layout>
-    </v-container>
+    </v-container>-->
 
     <v-card class="pa-5 mt-5">
       <form action>
@@ -42,9 +42,6 @@
           @input="$v.password.$touch()"
           @blur="$v.password.$touch()"
         ></v-text-field>
-
-        <!-- <button type="button" @click="googleLogIn">Google認証</button>
-        <button type="button" @click="logOut">log out</button>-->
 
         <v-btn class="mr-4" @click="submit">submit</v-btn>
         <v-btn @click="clear">clear</v-btn>

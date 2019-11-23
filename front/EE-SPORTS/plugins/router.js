@@ -18,8 +18,11 @@ export default async (context, inject) => {
                 console.log("setUser", res.data[0]);
 
                 const notification_res = await axios.get(`/notifications/${res.data[0].id}`)
-                store.commit('setNotifications', notification_res.data)
-                console.log("serNotifications", notification_res.data)
+                let notifications = notification_res.data.filter(notification => {
+                    return notification.checked === false
+                });
+                store.commit('setNotifications', notifications)
+                console.log("serNotifications", notifications)
             }
 
             resolve();

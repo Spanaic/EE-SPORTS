@@ -220,6 +220,7 @@ export default {
   },
   async mounted() {
     await this.updateFollowers();
+    await this.$store.dispatch("notificationsCheck", this.$store.state.user);
     // let para = `${this.$route.params.id}`;
     // console.log(para);
     // let url = "/end_users/" + para;

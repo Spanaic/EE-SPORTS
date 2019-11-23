@@ -90,6 +90,10 @@ export default {
       hashtag_post_images: []
     };
   },
+  async mounted() {
+    console.log("notificationsCheck", this.$store.state.user);
+    await this.$store.dispatch("notificationsCheck", this.$store.state.user);
+  },
   computed: {
     currentUser() {
       return this.$store.state.user;

@@ -105,6 +105,7 @@ export default {
       .then(res => {
         console.log(res);
         this.end_user = res.data;
+        this.$store.dispatch("notificationsCheck", this.$store.state.user);
       })
       .catch(function(error) {
         console.log("ERROR!! occurred in Backend.", error);

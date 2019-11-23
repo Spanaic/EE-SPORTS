@@ -39,6 +39,10 @@ export default {
     this.end_users = res.data[1];
     console.log(res.data[1]);
   },
+  async mounted() {
+    console.log("notificationsCheck", this.$store.state.user);
+    await this.$store.dispatch("notificationsCheck", this.$store.state.user);
+  },
   computed: {
     currentUser() {
       return this.$store.state.user;

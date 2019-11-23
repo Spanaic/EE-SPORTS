@@ -36,7 +36,10 @@ export default {
       TableName: "Faces"
     };
   },
-  //   fetch() {},
+  async mounted() {
+    console.log("notificationsCheck", this.$store.state.user);
+    await this.$store.dispatch("notificationsCheck", this.$store.state.user);
+  },
   methods: {
     onFileChange(e) {
       console.log(e);

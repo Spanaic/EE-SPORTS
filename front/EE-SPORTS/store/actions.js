@@ -165,8 +165,14 @@ const actions = {
     async notificationsCheck({ commit }, payload) {
         try {
             console.log("notificationsCheck")
-            const res = await axios.get(`/notifications/${payload[0].id}`);
-            commit('setNotifications', res.data);
+            const res = await axios.get(`/notifications/${payload.id}`);
+            let notifications = res.data.filter(notification => {
+                return notification.checked === false
+            });
+            console.log("setNotifications_check", notifications)
+            // commit('setNotifications', notifications);
+            console.log("res.data", res.data);
+            commit('setNotifications', notifications);
         } catch (err) {
             alert(err)
         }
@@ -176,7 +182,10 @@ const actions = {
             console.log("showNotifications")
             console.log("payload", payload)
             const res = await axios.put(`/notifications/${payload[0]}`, { id: payload[0], end_user_id: payload[1] })
-            commit('setNotifications', res.data);
+            let notifications = res.data.filter(notification => {
+                return notification.checked === false
+            });
+            commit('setNotifications', notifications);
         } catch (err) {
             alert(err)
         }

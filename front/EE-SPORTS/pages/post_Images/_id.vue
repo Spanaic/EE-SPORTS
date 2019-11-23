@@ -235,6 +235,10 @@ export default {
     //   }
     // );
   },
+  async mounted() {
+    console.log("notificationsCheck", this.$store.state.user);
+    await this.$store.dispatch("notificationsCheck", this.$store.state.user);
+  },
   computed: {
     user() {
       return this.$store.state.user;
