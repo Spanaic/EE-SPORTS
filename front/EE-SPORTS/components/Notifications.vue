@@ -23,21 +23,20 @@
           <v-list-item
             v-for="(notification, index) in latestNotifications"
             :key="index"
-            @click="showNotificaions(notification)"
+            @click="showNotifications(notification)"
           >
             <v-list-item-title>
-              <span v-if="notification.action === follow">
-                <nuxt-link
-                  :to="`/end_users/${notification.visitor_id}`"
-                >{{ notification.visitor.profile_name }}</nuxt-link>さんがあなたをフォローしました。
-              </span>
-              <span v-else-if="notification.action === favorite">
+              <nuxt-link
+                :to="`/end_users/${notification.visitor_id}`"
+              >{{ notification.visitor.profile_name }}</nuxt-link>
+              <span v-if="notification.action === 'follow'">さんがあなたをフォローしました。</span>
+              <span v-else-if="notification.action === 'favorite'">
                 さんが
-                <nuxt-link :to="`post_Images/${notification.post_image._id}`">あなたの投稿</nuxt-link>にいいねしました。
+                <nuxt-link :to="`post_Images/${notification.post_image.id}`">あなたの投稿</nuxt-link>にいいねしました。
               </span>
-              <span v-else-if="notification.action === comment">
+              <span v-else-if="notification.action === 'comment'">
                 さんが
-                <nuxt-link :to="`post_Images/${notification.post_image._id}`">あなたの投稿</nuxt-link>にコメントしました。
+                <nuxt-link :to="`post_Images/${notification.post_image.id}`">あなたの投稿</nuxt-link>にコメントしました。
               </span>
               <span v-else>新しい通知はありません。</span>
             </v-list-item-title>
@@ -64,7 +63,7 @@ export default {
     }
   },
   methods: {
-    async showNotificaions(notification) {
+    async showNotifications(notification) {
       await this.$store.dispatch("showNotifications", [
         notification.id,
         this.$store.state.user.id
