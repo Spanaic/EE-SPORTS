@@ -186,3 +186,8 @@ a.notifications.all
 exit
 Notification.find(71)
 Notification.first
+a = Favorite.aal
+a = Favorite.all
+Favorite.all
+a = Favorite.all
+a.delete_all

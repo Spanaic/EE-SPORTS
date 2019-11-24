@@ -14,7 +14,6 @@
         >-->
         <div>
           <!-- 今まで動いてたやつ -->
-          {{ this.filteredPostImages }}
           <div
             v-for="(post_image, i) in $store.state.search.length ?  $store.state.search : filterdPostImages"
             :key="i"
@@ -396,6 +395,13 @@ export default {
       const res = await axios.get(url);
       console.log("res", res);
       this.post_images = res.data.map(post_image => {
+        post_image.favorites.forEach(fav => {
+          if (fav.end_user_id === this.user.id) {
+            return (post_image.isFav = true);
+          } else {
+            return (post_image.isFav = false);
+          }
+        });
         post_image.caption = post_image.caption.replace(
           /[#＃][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー._-]+/gm,
           ""
