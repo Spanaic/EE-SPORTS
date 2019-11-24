@@ -569,6 +569,7 @@ export default {
           comment: this.post_comment,
           end_user: this.user
         };
+        console.log("comment", comment)
 
         const { data } = await axios.post(
           `/post_images/${this.post_image.id}/post_comments`,

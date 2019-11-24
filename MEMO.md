@@ -2045,10 +2045,30 @@ export default async (context, inject) => {
     });
 }
 ```
+---
 
 ## `【middlewareとpluginsの違い】`
 
 1. middlewareはrouterを通る度に処理を行う
 2. pluginsはリロードなど、最初に処理を行った後はコンポーネント間を移動しても処理されない。
 
+---
 
+## `【ストロングパラメータの指定とparamsの参照の仕方】`
+
+```
+ Parameters: {"comment"=>"こここ", "end_user"=>{"id"=>3, "email"=>"test@gmail.com", "name"=>"test", "profile_name"=>"test_user", "profile_image_name"=>"file1574415602533.jpg", "created_at"=>"2019-11-19T04:31:20.000Z", "updated_at"=>"2019-11-22T09:40:02.000Z"}, "post_image_id"=>"5", "post_comment"=>{"comment"=>"こここ"}}
+```
+
+` "post_comment"=>{"comment"=>"こここ"}}`
+
+paramsの最後のpost_commentの部分を見ている。
+この部分にparamsとして渡った値をストロングパラメータでnewレコードに挿入することが出来る
+
+```
+def post_comment_params
+        params.require(:post_comment).permit(:comment, :end_user_id)
+    end
+```
+
+上記の場合だと、:end_user_idが欲しくてもparamsに渡っていないため、ストロングパラメータで値を渡すことが出来ない。

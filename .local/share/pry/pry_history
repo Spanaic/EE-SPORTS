@@ -191,3 +191,5 @@ a = Favorite.all
 Favorite.all
 a = Favorite.all
 a.delete_all
+b =  PostComment.all
+b.delete_all
