@@ -102,14 +102,6 @@
           <div>{{post_image.caption}}</div>
           <v-divider class="my-4 info" style="opacity: 0.22"></v-divider>
         </v-card-text>
-        <v-subheader>コメント</v-subheader>
-        <v-card-text
-          class="text--primary"
-          v-for="(post_comment, i) in post_image.post_comments"
-          :key="i"
-        >
-          <div align="center">{{post_comment.comment}}</div>
-        </v-card-text>
 
         <v-card-actions>
           <v-btn color="orange" text></v-btn>
@@ -166,6 +158,15 @@
             </v-dialog>
           </v-row>
         </v-card-actions>
+
+        <v-subheader>コメント</v-subheader>
+        <v-card-text
+          class="text--primary"
+          v-for="(post_comment, i) in post_image.post_comments"
+          :key="i"
+        >
+          <div align="center">{{post_comment.comment}}</div>
+        </v-card-text>
 
         <v-col cols="12" lg="12" sm="6" md="3">
           <!-- <v-text-field label="Outlined" outlined></v-text-field> -->
@@ -376,7 +377,13 @@ export default {
       }
     },
     async deletePostImage(post_image) {
-      const res = await axios.delete(`/post_images/${post_image.id}`);
+      const res = await axios.delete(
+        `/post_images/${post_image.id}`,
+        post_image.id
+      );
+      this.post_image = res.data;
+      console.log("this.post_image", this.post_image);
+      this.$router.push("/post_Images");
     }
   },
   async fetch({ store }) {

@@ -1,7 +1,7 @@
 class PostImagesController < ApplicationController
     # before_action :authenticate_user!, except: [:index, :show]
     # protect_from_forgery with: :null_session
-    protect_from_forgery :except => [:create]
+    protect_from_forgery :except => [:create, :destroy]
 
 
     def index
@@ -119,7 +119,9 @@ class PostImagesController < ApplicationController
     def destroy
         post_image = PostImage.find(params[:id])
         post_image.destroy
-        redirect_to post_images_path
+        json = post_image.to_json
+        render :json => json
+        # redirect_to post_images_path
     end
 
     def hashtag
