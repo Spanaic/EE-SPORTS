@@ -101,7 +101,10 @@
                   <v-divider class="my-4 info" style="opacity: 0.22"></v-divider>
                 </v-item-group>
                 <v-subheader>説明</v-subheader>
-                <div>{{post_image.caption}}</div>
+                <div>
+                  {{post_image.caption}}
+                  <!-- {{post_image.post_comments[0]}} -->
+                </div>
                 <v-divider class="my-4 info" style="opacity: 0.22"></v-divider>
               </v-card-text>
 
@@ -166,9 +169,79 @@
                 </v-row>
               </v-card-actions>
 
-              <v-subheader>コメント</v-subheader>
+              <!-- <v-subheader>コメント</v-subheader> -->
               <div :class="{ maxHeight: post_image.isActive}">
-                <!-- <v-transition name:"fade"> -->
+                <v-container fluid>
+                  <v-row justify="center">
+                    <v-subheader>コメント</v-subheader>
+
+                    <v-expansion-panels popout>
+                      <v-expansion-panel
+                        v-for="(message, i) in post_image.post_comments"
+                        :key="i"
+                        hide-actions
+                      >
+                        <v-expansion-panel-header>
+                          <v-row align="center" class="spacer" no-gutters>
+                            <v-col cols="4" sm="2" md="1">
+                              <v-avatar size="36px">
+                                <img
+                                  alt="Avatar"
+                                  :src="'http://localhost:3001/end_users/' + `${message.end_user.profile_image_name}`"
+                                />
+                                <!-- v-if="message.end_user.porfile_image_name" -->
+                                <!-- <v-icon v-else :color="message.color" v-text="message.icon"></v-icon> -->
+                              </v-avatar>
+                            </v-col>
+
+                            <v-col class="hidden-xs-only" sm="5" md="3">
+                              <strong v-html="message.end_user.profile_name"></strong>
+                              <span
+                                v-if="message.total"
+                                class="grey--text"
+                              >&nbsp;({{ message.total }})</span>
+                            </v-col>
+
+                            <v-col class="text-no-wrap" cols="5" sm="3">
+                              <v-chip
+                                v-if="message.new"
+                                :color="`${message.color} lighten-4`"
+                                class="ml-0"
+                                label
+                                small
+                              >{{ message.new }} new</v-chip>
+                              <!-- <strong v-html="message.comment | webcamp"></strong> -->
+                              {{message.comment | commentsLength}}
+                            </v-col>
+
+                            <v-col
+                              v-if="message.excerpt"
+                              class="grey--text text-truncate hidden-sm-and-down"
+                            >
+                              &mdash;
+                              {{ message }}
+                            </v-col>
+                          </v-row>
+                        </v-expansion-panel-header>
+
+                        <v-expansion-panel-content>
+                          <v-divider></v-divider>
+                          <v-card-text v-text="message.comment "></v-card-text>
+                        </v-expansion-panel-content>
+                      </v-expansion-panel>
+                    </v-expansion-panels>
+                  </v-row>
+                </v-container>
+                <!-- <v-card-text
+                  class="text--primary"
+                  v-for="(post_comment, i) in post_image.post_comments"
+                  :key="i"
+                >
+                  <div align="center">{{post_comment.comment}}</div>
+                </v-card-text>-->
+              </div>
+
+              <!-- <div :class="{ maxHeight: post_image.isActive}">
                 <v-card-text
                   class="text--primary"
                   v-for="(post_comment, i) in post_image.post_comments"
@@ -176,8 +249,7 @@
                 >
                   <div align="center">{{post_comment.comment}}</div>
                 </v-card-text>
-                <!-- </v-transition> -->
-              </div>
+              </div>-->
 
               <v-btn
                 v-if="post_image.isActive === true"
@@ -263,7 +335,7 @@
               dark
             >
               <v-row class>
-                <v-card-title>
+                <!-- <v-card-title>
                   <v-btn dark icon>
                     <v-icon>mdi-chevron-left</v-icon>
                   </v-btn>
@@ -277,7 +349,7 @@
                   <v-btn dark icon>
                     <v-icon>mdi-dots-vertical</v-icon>
                   </v-btn>
-                </v-card-title>
+                </v-card-title>-->
 
                 <v-spacer></v-spacer>
 
@@ -290,37 +362,36 @@
             <v-list two-line>
               <v-list-item @click>
                 <v-list-item-icon>
-                  <v-icon color="indigo">mdi-phone</v-icon>
+                  <v-icon color="white">mdi-account-circle</v-icon>
                 </v-list-item-icon>
 
                 <v-list-item-content>
                   <v-list-item-title>{{ this.$store.state.user.name }}</v-list-item-title>
                   <v-list-item-subtitle>お名前</v-list-item-subtitle>
                 </v-list-item-content>
-
-                <v-list-item-icon>
-                  <v-icon>mdi-message-text</v-icon>
-                </v-list-item-icon>
               </v-list-item>
 
               <v-list-item @click>
-                <v-list-item-action></v-list-item-action>
+                <v-list-item-icon>
+                  <v-icon color="white">mdi-rename-box</v-icon>
+                </v-list-item-icon>
+                <!-- <v-list-item-action></v-list-item-action> -->
 
                 <v-list-item-content>
                   <v-list-item-title>{{ this.$store.state.user.profile_name }}</v-list-item-title>
-                  <v-list-item-subtitle>ニックネーム</v-list-item-subtitle>
+                  <v-list-item-subtitle>ユーザー名</v-list-item-subtitle>
                 </v-list-item-content>
 
-                <v-list-item-icon>
+                <!-- <v-list-item-icon>
                   <v-icon>mdi-message-text</v-icon>
-                </v-list-item-icon>
+                </v-list-item-icon>-->
               </v-list-item>
 
               <v-divider inset></v-divider>
 
               <v-list-item @click>
                 <v-list-item-icon>
-                  <v-icon color="indigo">mdi-email</v-icon>
+                  <v-icon color="white">mdi-email</v-icon>
                 </v-list-item-icon>
 
                 <v-list-item-content>
@@ -329,7 +400,7 @@
                 </v-list-item-content>
               </v-list-item>
 
-              <v-list-item @click>
+              <!-- <v-list-item @click>
                 <v-list-item-action></v-list-item-action>
 
                 <v-list-item-content>
@@ -349,7 +420,7 @@
                   <v-list-item-title>1400 Main Street</v-list-item-title>
                   <v-list-item-subtitle>Orlando, FL 79938</v-list-item-subtitle>
                 </v-list-item-content>
-              </v-list-item>
+              </v-list-item>-->
             </v-list>
           </v-card>
         </div>
@@ -361,6 +432,8 @@
 <script>
 import axios from "@/plugins/axios";
 import { mdiPound } from "@mdi/js";
+import { mdiAccountCircle } from "@mdi/js";
+import { mdiRenameBox } from "@mdi/js";
 import { mdiPoundBoxOutline } from "@mdi/js";
 import { mdiThumbUp } from "@mdi/js";
 import { mdiThumbUpOutline } from "@mdi/js";
@@ -371,6 +444,7 @@ const url = "http://localhost:3001/post_images";
 export default {
   data() {
     return {
+      baseUrl: process.env.baseUrl,
       keyword: "",
       post_images: [],
       post_image: {},
@@ -385,6 +459,11 @@ export default {
       // end_users_list
       current_user: []
     };
+  },
+  filters: {
+    commentsLength(message) {
+      return message.length >= 10 ? message.slice(0, 10) + "....." : message;
+    }
   },
   async created() {
     // if (this.$store.state.user.id === 0)
@@ -533,6 +612,24 @@ export default {
         });
       });
     }
+    // comments(post_image) {
+    //   let commentsArray = [];
+    //   this.post_images.forEach(post_image => {
+    //     post_image.post_comments.forEach(post_comment => {
+    //       console.log("post_comment", post_comment);
+    //       commentsArray.push({
+    //         avatar:
+    //           process.env.baseUrl +
+    //           `/end_users/${post_comment.end_user.profile_image_name}`,
+    //         name: post_comment.end_user.profile_name,
+    //         title: post_comment.comment.slice(0, 10),
+    //         lorem: post_comment.comment
+    //       });
+    //     });
+    //   });
+    //   console.log("commentsArray", commentsArray);
+    //   return commentsArray;
+    // }
   },
   methods: {
     setPostImage(postImage) {
@@ -571,12 +668,13 @@ export default {
         };
         console.log("comment", comment);
 
-        const { data } = await axios.post(
+        const res = await axios.post(
           `/post_images/${this.post_image.id}/post_comments`,
           comment
         );
-        console.log({ data });
-        this.post_image.post_comments = data;
+        console.log(res);
+        this.post_image.post_comments = res.data.post_comments;
+        console.log("post_image.post_comments", this.post_image.post_comments);
         this.post_comment = "";
       } catch (error) {
         alert(error);

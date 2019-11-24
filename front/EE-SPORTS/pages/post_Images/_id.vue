@@ -8,6 +8,22 @@
         :key="i"
       >-->
       <v-card class="mx-auto mb-5" height="100%" max-width="800">
+        <v-toolbar color="indigo" dark>
+          <nuxt-link :to="`/end_users/${post_image.end_user.id}`">
+            <v-list-item>
+              <v-list-item-avatar>
+                <v-img
+                  :src="'http://localhost:3001/end_users/' + post_image.end_user.profile_image_name"
+                ></v-img>
+              </v-list-item-avatar>
+              <v-list-item-content>
+                <v-list-item-title class="headline">{{ post_image.title }}</v-list-item-title>
+                <v-list-item-subtitle>by {{ post_image.end_user.profile_name }}</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+          </nuxt-link>
+        </v-toolbar>
+
         <v-img
           class="white--text align-end"
           height="400px"
@@ -28,9 +44,21 @@
             <v-icon>mdi-pencil</v-icon>
           </v-btn>-->
 
-          <v-btn dark icon>
-            <v-icon>mdi-dots-vertical</v-icon>
-          </v-btn>
+          <v-menu offset-y>
+            <template v-slot:activator="{ on }">
+              <v-btn v-on="on" dark icon>
+                <v-icon>mdi-dots-vertical</v-icon>
+              </v-btn>
+            </template>
+            <v-list>
+              <v-list-item @click>
+                <v-list-item-title>編集</v-list-item-title>
+              </v-list-item>
+              <v-list-item @click="deletePostImage(post_image)">
+                <v-list-item-title>削除</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
         </v-card-title>
 
         <v-overlay :absolute="absolute" :value="overlay">
@@ -46,22 +74,6 @@
             </nuxt-link>
           </v-btn>
         </v-overlay>
-
-        <!-- <v-toolbar color="indigo" dark>
-          <nuxt-link :to="`/end_users/${post_image.end_user.id}`">
-            <v-list-item>
-              <v-list-item-avatar>
-                <v-img
-                  :src="'http://localhost:3001/end_users/' + post_image.end_user.profile_image_name"
-                ></v-img>
-              </v-list-item-avatar>
-              <v-list-item-content>
-                <v-list-item-title class="headline">{{ post_image.title }}</v-list-item-title>
-                <v-list-item-subtitle>by {{ post_image.end_user.profile_name }}</v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-          </nuxt-link>
-        </v-toolbar>-->
 
         <v-card-subtitle class="pb-0"></v-card-subtitle>
 
@@ -104,7 +116,7 @@
 
           <v-btn color="orange" text></v-btn>
 
-          <!-- お気に入り機能ボタンボタン（作りかけ） -->
+          <!-- お気に入り機能ボタンボタン -->
           <template v-if="post_image.isFav !== true || undefined">
             <!-- <div>{{post_image.id}}</div> -->
             <v-btn icon @click="createFavorite(post_image)">
@@ -178,6 +190,7 @@ export default {
   data() {
     return {
       post_image: {},
+      raw_post_image: {},
       current_user: [],
       dialog: false,
       post_comments: [],
@@ -190,6 +203,15 @@ export default {
     };
   },
   async created() {
+    this.post_image = this.raw_post_image;
+    this.post_image.caption.replace(
+      /[#＃][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー._-]+/gm,
+      ""
+    );
+    this.post_image.hashtags.map(hashtag => {
+      hashtag.hashname.replace(/[#＃]/gm, "");
+    });
+
     const unwatch = this.$store.watch(
       state => state.user,
       async (newUser, oldUser) => {
@@ -203,6 +225,12 @@ export default {
             console.log("post_image.end_user.id", res.data.end_user.id);
 
             this.post_image = res.data;
+
+            console.log(
+              "this.post_image.end_user.id",
+              this.post_image.end_user.id
+            );
+
             this.post_image.favorites.forEach(fav => {
               if (fav.end_user_id === current_user_id) {
                 return (res.data.isFav = true);
@@ -215,6 +243,7 @@ export default {
               ""
             );
             console.log("this.post_image.caption", this.post_image.caption);
+
             this.post_image.hashtags.map(hashtag => {
               hashtag.hashname.replace(/[#＃]/gm, "");
             });
@@ -225,32 +254,16 @@ export default {
         }
       }
     );
-
-    //         // this.post_images = res.data.map(post_image => {
-    //         //   console.log("post_image.favorites", post_image.favorites);
-    //         this.post_image = res.data.favorites.forEach(fav => {
-    //           if (fav.end_user_id === current_user_id) {
-    //             return (res.data.isFav = true);
-    //           } else {
-    //             return (res.data.isFav = false);
-    //           }
-    //         });
-    //         this.post_image = res.data.caption.replace(
-    //           /[#＃][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー._-]+/gm,
-    //           ""
-    //         );
-    //         res.data.hashtags.map(hashtag => {
-    //           hashtag.hashname.replace(/[#＃]/gm, "");
-    //           // debugger;
-    //         });
-    //         return res.data;
-    //         console.log("fav_post_image", post_image);
-    //       } catch (err) {
-    //         console.log("err", err);
-    //       }
-    //     }
-    //   }
-    // );
+  },
+  async asyncData({ params }) {
+    try {
+      const res = await axios.get(url + `/${params.id}`);
+      return {
+        raw_post_image: res.data
+      };
+    } catch (err) {
+      console.log("err", err);
+    }
   },
   async mounted() {
     console.log("notificationsCheck", this.$store.state.user);
@@ -361,6 +374,9 @@ export default {
       } catch (error) {
         alert(error);
       }
+    },
+    async deletePostImage(post_image) {
+      const res = await axios.delete(`/post_images/${post_image.id}`);
     }
   },
   async fetch({ store }) {

@@ -2082,3 +2082,92 @@ def post_comment_params
 ```
 
 1. 子の関連テーブルに孫の関連テーブルをinclude:させることでアソシエーションされたデータをクライアント側に渡すことができる。
+
+---
+## `【asyncData fetch】`
+
+### `asyncData`
+
+thisが使えない。dataを打ち込める
+storeも参照できない
+
+### `fetch`
+
+storeにしか値を入れられない。
+thisが参照出来ない
+storeは・・・
+
+### `後でさせたい処理`
+
+watch内にあとでさせたい処理を記述して、先に描画に必要な部分を処理させることが出来る
+
+```
+async created() {
+    this.post_image = this.raw_post_image;
+    this.post_image.caption.replace(
+      /[#＃][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー._-]+/gm,
+      ""
+    );
+    this.post_image.hashtags.map(hashtag => {
+      hashtag.hashname.replace(/[#＃]/gm, "");
+    });
+
+    const unwatch = this.$store.watch(
+      state => state.user,
+      async (newUser, oldUser) => {
+        console.log("state2", newUser);
+        if (newUser.id) {
+          try {
+            const res = await axios.get(url + `/${this.$route.params.id}`);
+            let current_user_id = this.user.id;
+            console.log("current_user_id", current_user_id);
+            console.log("res.data", res.data);
+            console.log("post_image.end_user.id", res.data.end_user.id);
+
+            this.post_image = res.data;
+
+            console.log(
+              "this.post_image.end_user.id",
+              this.post_image.end_user.id
+            );
+
+            this.post_image.favorites.forEach(fav => {
+              if (fav.end_user_id === current_user_id) {
+                return (res.data.isFav = true);
+              } else {
+                return (res.data.isFav = false);
+              }
+            });
+            this.post_image.caption.replace(
+              /[#＃][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー._-]+/gm,
+              ""
+            );
+            console.log("this.post_image.caption", this.post_image.caption);
+
+            this.post_image.hashtags.map(hashtag => {
+              hashtag.hashname.replace(/[#＃]/gm, "");
+            });
+            console.log("this.post_image.hashtags", this.post_image.hashtags);
+          } catch (err) {
+            console.log("err", err);
+          }
+        }
+      }
+    );
+  },
+  async asyncData({ params }) {
+    try {
+      const res = await axios.get(url + `/${params.id}`);
+      return {
+        raw_post_image: res.data
+      };
+    } catch (err) {
+      console.log("err", err);
+    }
+  },
+```
+
+1. `ライフサイクルはレンダリングを待ってくれない`
+2. `asyncで処理をawaitさせることは出来るけど、非同期なのでレンダリングは進んでしまう`
+3. `ライフサイクルをコントロールするために、asyncData, fetch, middleware, plugins, storeを駆使する`
+4. `pagesのindex.vueの前に、もう一つにエントリーポイントを作成することで、v-ifを噛ませて条件分岐を行う設計`

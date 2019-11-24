@@ -19,10 +19,12 @@ class PostCommentsController < ApplicationController
         if  @post_comment.save!
             @post_comment.create_notification_post_comment(end_user, @post_comment.post_comments)
             # redirect_to post_image_path(params[:post_image_id])
-            render :json => @post_comment.post_comments
+            post_comments_list = @post_comment.to_json(include: [:favorites,:end_user, :hashtags, :notifications,:post_comments =>{ :include => :end_user}])
+            p post_comments_list
+            render :json => post_comments_list
         else
             puts @post_comment.errors.full_messages
-            render :json => @post_comment , status: 500
+            render :json => post_comments_list , status: 500
             # render template: "post_images/show"
         end
     end
