@@ -2072,3 +2072,13 @@ def post_comment_params
 ```
 
 上記の場合だと、:end_user_idが欲しくてもparamsに渡っていないため、ストロングパラメータで値を渡すことが出来ない。
+
+---
+
+## `【関連テーブル（孫テーブル）のjsonを取得する記述方法】`
+
+```
+@post_images = post_images.to_json(include: [:favorites,:end_user, :hashtags, :notifications,:post_comments =>{ :include => :end_user}])
+```
+
+1. 子の関連テーブルに孫の関連テーブルをinclude:させることでアソシエーションされたデータをクライアント側に渡すことができる。

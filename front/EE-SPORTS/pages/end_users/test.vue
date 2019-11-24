@@ -9,11 +9,7 @@
             <v-row align="center" class="spacer" no-gutters>
               <v-col cols="4" sm="2" md="1">
                 <v-avatar size="36px">
-                  <img
-                    v-if="message.avatar"
-                    alt="Avatar"
-                    src="https://avatars0.githubusercontent.com/u/9064066?v=4&s=460"
-                  />
+                  <img v-if="message.avatar" alt="Avatar" :src="message.avatar" />
                   <v-icon v-else :color="message.color" v-text="message.icon"></v-icon>
                 </v-avatar>
               </v-col>
@@ -34,16 +30,16 @@
                 <strong v-html="message.title"></strong>
               </v-col>
 
-              <!-- <v-col v-if="message.excerpt" class="grey--text text-truncate hidden-sm-and-down">
+              <v-col v-if="message.excerpt" class="grey--text text-truncate hidden-sm-and-down">
                 &mdash;
-                {{ message.excerpt }}
-              </v-col>-->
+                {{ message }}
+              </v-col>
             </v-row>
           </v-expansion-panel-header>
 
           <v-expansion-panel-content>
             <v-divider></v-divider>
-            <v-card-text v-text="lorem"></v-card-text>
+            <v-card-text v-text="message.lorem"></v-card-text>
           </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>
@@ -234,15 +230,19 @@ export default {
           // let comments_list =
           post_image.post_comments.forEach(post_comment => {
             console.log("post_comment", post_comment);
-            // commentsArray.push({
-            //   avatar:
-            //     process.env.baseUrl +
-            //     `/end_users/${post_comment.end_user.profile_image_name}`,
-            //   name: post_comment.end_user.profile_name,
-            //   title: post_comment.comment.slice(0, 10)
-            // });
+            commentsArray.push({
+              avatar:
+                process.env.baseUrl +
+                `/end_users/${post_comment.end_user.profile_image_name}`,
+              name: post_comment.end_user.profile_name,
+              title: post_comment.comment.slice(0, 10),
+              lorem: post_comment.comment
+            });
           });
         });
+
+        console.log("commentsArray", commentsArray);
+        return commentsArray;
       }
     }
   },

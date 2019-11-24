@@ -12,7 +12,7 @@ class PostImagesController < ApplicationController
         unless params[:search].blank?
         else
             post_images = PostImage.all.order("id DESC")
-            @post_images = post_images.to_json(include: [:post_comments, :favorites, :end_user, :hashtags, :notifications])
+            @post_images = post_images.to_json(include: [:favorites,:end_user, :hashtags, :notifications,:post_comments =>{ :include => :end_user}])
             render :json => @post_images
         end
 
