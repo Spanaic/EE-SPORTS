@@ -56,6 +56,7 @@ export default {
       }
     }
   },
+  middleware: "authenticated",
   async created() {
     try {
       const res = await axios.get(

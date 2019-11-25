@@ -93,6 +93,7 @@ export default {
       // return errors;
     }
   },
+  middleware: "authenticated",
   created() {
     var vm = this;
     var params = {

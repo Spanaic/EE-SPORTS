@@ -37,7 +37,7 @@
             <!-- 投稿一覧のカード表示とオーバーレイの組み込み -->
 
             <!-- hashtag付きで、これから試すv-for -->
-            <!-- <div v-for="(post_image, i) in post_images" :key="i"> -->
+            <!-- < v-for="(post_image, i) in post_images" :key="i"> -->
             <!-- 投稿一覧のカード表示とオーバーレイの組み込み -->
             <!-- <template v-if="$store.state.search.length">
               <v-text>検索結果</v-text>
@@ -46,9 +46,15 @@
               <nuxt-link :to="`/end_users/${post_image.end_user.id}`">
                 <v-list-item>
                   <v-list-item-avatar>
+                    <!-- <template v-if="post_image.end_user.profile_image_name"> -->
                     <v-img
-                      :src="'http://localhost:3001/end_users/' + `${post_image.end_user.profile_image_name}`"
+                      v-if="post_image.end_user.profile_image_name"
+                      :src="`${baseUrl}/end_users/${post_image.end_user.profile_image_name}`"
                     ></v-img>
+                    <!-- </template> -->
+                    <!-- <template v-else> -->
+                    <v-img v-else :src="`${baseUrl}/no_image.jpg`"></v-img>
+                    <!-- </template> -->
                   </v-list-item-avatar>
                   <v-list-item-content>
                     <v-list-item-title class="headline">{{ post_image.title }}</v-list-item-title>
@@ -63,7 +69,7 @@
                 <v-img
                   class="white--text"
                   height="400px"
-                  :src="'http://localhost:3001/post_images/' + post_image.image_name"
+                  :src="`${baseUrl}/post_images/${post_image.image_name}`"
                 >
                   <!-- @click="post_image.overlay =!post_image.overlay" -->
                   <v-card-title></v-card-title>
@@ -203,15 +209,18 @@
                             <v-col cols="4" sm="2" md="1">
                               <v-avatar size="36px">
                                 <img
+                                  v-if="message.end_user.profile_image_name"
                                   alt="Avatar"
-                                  :src="'http://localhost:3001/end_users/' + `${message.end_user.profile_image_name}`"
+                                  :src="`${baseUrl}/end_users/${message.end_user.profile_image_name}`"
                                 />
+                                <img v-else alt="Avatar" :src="`${baseUrl}/no_image.jpg`" />
                                 <!-- v-if="message.end_user.porfile_image_name" -->
                                 <!-- <v-icon v-else :color="message.color" v-text="message.icon"></v-icon> -->
                               </v-avatar>
                             </v-col>
 
                             <v-col class="hidden-xs-only" sm="5" md="3">
+                              <nuxt-link :to="`/end_users/`"></nuxt-link>
                               <strong v-html="message.end_user.profile_name"></strong>
                               <span
                                 v-if="message.total"
@@ -269,6 +278,7 @@
               </div>-->
 
               <v-btn
+                block
                 v-if="post_image.isActive === true"
                 @click="showComments(post_image)"
                 :class="{ showBtn: post_image.showBtn }"
@@ -348,7 +358,8 @@
           <v-card max-width="375" class="mx-auto">
             <nuxt-link :to="`/end_users/${user.id}`">
               <v-img
-                :src="'http://localhost:3001/end_users/' + `${$store.state.user.profile_image_name}`"
+                v-if="$store.state.user.profile_image_name"
+                :src="`${baseUrl}/end_users/${$store.state.user.profile_image_name}`"
                 height="auto"
                 dark
               >
@@ -374,6 +385,11 @@
                   <!-- <v-card-title class="white--text pl-12 pt-12">
                 <div class="display-1 pl-12 pt-12">Ali Conners</div>
                   </v-card-title>-->
+                </v-row>
+              </v-img>
+              <v-img v-else :src="`${baseUrl}/no_image.jpg`" height="auto" dark>
+                <v-row class>
+                  <v-spacer></v-spacer>
                 </v-row>
               </v-img>
 
@@ -768,7 +784,7 @@ a {
   text-decoration: none;
 }
 .maxHeight {
-  max-height: 300px;
+  max-height: 330px;
   overflow: hidden;
 }
 .showBtn {

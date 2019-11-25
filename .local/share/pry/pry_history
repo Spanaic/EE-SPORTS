@@ -201,3 +201,13 @@ exit
 PostComment.all
 PostImage.all
 PostComment.all
+EndUser.where(email: dont@gmail.com)
+EndUser.where(email: "dont@gmail.co"m)
+EndUser.where(email: "dont@gmail.com")
+EndUser.first
+EndUser.last
+EndUser.last.delete
+EndUser.last
+EndUser.last.delete
+EndUser.last
+EndUser.last.delete

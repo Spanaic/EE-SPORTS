@@ -49,7 +49,8 @@ export default {
   ** Plugins to load before mounting the App
   */
   router: {
-    // middleware: ['notifications', 'authenticated']
+    // middleware: ['notifications']
+    // middleware: ['authenticated']
   },
   plugins: [
     { src: '~/plugins/router' },

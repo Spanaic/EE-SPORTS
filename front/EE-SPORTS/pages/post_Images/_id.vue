@@ -12,9 +12,7 @@
           <nuxt-link :to="`/end_users/${post_image.end_user.id}`">
             <v-list-item>
               <v-list-item-avatar>
-                <v-img
-                  :src="'http://localhost:3001/end_users/' + post_image.end_user.profile_image_name"
-                ></v-img>
+                <v-img :src="`${baseUrl}/end_users/${post_image.end_user.profile_image_name}`"></v-img>
               </v-list-item-avatar>
               <v-list-item-content>
                 <v-list-item-title class="headline">{{ post_image.title }}</v-list-item-title>
@@ -27,7 +25,7 @@
         <v-img
           class="white--text align-end"
           height="400px"
-          :src="'http://localhost:3001/post_images/' + post_image.image_name"
+          :src="`${baseUrl}/post_images/${post_image.image_name}`"
           @click="overlay =!overlay"
         >
           <v-card-title></v-card-title>
@@ -70,7 +68,7 @@
                 class="white--text align-end"
                 height="480px"
                 width="720px"
-                :src="'http://localhost:3001/post_images/' + post_image.image_name"
+                :src="`${baseUrl}/post_images/${post_image.image_name}`"
               ></v-img>
             </nuxt-link>
           </v-btn>
@@ -176,9 +174,11 @@
                     <v-col cols="4" sm="2" md="1">
                       <v-avatar size="36px">
                         <img
+                          v-if="message.end_user.profile_image_name"
                           alt="Avatar"
-                          :src="'http://localhost:3001/end_users/' + `${message.end_user.profile_image_name}`"
+                          :src="`${baseUrl}/end_users/${message.end_user.profile_image_name}`"
                         />
+                        <img v-else alt="Avatar" :src="`${baseUrl}/no_image.jpg`" />
                         <!-- v-if="message.end_user.porfile_image_name" -->
                         <!-- <v-icon v-else :color="message.color" v-text="message.icon"></v-icon> -->
                       </v-avatar>
@@ -278,6 +278,7 @@ const url = "http://localhost:3001/post_images";
 export default {
   data() {
     return {
+      baseUrl: process.env.baseUrl,
       post_image: {},
       raw_post_image: {},
       current_user: [],

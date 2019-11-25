@@ -5,7 +5,11 @@
       <v-row align="end" class="fill-height">
         <v-col align-self="start" class="pa-0" cols="3">
           <v-avatar class="profile" color="grey" size="164" tile>
-            <v-img :src="'http://localhost:3001/end_users/' + `${end_user.profile_image_name}`"></v-img>
+            <v-img
+              v-if="end_user.profile_image_name"
+              :src="`${baseUrl}/end_users/${end_user.profile_image_name}`"
+            ></v-img>
+            <v-img v-else :src="`${baseUrl}/no_image.jpg`"></v-img>
           </v-avatar>
         </v-col>
 
@@ -173,8 +177,8 @@
                 <nuxt-link :to="`/post_Images/${post_image.id}`">
                   <v-card flat tile class="d-flex">
                     <v-img
-                      :src="'http://localhost:3001/post_images/' + `${post_image.image_name}`"
-                      :lazy-src="'http://localhost:3001/post_images/' + `${post_image.image_name}`"
+                      :src="`${baseUrl}/post_images/${post_image.image_name}`"
+                      :lazy-src="`${baseUrl}/post_images/${post_image.image_name}`"
                       aspect-ratio="1"
                       class="grey lighten-2"
                     >
@@ -202,6 +206,7 @@ import Vuex from "vuex";
 export default {
   data() {
     return {
+      baseUrl: process.env.baseUrl,
       end_user: {},
       followers: [],
       follower: "",
@@ -216,6 +221,7 @@ export default {
       return this.$store.state.user;
     }
   },
+  middleware: "authenticated",
   async mounted() {
     await this.updateFollowers();
     await this.$store.dispatch("notificationsCheck", this.$store.state.user);

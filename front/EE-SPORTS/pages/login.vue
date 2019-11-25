@@ -26,9 +26,7 @@
         ></v-text-field>
 
         <v-card-actions class="justify-center">
-          <v-btn class="btn" @click="submit" color="primary" dark>
-            ログイン
-          </v-btn>
+          <v-btn class="btn" @click="submit" color="primary" dark>ログイン</v-btn>
           <v-btn @click="testLogIn">テストユーザーで簡単ログイン</v-btn>
         </v-card-actions>
       </form>
@@ -57,7 +55,7 @@
         <v-btn @click="clear">clear</v-btn>
         <v-btn @click="testLogIn">テストユーザーで簡単ログイン</v-btn>
       </form>
-    </v-card> -->
+    </v-card>-->
   </div>
 </template>
 

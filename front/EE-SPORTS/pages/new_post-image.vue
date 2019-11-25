@@ -30,6 +30,7 @@ export default {
       loading: false
     };
   },
+  middleware: "authenticated",
   created() {
     var vm = this;
     var params = {
@@ -69,7 +70,6 @@ export default {
       console.log(this.uploadFile);
       formData.append("post_image[image]", this.files[0]);
       this.loading = true;
-      console.log("unko");
       var vm = this;
       //   axios.get("http://localhost:3001/post_images.json").then(res => {
       //     console.log(res.data);

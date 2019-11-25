@@ -1,5 +1,57 @@
  <template>
-  <v-card class="pa-5 mt-5">
+  <v-card class="mx-auto" color="#26c6da" dark max-width="400">
+    <v-card-title>
+      <v-icon large left>mdi-draw</v-icon>
+      <span class="title font-weight-light">新規登録</span>
+    </v-card-title>
+    <form action>
+      <v-text-field
+        class="ma-5"
+        v-model="email"
+        :error-messages="emailErrors"
+        label="Email"
+        required
+        @input="$v.email.$touch()"
+        @blur="$v.email.$touch()"
+      ></v-text-field>
+      <v-text-field
+        class="ma-5"
+        v-model="password"
+        :error-messages="passwordErrors"
+        label="パスワード"
+        required
+        @input="$v.password.$touch()"
+        @blur="$v.password.$touch()"
+      ></v-text-field>
+      <v-text-field
+        class="ma-5"
+        v-model="name"
+        :error-messages="nameErrors"
+        :counter="20"
+        label="お名前"
+        required
+        @input="$v.name.$touch()"
+        @blur="$v.name.$touch()"
+      ></v-text-field>
+      <v-text-field
+        class="ma-5"
+        v-model="profile_name"
+        :error-messages="profileNameErrors"
+        :counter="50"
+        label="ユーザー名"
+        required
+        @input="$v.profile_name.$touch()"
+        @blur="$v.profile_name.$touch()"
+      ></v-text-field>
+
+      <v-card-actions class="justify-center">
+        <v-btn class="btn" @click="submit" color="primary" dark>新規登録</v-btn>
+        <v-btn @click="testLogIn">テストユーザーで簡単ログイン</v-btn>
+      </v-card-actions>
+    </form>
+  </v-card>
+
+  <!-- <v-card class="pa-5 mt-5">
     <form action>
       <v-text-field
         v-model="email"
@@ -40,7 +92,7 @@
       <v-btn @click="clear">clear</v-btn>
       <v-btn @click="testLogIn">テストユーザーで簡単ログイン</v-btn>
     </form>
-  </v-card>
+  </v-card>-->
 </template>
 
 <script>
@@ -53,6 +105,7 @@ import {
 } from "vuelidate/lib/validators";
 import firebase from "@/plugins/firebase";
 import axios from "@/plugins/axios";
+import { mdiDraw } from "@mdi/js";
 
 export default {
   mixins: [validationMixin],

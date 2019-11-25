@@ -429,6 +429,7 @@ export default {
   background-attachment: fixed;
   background-repeat: no-repeat;
   /* opacity: 0.4; */
+  min-height: 100vh;
 }
 a {
   text-decoration: none;

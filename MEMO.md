@@ -2088,14 +2088,18 @@ def post_comment_params
 
 ### `asyncData`
 
-thisが使えない。dataを打ち込める
-storeも参照できない
+1. thisが使えない。storeも参照できない
+2. 使い方としては、axiosで叩いたデータで初期を上書きするときに用いる。
+3. ライフサイクルとの最大の違いは、レンダリングを始めずに、処理をきちんと待ってくれる。
+4. 取得した生dataは,dataに上書きすることが出来る。
+3. dataの値を上書きする。 data => asyncData =>　lifeSycle
 
 ### `fetch`
 
-storeにしか値を入れられない。
-thisが参照出来ない
-storeは・・・
+1. axiosなどで叩いたデータをレンダリングが始まる前にstoreに格納するときに用いる。
+2. thisが参照出来ない。storeも参照出来ない。
+3. 取得した値を直接dataに渡すことも出来ない。
+4. asyncDataと同じく、処理が終わるまでライフサイクルは始まらない。
 
 ### `後でさせたい処理`
 
@@ -2192,3 +2196,75 @@ async created() {
 ```
 <v-btn v-if="$store.state.search.length !== 0 " @click="cancelSearch">画像一覧に戻る</v-btn>
 ```
+
+---
+
+## `【バックグラウンドイメージの要素を画面の高さに固定する】`
+
+`min-height: 100vh;`
+
+---
+
+## `【デプロイ後の環境変数の設定】`
+
+```
+export default {
+  env: {
+    API_URL: process.env.IIKANKYO ? "http://123.456.789/" : "http://localhost:3000/"
+  },
+```
+
+1. nuxt.configに下記の記述を書き加える
+2. 本番環境とデプロイ環境で見に行くURLを分ける
+
+```
+  mounted () {
+      console.log(process.env.API_URL);
+  }
+```
+
+3. mountedなどで叩きに行くbaseUrlをenvから引っ張る
+
+```
+$ yarn dev
+$ IIKANKYO=unko yarn generate
+```
+
+4. 開発環境と本番環境用で変化する
+
+---
+
+## `【ナビゲーションガードを行う方法】`
+
+1. おのキャンはmiddlewareにpathを一つずつ記述して、遷移前にstate.userを確認させていた
+2. 公式では,`state.userの値がセットされていなければ"/"へと飛ばす処理のみ`を記述している。
+3. 未ログインユーザなど絶対に弾きたいPageコンポーネントでのみ、middlewareを記述して読み込ませる
+
+```
+export default function ({ store, redirect }) {
+    // ユーザーが認証されていないとき
+
+    if (store.state.user.id === 0) {
+        return redirect('/login')
+    }
+}
+```
+
+4. middlewareに`authenticated.js`を作成して上記の記述を行う。
+
+```
+middleware: "authenticated",
+```
+
+5. Pageコンポーネント内で、middlewareプロパティに読み込みたいmiddlewareのファイル名を記述する。
+
+---
+
+## `【確実にログイン認証を永続化させる方法】`
+
+1. ログイン認証の一番の敵はリロード時。
+2. default.vue内の最初から2番目のdivタグにv-ifをかませる
+3. currentUserの値を取得できるまではレンダリングをさせない
+4. それに加えて、値を取得している間はloadingコンポーネントを設置
+5. userの値がVuexにセットされたら、loadingをオフにして、mountさせる。
+6. ソースは無いので、次回は試してみよう。
