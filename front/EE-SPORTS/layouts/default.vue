@@ -54,7 +54,9 @@
       >
         <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
         <nuxt-link to="/post_Images">
-          <v-toolbar-title>Collapsing Bar</v-toolbar-title>
+          <v-toolbar-title>
+            <v-img :src="`${baseUrl}/EE!Sports_logo.png`" height="100" width="100" class="mt-5"></v-img>
+          </v-toolbar-title>
         </nuxt-link>
 
         <v-spacer></v-spacer>
@@ -123,10 +125,10 @@
           </template>
           <v-icon color="grey lighten-1" large>mdi-bell</v-icon>
         </v-badge>-->
-        <nuxt-link to="/post_Images/test">てすと</nuxt-link>
+        <!-- <nuxt-link to="/post_Images/test">てすと</nuxt-link> -->
 
         <!-- ここまで -->
-        <v-form @submit.prevent="searchSubmit" class="pt-4">
+        <v-form @submit.prevent="searchSubmit" class="pt-5">
           <v-container>
             <v-text-field v-model="keyword">
               <template v-slot:label>
@@ -193,6 +195,7 @@ export default {
   },
   data() {
     return {
+      baseUrl: process.env.baseUrl,
       collapseOnScroll: true,
       clipped: false,
       drawer: false,

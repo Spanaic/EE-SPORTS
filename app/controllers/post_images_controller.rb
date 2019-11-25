@@ -62,7 +62,7 @@ class PostImagesController < ApplicationController
 
     def show
         # @post_image = PostImage.find(params[:id])
-        @post_image = PostImage.find(params[:id]).to_json(include: [:post_comments, :favorites, :end_user, :hashtags, :notifications])
+        @post_image = PostImage.find(params[:id]).to_json(include: [:favorites,:end_user, :hashtags, :notifications,:post_comments =>{ :include => :end_user}])
         render :json => @post_image
     end
 

@@ -196,3 +196,8 @@ b.delete_all
 exit
 a = PostImage.fine(7)
 PostImage.all
+PostComment.all
+exit
+PostComment.all
+PostImage.all
+PostComment.all

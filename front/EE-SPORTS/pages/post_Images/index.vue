@@ -18,7 +18,7 @@
             v-for="(post_image, i) in $store.state.search.length ?  $store.state.search : filterdPostImages"
             :key="i"
           >
-            {{ post_image.isFav }}
+            <!-- {{ post_image.isFav }} -->
             <!-- 投稿一覧のカード表示とオーバーレイの組み込み -->
 
             <!-- hashtag付きで、これから試すv-for -->
@@ -45,19 +45,19 @@
 
             <v-card class="mx-auto mb-5" height="100%" max-width="800">
               <v-img
-                class="white--text align-end"
+                class="white--text"
                 height="400px"
                 :src="'http://localhost:3001/post_images/' + post_image.image_name"
-                @click="overlay =!overlay"
+                @click="post_image.overlay =!post_image.overlay"
               >
                 <v-card-title></v-card-title>
               </v-img>
-              <v-overlay :absolute="absolute" :value="overlay">
-                <v-btn icon @click="overlay = false">
+              <v-overlay :value="post_image.overlay">
+                <v-btn icon @click="post_image.overlay = false">
                   <v-icon>mdi-close</v-icon>
                   <nuxt-link :to="`/post_images/${ post_image.id }`">
                     <v-img
-                      class="white--text align-end"
+                      class="white--text"
                       height="480px"
                       width="720px"
                       :src="'http://localhost:3001/post_images/' + post_image.image_name"
@@ -491,6 +491,7 @@ export default {
         });
         post_image.isActive = true;
         post_image.showBtn = false;
+        post_image.overlay = false;
         return post_image;
       });
       console.log("this.post_images", this.post_images);
@@ -535,6 +536,7 @@ export default {
               });
               post_image.isActive = true;
               post_image.showBtn = false;
+              post_image.overlay = false;
               return post_image;
               console.log("fav_post_image", post_image);
             });

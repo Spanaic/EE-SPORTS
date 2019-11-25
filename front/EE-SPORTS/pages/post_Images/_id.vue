@@ -159,14 +159,101 @@
           </v-row>
         </v-card-actions>
 
-        <v-subheader>コメント</v-subheader>
+        <!-- <div :class="{ maxHeight: post_image.isActive}"> -->
+        <v-container fluid>
+          <v-row justify="center">
+            <v-subheader>コメント</v-subheader>
+
+            <v-expansion-panels popout>
+              <v-expansion-panel
+                v-for="(message, i) in post_image.post_comments"
+                :key="i"
+                hide-actions
+              >
+                <v-expansion-panel-header>
+                  <v-row align="center" class="spacer" no-gutters>
+                    <v-col cols="4" sm="2" md="1">
+                      <v-avatar size="36px">
+                        <img
+                          alt="Avatar"
+                          :src="'http://localhost:3001/end_users/' + `${message.end_user.profile_image_name}`"
+                        />
+                        <!-- v-if="message.end_user.porfile_image_name" -->
+                        <!-- <v-icon v-else :color="message.color" v-text="message.icon"></v-icon> -->
+                      </v-avatar>
+                    </v-col>
+
+                    <v-col class="hidden-xs-only" sm="5" md="3">
+                      <strong v-html="message.end_user.profile_name"></strong>
+                      <span v-if="message.total" class="grey--text">&nbsp;({{ message.total }})</span>
+                    </v-col>
+
+                    <v-col class="text-no-wrap" cols="5" sm="3">
+                      <v-chip
+                        v-if="message.new"
+                        :color="`${message.color} lighten-4`"
+                        class="ml-0"
+                        label
+                        small
+                      >{{ message.new }} new</v-chip>
+                      <!-- <strong v-html="message.comment | webcamp"></strong> -->
+                      {{message.comment | commentsLength}}
+                      <!-- {{ post_comment }} -->
+                    </v-col>
+
+                    <v-col
+                      v-if="message.excerpt"
+                      class="grey--text text-truncate hidden-sm-and-down"
+                    >
+                      &mdash;
+                      {{ message }}
+                    </v-col>
+                  </v-row>
+                </v-expansion-panel-header>
+
+                <v-expansion-panel-content>
+                  <v-divider></v-divider>
+                  <v-card-text v-text="message.comment "></v-card-text>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+            </v-expansion-panels>
+          </v-row>
+        </v-container>
+        <!-- <v-card-text
+                  class="text--primary"
+                  v-for="(post_comment, i) in post_image.post_comments"
+                  :key="i"
+                >
+                  <div align="center">{{post_comment.comment}}</div>
+        </v-card-text>-->
+        <!-- </div> -->
+
+        <!-- <div :class="{ maxHeight: post_image.isActive}">
+                <v-card-text
+                  class="text--primary"
+                  v-for="(post_comment, i) in post_image.post_comments"
+                  :key="i"
+                >
+                  <div align="center">{{post_comment.comment}}</div>
+                </v-card-text>
+        </div>-->
+
+        <!-- <v-btn
+          v-if="post_image.isActive === true"
+          @click="showComments(post_image)"
+          :class="{ showBtn: post_image.showBtn }"
+        >続きを読む</v-btn>
+
+        <v-btn v-if="post_image.showBtn === true" @click="closeComments(post_image)">コメントを閉じる</v-btn>-->
+
+        <!-- <v-subheader>コメント</v-subheader>
         <v-card-text
           class="text--primary"
           v-for="(post_comment, i) in post_image.post_comments"
           :key="i"
         >
           <div align="center">{{post_comment.comment}}</div>
-        </v-card-text>
+        </v-card-text>-->
 
         <v-col cols="12" lg="12" sm="6" md="3">
           <!-- <v-text-field label="Outlined" outlined></v-text-field> -->
@@ -203,6 +290,11 @@ export default {
       isActive: false
     };
   },
+  filters: {
+    commentsLength(comment) {
+      return comment.length >= 10 ? comment.slice(0, 10) + "....." : comment;
+    }
+  },
   async created() {
     this.post_image = this.raw_post_image;
     this.post_image.caption.replace(
@@ -212,6 +304,13 @@ export default {
     this.post_image.hashtags.map(hashtag => {
       hashtag.hashname.replace(/[#＃]/gm, "");
     });
+    this.post_image.isActive = true;
+    this.post_image.showBtn = false;
+
+    console.log(
+      "this.post_image.post_comments",
+      this.post_image.post_comments[0]
+    );
 
     const unwatch = this.$store.watch(
       state => state.user,
@@ -248,6 +347,8 @@ export default {
             this.post_image.hashtags.map(hashtag => {
               hashtag.hashname.replace(/[#＃]/gm, "");
             });
+            this.post_image.isActive = true;
+            this.post_image.showBtn = false;
             console.log("this.post_image.hashtags", this.post_image.hashtags);
           } catch (err) {
             console.log("err", err);
@@ -384,6 +485,15 @@ export default {
       this.post_image = res.data;
       console.log("this.post_image", this.post_image);
       this.$router.push("/post_Images");
+    },
+    showComments(post_image) {
+      post_image.isActive = false;
+      post_image.showBtn = true;
+      console.log("post_image", this.post_image);
+    },
+    closeComments(post_image) {
+      post_image.isActive = true;
+      post_image.showBtn = false;
     }
   },
   async fetch({ store }) {
@@ -392,8 +502,15 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 a {
   text-decoration: none;
+}
+.maxHeight {
+  max-height: 300px;
+  overflow: hidden;
+}
+.showBtn {
+  display: none;
 }
 </style>
