@@ -2171,3 +2171,24 @@ async created() {
 2. `asyncで処理をawaitさせることは出来るけど、非同期なのでレンダリングは進んでしまう`
 3. `ライフサイクルをコントロールするために、asyncData, fetch, middleware, plugins, storeを駆使する`
 4. `pagesのindex.vueの前に、もう一つにエントリーポイントを作成することで、v-ifを噛ませて条件分岐を行う設計`
+
+## `【Vuex 配列が初期値の場合　データを初期化する方法と初期化されたかどうかを判定する方法】`
+
+### `データの初期化`
+
+1. 空の配列が初期値に入っている場合,　commitで空の初期値を入れ直して上げることでデータを初期化させることが出来る。
+
+```
+    cancelSearch({ commit }) {
+        commit('setSearchResult', [])
+        this.$router.push("/post_Images/")
+    },
+```
+
+### `stateがセットされているかどうかを判定する方法`
+
+2. stateの配列の中の数で判定する。空の場合は"0になるので" `length !== 0`などで判定できる。
+
+```
+<v-btn v-if="$store.state.search.length !== 0 " @click="cancelSearch">画像一覧に戻る</v-btn>
+```

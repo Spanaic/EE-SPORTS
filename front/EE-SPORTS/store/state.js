@@ -5,8 +5,7 @@ const state = {
         id: 0
     },
     status: false,
-    search: [
-    ],
+    search: [],
     notifications: []
 }
 

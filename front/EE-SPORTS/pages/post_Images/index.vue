@@ -13,7 +13,22 @@
             transition="fade-transition"
         >-->
         <div>
+          <v-btn
+            class="ma-2"
+            outlined
+            large
+            fab
+            color="indigo"
+            v-if="$store.state.search.length !== 0 "
+            @click="cancelSearch"
+          >
+            <v-icon>mdi-water-off</v-icon>
+          </v-btn>
           <!-- 今まで動いてたやつ -->
+          <!-- <div
+            v-for="(post_image, i) in $store.state.search.length ?  searchResults : filterdPostImages"
+            :key="i"
+          >-->
           <div
             v-for="(post_image, i) in $store.state.search.length ?  $store.state.search : filterdPostImages"
             :key="i"
@@ -44,15 +59,17 @@
             </v-toolbar>
 
             <v-card class="mx-auto mb-5" height="100%" max-width="800">
-              <v-img
-                class="white--text"
-                height="400px"
-                :src="'http://localhost:3001/post_images/' + post_image.image_name"
-                @click="post_image.overlay =!post_image.overlay"
-              >
-                <v-card-title></v-card-title>
-              </v-img>
-              <v-overlay :value="post_image.overlay">
+              <nuxt-link :to="`/post_images/${ post_image.id }`">
+                <v-img
+                  class="white--text"
+                  height="400px"
+                  :src="'http://localhost:3001/post_images/' + post_image.image_name"
+                >
+                  <!-- @click="post_image.overlay =!post_image.overlay" -->
+                  <v-card-title></v-card-title>
+                </v-img>
+              </nuxt-link>
+              <!-- <v-overlay :value="post_image.overlay">
                 <v-btn icon @click="post_image.overlay = false">
                   <v-icon>mdi-close</v-icon>
                   <nuxt-link :to="`/post_images/${ post_image.id }`">
@@ -64,7 +81,7 @@
                     ></v-img>
                   </nuxt-link>
                 </v-btn>
-              </v-overlay>
+              </v-overlay>-->
 
               <v-card-subtitle class="pb-0"></v-card-subtitle>
 
@@ -109,9 +126,9 @@
               </v-card-text>
 
               <v-card-actions v-if="$store.state.user.id !== 0 ">
-                <v-btn color="orange" text></v-btn>
+                <v-btn class="btnNone" color="orange" text></v-btn>
 
-                <v-btn color="orange" text></v-btn>
+                <v-btn class="btnNone" color="orange" text></v-btn>
 
                 <!-- お気に入り機能ボタンボタン（作りかけ） -->
                 <template v-if="post_image.isFav !== true || undefined">
@@ -329,13 +346,14 @@
         <!-- {{ this.user }} -->
         <div v-if="$store.state.user.id">
           <v-card max-width="375" class="mx-auto">
-            <v-img
-              :src="'http://localhost:3001/end_users/' + `${$store.state.user.profile_image_name}`"
-              height="auto"
-              dark
-            >
-              <v-row class>
-                <!-- <v-card-title>
+            <nuxt-link :to="`/end_users/${user.id}`">
+              <v-img
+                :src="'http://localhost:3001/end_users/' + `${$store.state.user.profile_image_name}`"
+                height="auto"
+                dark
+              >
+                <v-row class>
+                  <!-- <v-card-title>
                   <v-btn dark icon>
                     <v-icon>mdi-chevron-left</v-icon>
                   </v-btn>
@@ -349,58 +367,58 @@
                   <v-btn dark icon>
                     <v-icon>mdi-dots-vertical</v-icon>
                   </v-btn>
-                </v-card-title>-->
+                  </v-card-title>-->
 
-                <v-spacer></v-spacer>
+                  <v-spacer></v-spacer>
 
-                <!-- <v-card-title class="white--text pl-12 pt-12">
+                  <!-- <v-card-title class="white--text pl-12 pt-12">
                 <div class="display-1 pl-12 pt-12">Ali Conners</div>
-                </v-card-title>-->
-              </v-row>
-            </v-img>
+                  </v-card-title>-->
+                </v-row>
+              </v-img>
 
-            <v-list two-line>
-              <v-list-item @click>
-                <v-list-item-icon>
-                  <v-icon color="white">mdi-account-circle</v-icon>
-                </v-list-item-icon>
+              <v-list two-line>
+                <v-list-item @click>
+                  <v-list-item-icon>
+                    <v-icon color="white">mdi-account-circle</v-icon>
+                  </v-list-item-icon>
 
-                <v-list-item-content>
-                  <v-list-item-title>{{ this.$store.state.user.name }}</v-list-item-title>
-                  <v-list-item-subtitle>お名前</v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title>{{ this.$store.state.user.name }}</v-list-item-title>
+                    <v-list-item-subtitle>お名前</v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
 
-              <v-list-item @click>
-                <v-list-item-icon>
-                  <v-icon color="white">mdi-rename-box</v-icon>
-                </v-list-item-icon>
-                <!-- <v-list-item-action></v-list-item-action> -->
+                <v-list-item @click>
+                  <v-list-item-icon>
+                    <v-icon color="white">mdi-rename-box</v-icon>
+                  </v-list-item-icon>
+                  <!-- <v-list-item-action></v-list-item-action> -->
 
-                <v-list-item-content>
-                  <v-list-item-title>{{ this.$store.state.user.profile_name }}</v-list-item-title>
-                  <v-list-item-subtitle>ユーザー名</v-list-item-subtitle>
-                </v-list-item-content>
+                  <v-list-item-content>
+                    <v-list-item-title>{{ this.$store.state.user.profile_name }}</v-list-item-title>
+                    <v-list-item-subtitle>ユーザー名</v-list-item-subtitle>
+                  </v-list-item-content>
 
-                <!-- <v-list-item-icon>
+                  <!-- <v-list-item-icon>
                   <v-icon>mdi-message-text</v-icon>
-                </v-list-item-icon>-->
-              </v-list-item>
+                  </v-list-item-icon>-->
+                </v-list-item>
 
-              <v-divider inset></v-divider>
+                <v-divider inset></v-divider>
 
-              <v-list-item @click>
-                <v-list-item-icon>
-                  <v-icon color="white">mdi-email</v-icon>
-                </v-list-item-icon>
+                <v-list-item @click>
+                  <v-list-item-icon>
+                    <v-icon color="white">mdi-email</v-icon>
+                  </v-list-item-icon>
 
-                <v-list-item-content>
-                  <v-list-item-title>{{ this.$store.state.user.email }}</v-list-item-title>
-                  <v-list-item-subtitle>Personal</v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title>{{ this.$store.state.user.email }}</v-list-item-title>
+                    <v-list-item-subtitle>Personal</v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
 
-              <!-- <v-list-item @click>
+                <!-- <v-list-item @click>
                 <v-list-item-action></v-list-item-action>
 
                 <v-list-item-content>
@@ -420,8 +438,9 @@
                   <v-list-item-title>1400 Main Street</v-list-item-title>
                   <v-list-item-subtitle>Orlando, FL 79938</v-list-item-subtitle>
                 </v-list-item-content>
-              </v-list-item>-->
-            </v-list>
+                </v-list-item>-->
+              </v-list>
+            </nuxt-link>
           </v-card>
         </div>
       </v-col>
@@ -437,6 +456,7 @@ import { mdiRenameBox } from "@mdi/js";
 import { mdiPoundBoxOutline } from "@mdi/js";
 import { mdiThumbUp } from "@mdi/js";
 import { mdiThumbUpOutline } from "@mdi/js";
+import { mdiWaterOff } from "@mdi/js";
 import firebase from "@/plugins/firebase";
 
 const url = "http://localhost:3001/post_images";
@@ -491,7 +511,6 @@ export default {
         });
         post_image.isActive = true;
         post_image.showBtn = false;
-        post_image.overlay = false;
         return post_image;
       });
       console.log("this.post_images", this.post_images);
@@ -536,7 +555,7 @@ export default {
               });
               post_image.isActive = true;
               post_image.showBtn = false;
-              post_image.overlay = false;
+              // post_image.overlay = false;
               return post_image;
               console.log("fav_post_image", post_image);
             });
@@ -588,32 +607,32 @@ export default {
           post_image.end_user.profile_name.includes(this.keyword)
         );
       });
-    },
-    // search結果をstoreから受け取って表示するための値
-    searchResults() {
-      let vm = this.$store.state.search;
-      console.log("-------------");
-      console.log("search_vm", vm);
-      console.log("-------------");
-      return vm.map(search_results => {
-        console.log("-------------");
-        console.log(search_results);
-        console.log("-------------");
-        search_results.filter(search_result => {
-          console.log("-------------");
-          console.log(search_result);
-          console.log("-------------");
-          console.log("-------------");
-          console.log(vm.keyword == search_result.title);
-          console.log(vm.keyword == search_result.caption);
-          console.log("-------------");
-          return (
-            vm.keyword == search_result.title ||
-            vm.keyword == search_result.caption
-          );
-        });
-      });
     }
+    // search結果をstoreから受け取って表示するための値
+    // searchResults() {
+    //   let vm = this.$store.state.search;
+    //   console.log("-------------");
+    //   console.log("search_vm", vm);
+    //   console.log("-------------");
+    //   return vm.map(search_results => {
+    //     // console.log("-------------");
+    //     // console.log(search_results);
+    //     // console.log("-------------");
+    //     search_results.filter(search_result => {
+    //       // console.log("-------------");
+    //       // console.log(search_result);
+    //       // console.log("-------------");
+    //       // console.log("-------------");
+    //       // console.log(vm.keyword == search_result.title);
+    //       // console.log(vm.keyword == search_result.caption);
+    //       // console.log("-------------");
+    //       return (
+    //         vm.keyword == search_result.title ||
+    //         vm.keyword == search_result.caption
+    //       );
+    //     });
+    //   });
+    // }
     // comments(post_image) {
     //   let commentsArray = [];
     //   this.post_images.forEach(post_image => {
@@ -732,6 +751,10 @@ export default {
     closeComments(post_image) {
       post_image.isActive = true;
       post_image.showBtn = false;
+    },
+    cancelSearch() {
+      this.$store.dispatch("cancelSearch");
+      this.$router.push("/post_Images");
     }
   },
   async fetch({ store }) {
@@ -750,5 +773,8 @@ a {
 }
 .showBtn {
   display: none;
+}
+.btnNone {
+  visibility: hidden;
 }
 </style>

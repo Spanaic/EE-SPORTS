@@ -5,7 +5,7 @@ class SearchesController < ApplicationController
     # post_image_captions = PostImage
     # end_user_profile_names = EndUser.where("profile_name LIKE ?", "%#{params[:search]}%")
 
-    search_results = post_images.to_json(include: [:post_comments, :favorites, :end_user, :hashtags, :notifications])
+    search_results = post_images.to_json(include: [:favorites, :end_user, :hashtags, :notifications, :post_comments => {:include => :end_user}])
     # # search_results.push(hashtags)
     # search_results.push(post_image_titles)
     # search_results.push(post_image_captions)

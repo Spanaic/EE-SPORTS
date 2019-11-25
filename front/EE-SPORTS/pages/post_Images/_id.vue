@@ -46,14 +46,15 @@
 
           <v-menu offset-y>
             <template v-slot:activator="{ on }">
-              <v-btn v-on="on" dark icon>
+              <v-btn v-on="on" dark icon v-if="$store.state.user.id === $route.params.id">
                 <v-icon>mdi-dots-vertical</v-icon>
               </v-btn>
             </template>
+
             <v-list>
-              <v-list-item @click>
+              <!-- <v-list-item @click>
                 <v-list-item-title>編集</v-list-item-title>
-              </v-list-item>
+              </v-list-item>-->
               <v-list-item @click="deletePostImage(post_image)">
                 <v-list-item-title>削除</v-list-item-title>
               </v-list-item>

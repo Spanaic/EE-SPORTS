@@ -123,15 +123,64 @@ const actions = {
             const res = await axios.get(
                 `/searches?search=${payload}`
             );
-            const searchResult = res.data
+            const searchResult = res.data.map(post_image => {
+                post_image.favorites.forEach(fav => {
+                    console.log("this.sate.user.id", this.state.user.id)
+                    if (fav.end_user_id === this.state.user.id) {
+                        return (post_image.isFav = true);
+                    } else {
+                        return (post_image.isFav = false);
+                    }
+                });
+                post_image.caption = post_image.caption.replace(
+                    /[#＃][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー._-]+/gm,
+                    ""
+                );
+                post_image.hashtags.map(hashtag => {
+                    hashtag.hashname.replace(/[#＃]/gm, "");
+                    // debugger;
+                });
+                post_image.isActive = true;
+                post_image.showBtn = false;
+                return post_image;
+            });
             // &title=${payload}&profile_name=${payload}
-            console.log(searchResult);
+            console.log("searchResult", searchResult);
             commit('setSearchResult', searchResult);
             this.$router.push("/post_Images/")
             this.keyword = "";
         } catch (err) {
             alert(err);
         }
+        // async searchSubmit({ commit }, payload) {
+        //     firebase
+        //     try {
+        //         const res = await axios.get(
+        //             `/searches?search=${payload}`
+        //         );
+        //         const searchResult = res.data.map(post_image => {
+        //             post_image.caption = post_image.caption.replace(
+        //                 /[#＃][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー._-]+/gm,
+        //                 ""
+        //             );
+        //             post_image.hashtags.map(hashtag => {
+        //                 hashtag.hashname.replace(/[#＃]/gm, "");
+        //                 // debugger;
+        //             });
+        //             return post_image;
+        //         })
+        //         // &title=${payload}&profile_name=${payload}
+        //         console.log("searchResult", searchResult);
+        //         commit('setSearchResult', searchResult);
+        //         this.$router.push("/post_Images/")
+        //         this.keyword = "";
+        //     } catch (err) {
+        //         alert(err);
+        //     }
+    },
+    cancelSearch({ commit }) {
+        commit('setSearchResult', [])
+        this.$router.push("/post_Images/")
     },
     testLogIn({ commit }, payload) {
         firebase.auth()
