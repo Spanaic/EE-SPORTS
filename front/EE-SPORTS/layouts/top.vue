@@ -424,8 +424,9 @@ export default {
 <style scoped>
 .bg {
   background-size: cover;
-  background-position: top;
-  background-image: url("http://localhost:3001/301618-abstract.jpeg");
+  background-position: center;
+  background-image: url("http://localhost:3001/gamer-background-2.png");
+  /* background-color: white; */
   background-attachment: fixed;
   background-repeat: no-repeat;
   /* opacity: 0.4; */

@@ -2268,3 +2268,34 @@ middleware: "authenticated",
 4. それに加えて、値を取得している間はloadingコンポーネントを設置
 5. userの値がVuexにセットされたら、loadingをオフにして、mountさせる。
 6. ソースは無いので、次回は試してみよう。
+
+---
+
+## `【v-timelineの縦線の色を変える方法】`
+
+```
+<style scoped>
+.v-timeline:before { background-color: red; }
+</style>
+```
+
+1. v-timelineのあるコンポーネントで上記の記述を追加して、色指定するだけ。
+
+---
+
+## `【ページ毎にbackground-imageやcolorを変更する方法】`
+
+1. layout/〇〇.vueという新たなファイルを作成
+2. 新たに作成したstyleを適用したいページで読み込む
+
+```
+export default {
+  layout: "〇〇",
+  data (){
+    ...
+  }
+}
+```
+
+
+
