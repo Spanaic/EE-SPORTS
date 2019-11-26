@@ -207,21 +207,24 @@
                         <v-expansion-panel-header>
                           <v-row align="center" class="spacer" no-gutters>
                             <v-col cols="4" sm="2" md="1">
-                              <v-avatar size="36px">
-                                <img
-                                  v-if="message.end_user.profile_image_name"
-                                  alt="Avatar"
-                                  :src="`${baseUrl}/end_users/${message.end_user.profile_image_name}`"
-                                />
-                                <img v-else alt="Avatar" :src="`${baseUrl}/no_image.jpg`" />
-                                <!-- v-if="message.end_user.porfile_image_name" -->
-                                <!-- <v-icon v-else :color="message.color" v-text="message.icon"></v-icon> -->
-                              </v-avatar>
+                              <nuxt-link :to="`/end_users/${message.end_user.id}`">
+                                <v-avatar size="36px">
+                                  <img
+                                    v-if="message.end_user.profile_image_name"
+                                    alt="Avatar"
+                                    :src="`${baseUrl}/end_users/${message.end_user.profile_image_name}`"
+                                  />
+                                  <img v-else alt="Avatar" :src="`${baseUrl}/no_image.jpg`" />
+                                  <!-- v-if="message.end_user.porfile_image_name" -->
+                                  <!-- <v-icon v-else :color="message.color" v-text="message.icon"></v-icon> -->
+                                </v-avatar>
+                              </nuxt-link>
                             </v-col>
 
                             <v-col class="hidden-xs-only" sm="5" md="3">
-                              <nuxt-link :to="`/end_users/`"></nuxt-link>
-                              <strong v-html="message.end_user.profile_name"></strong>
+                              <nuxt-link :to="`/end_users/${message.end_user.id}`">
+                                <strong v-html="message.end_user.profile_name"></strong>
+                              </nuxt-link>
                               <span
                                 v-if="message.total"
                                 class="grey--text"
@@ -284,7 +287,7 @@
                 :class="{ showBtn: post_image.showBtn }"
               >続きを読む</v-btn>
 
-              <v-btn v-if="post_image.showBtn === true" @click="closeComments(post_image)">コメントを閉じる</v-btn>
+              <v-btn block v-if="post_image.showBtn === true" @click="closeComments(post_image)">コメントを閉じる</v-btn>
 
               <!-- <v-btn
                 v-if="post_image.isActive === true"
@@ -782,6 +785,7 @@ export default {
 <style scoped>
 a {
   text-decoration: none;
+  color: #fff;
 }
 .maxHeight {
   max-height: 330px;

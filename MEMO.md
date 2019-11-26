@@ -2296,6 +2296,33 @@ export default {
   }
 }
 ```
+---
+
+## `【他のユーザの侵入を防ぐmiddlewareの使用方法】`
+
+1. middlewareの中に新しいファイルを作成する
+
+```
+<userAuth.js>
+export default function ({ store, redirect, route }) {
+    // 現在のユーザーとリクエストされたユーザーが食い違う場合
+    if (route.params.userId !== store.state.user.id) {
+        return redirect(`/end_users/${store.state.user.id}`)
+    }
+}
+```
+
+2. バリデーションをかけたいページにmiddlewareを差し込む(export default内)
+
+```
+middleware: ["authenticated", "userAuth"],
+```
+
+3. middlewareを複数かませる場合は、配列として記述する。
+
+---
+
+
 
 
 

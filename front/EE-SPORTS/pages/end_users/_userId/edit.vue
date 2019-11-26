@@ -93,23 +93,41 @@ export default {
       // return errors;
     }
   },
-  middleware: "authenticated",
+  middleware: ["authenticated", "userAuth"],
   created() {
+    // if (this.$route.params.userId !== this.$store.state.user.id) {
+    //   this.$router.push(`/end_users/${this.$store.state.user.id}`);
     var vm = this;
     var params = {
       TableName: "Faces"
     };
+    // }
+    // axios
+    //   .get(`/end_users/${this.$route.params.userId}`)
+    //   .then(res => {
+    //     this.end_user = res.data;
+    //     this.$store.dispatch("notificationsCheck", this.$store.state.user);
+    //   })
+    //   .catch(function(error) {
+    //     console.log("ERROR!! occurred in Backend.", error);
+    //   });
   },
   mounted() {
     axios
       .get(`/end_users/${this.$route.params.userId}`)
       .then(res => {
+        if (res.data.id !== this.$store.state.user.id) {
+          this.$router.push(`/end_users/${this.$store.state.user.id}`);
+        }
         this.end_user = res.data;
         this.$store.dispatch("notificationsCheck", this.$store.state.user);
       })
       .catch(function(error) {
         console.log("ERROR!! occurred in Backend.", error);
       });
+    // if (this.end_user.id !== this.$store.state.user.id) {
+    //   this.$router.push(`/end_users/${this.$store.state.user.id}`);
+    // }
   },
   methods: {
     onFileChange(e) {
@@ -160,6 +178,16 @@ export default {
         });
     }
   }
+  // asyncData() {
+  //   axios
+  //     .get(`/end_users/${this.$route.params.userId}`)
+  //     .then(res => {
+  //       this.end_user = res.data;
+  //     })
+  //     .catch(function(error) {
+  //       console.log("ERROR!! occurred in Backend.", error);
+  //     });
+  // }
 };
 </script>
 
