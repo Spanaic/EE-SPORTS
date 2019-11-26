@@ -50,49 +50,6 @@
       </v-card-actions>
     </form>
   </v-card>
-
-  <!-- <v-card class="pa-5 mt-5">
-    <form action>
-      <v-text-field
-        v-model="email"
-        :error-messages="emailErrors"
-        label="Email"
-        required
-        @input="$v.email.$touch()"
-        @blur="$v.email.$touch()"
-      ></v-text-field>
-      <v-text-field
-        v-model="password"
-        :error-messages="passwordErrors"
-        label="パスワード"
-        required
-        @input="$v.password.$touch()"
-        @blur="$v.password.$touch()"
-      ></v-text-field>
-      <v-text-field
-        v-model="name"
-        :error-messages="nameErrors"
-        :counter="20"
-        label="お名前"
-        required
-        @input="$v.name.$touch()"
-        @blur="$v.name.$touch()"
-      ></v-text-field>
-      <v-text-field
-        v-model="profile_name"
-        :error-messages="profileNameErrors"
-        :counter="50"
-        label="ユーザー名"
-        required
-        @input="$v.profile_name.$touch()"
-        @blur="$v.profile_name.$touch()"
-      ></v-text-field>
-
-      <v-btn class="mr-4" @click="submit">submit</v-btn>
-      <v-btn @click="clear">clear</v-btn>
-      <v-btn @click="testLogIn">テストユーザーで簡単ログイン</v-btn>
-    </form>
-  </v-card>-->
 </template>
 
 <script>
@@ -169,10 +126,6 @@ export default {
         this.name,
         this.profile_name
       ]);
-      // this.email = "";
-      // this.password = "";
-      // this.name = "";
-      // this.profile_name = "";
     },
     testLogIn() {
       this.$store.dispatch("testLogIn", [this.test_email, this.test_password]);

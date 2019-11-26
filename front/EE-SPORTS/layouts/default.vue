@@ -54,16 +54,6 @@
 
         <notifications />
 
-        <!-- notifications.lengthを使用しなければ表示される -->
-        <!-- <v-badge color="purple" left overlap>
-          <template v-slot:badge>
-            <v-icon dark>1</v-icon>
-          </template>
-          <v-icon color="grey lighten-1" large>mdi-bell</v-icon>
-        </v-badge>-->
-        <!-- <nuxt-link to="/post_Images/test">てすと</nuxt-link> -->
-
-        <!-- ここまで -->
         <v-form @submit.prevent="searchSubmit" class="pt-5">
           <v-container>
             <v-text-field v-model="keyword">
@@ -76,43 +66,22 @@
           </v-container>
         </v-form>
 
-        <!-- <v-form @submit.prevent="searchSubmit" class="pt-4">
-          <v-container>
-            <v-text-field v-model="keyword">
-              <template v-slot:label>
-                <strong>"#"</strong> or
-                <strong>ユーザー名</strong>
-                <v-icon style="vertical-align: middle">find_in_page</v-icon>
-              </template>
-            </v-text-field>
-          </v-container>
-        </v-form>-->
         <v-checkbox v-model="collapseOnScroll" color="white" hide-details></v-checkbox>
       </v-app-bar>
 
       <v-sheet id="scrolling-techniques-6" class="overflow-y-auto" max-height="1280">
-        <!-- <v-parallax
-          dark
-          src="http://localhost:3001/performance-3110696_1920.jpg"
-          height="100%"
-          width="100%"
-        >-->
         <div class="bg">
           <v-container style="height: 100px;"></v-container>
-          <!-- <v-content> -->
-          <!-- <v-container> -->
+
           <nuxt />
         </div>
 
-        <!-- </v-container> -->
-        <!-- </v-content> -->
         <v-footer :fixed="fixed" app>
           <v-btn icon @click="logOut" :right="right">
             <v-icon>mdi-logout</v-icon>
           </v-btn>
           <span>&copy; 2019</span>
         </v-footer>
-        <!-- </v-parallax> -->
       </v-sheet>
     </v-card>
   </v-app>
@@ -123,7 +92,6 @@ import { mdiLogout } from "@mdi/js";
 import { mdiBell } from "@mdi/js";
 import axios from "@/plugins/axios";
 import Notifications from "@/components/Notifications";
-// import firebase from "@/plugins/firebase";
 
 export default {
   components: {
@@ -167,20 +135,12 @@ export default {
       keyword: "",
       searchResults: []
     };
-    // consol.log(this);
   },
   computed: {
     currentUser() {
-      // if (this.$store.state.user && this.$store.state.user.id != undefined) {
-      //   this.notifications = this.notificationFilter(this.$store.state.user);
-      //   console.log("kita2", this.notifications);
-      // }
-      // console.log("kita", this.notifications);
-
       return this.$store.state.user;
     },
     items() {
-      console.log("test");
       if (this.currentUser.id) {
         return [
           {
@@ -234,20 +194,13 @@ export default {
     const unwatch = this.$store.watch(
       state => state.user,
       async (newUser, oldUser) => {
-        console.log("state1", newUser);
-
         if (newUser.id) {
-          console.log("state2", newUser);
           try {
             const res = await axios.get(`/notifications/${newUser.id}`);
-            // console.log("resssssssss", res);
-            // return this.notificationsAsync(res);
             this.notifications = res.data.filter(notification => {
-              // console.log("notification.checked", notification.checked);
               return notification.checked === false;
             });
           } catch (err) {
-            // alert(err);
             console.log("Notifications err", err);
             return null;
           }
@@ -259,100 +212,11 @@ export default {
   methods: {
     logOut() {
       this.$store.dispatch("logOut");
-      // this.$router.push("/post_Images");
     },
-    // async notificationFilter(currentUser) {
-    //   console.log("notifications");
-    //   let vm = currentUser;
-    //   try {
-    //     const res = await axios.get(`/notifications/${vm.id}`);
-    //     console.log("res", res);
-    //     return this.notificationsAsync(res);
-    //   } catch (err) {
-    //     // alert(err);
-    //     console.log("Notifications err", err);
-    //     return null;
-    //   }
-    // },
-    // notificationsAsync(res) {
-    //   let notifications = null;
-    //   try {
-    //     notifications = res;
-    //     if (notifications != undefined) {
-    //       console.log("notifications.data", notifications.data);
-    //       // this.notifications = res.data;
-    //       // this.notifications = res.data.map(notification => {
-    //       //   notification.checked == false;
-    //       // });
-    //       notifications = notifications.data.filter(notification => {
-    //         // console.log("notification.checked", notification.checked);
-    //         return notification.checked === false;
-    //       });
-    //       // return notification;
-    //       // ==================debag======================
-    //       // var toString = Object.prototype.toString;
-    //       console.log("this.notifications", notifications);
-    //       console.log("this.notifications.length", notifications.length);
-    //       console.log(
-    //         "this.notifications.length === 0",
-    //         notificaitons.length === 0
-    //       );
-    //     }
-
-    //     // console.log("type of this.notifications", typeof this.notifications);
-    //     // console.log(
-    //     //   "toString this.notifications",
-    //     //   toString.call(this.notifications)
-    //     // );
-    //     // ==================debag======================
-    //   } catch (err) {
-    //     // alert(err);
-    //     console.log("err", err);
-    //   }
-    //   console.log("tes---t");
-    //   return notifications;
-    // },
-    // mounted() {
-    //   console.log("aaaaaaa", this.notifications);
-    // },
     searchSubmit() {
       this.$store.dispatch("searchSubmit", this.keyword);
       this.keyword = "";
     }
-    // async checkNotifications() {
-    //   let vm = this.currentUser;
-    //   try {
-    //     const res = await axios.get(`/notifications/${vm.id}`);
-    //     console.log("res.data", res.data);
-    //     // this.notifications = res.data;
-    //     // this.notifications = res.data.map(notification => {
-    //     //   notification.checked == false;
-    //     // });
-    //     this.notifications = res.data.filter(notification => {
-    //       // console.log("notification.checked", notification.checked);
-    //       return notification.checked === false;
-    //     });
-    //     // return notification;
-
-    //     // ==================debag======================
-    //     // var toString = Object.prototype.toString;
-    //     console.log("this.notifications", this.notifications);
-    //     console.log("this.notifications.length", this.notifications.length);
-    //     console.log(
-    //       "this.notifications.length === 0",
-    //       this.notificaitons.length === 0
-    //     );
-    //     // console.log("type of this.notifications", typeof this.notifications);
-    //     // console.log(
-    //     //   "toString this.notifications",
-    //     //   toString.call(this.notifications)
-    //     // );
-    //     // ==================debag======================
-    //   } catch (err) {
-    //     // alert(err);
-    //     console.log("err", err);
-    //   }
-    // }
   }
 };
 </script>
@@ -364,11 +228,9 @@ export default {
   background-image: url("http://localhost:3001/301618-abstract.jpeg");
   background-attachment: fixed;
   background-repeat: no-repeat;
-  /* opacity: 0.4; */
   min-height: 100vh;
 }
 a {
   text-decoration: none;
-  /* color: #fff; */
 }
 </style>

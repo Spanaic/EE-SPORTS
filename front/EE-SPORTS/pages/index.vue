@@ -71,7 +71,6 @@
                   <v-col cols="12" md="3">1. 会員登録</v-col>
                   <v-col cols="12" md="3">2. 画像投稿</v-col>
                   <v-col cols="12" md="4">3. いいねやコメント機能でみんなと交流</v-col>
-                  <!-- <v-col cols="12" md="3">4. 素敵なチームメイトが見つかるかも…</v-col> -->
                 </v-row>
               </v-container>
             </v-card>

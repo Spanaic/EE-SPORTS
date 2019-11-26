@@ -1,5 +1,4 @@
 import firebase from "firebase"
-// import store from "~/store";
 
 
 var firebaseConfig = {
@@ -12,32 +11,8 @@ var firebaseConfig = {
     appId: process.env.APP_ID
 };
 
-// Initialize Firebase
-// firebase.initializeApp(firebaseConfig);
-
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig)
 }
 
 export default firebase
-
-// export default {
-//     init() {
-//         firebase.initializeApp(config);
-//         firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION);
-//     },
-//     login() {
-//         const provider = new firebase.auth.GoogleAuthProvider();
-//         firebase.auth().signInWithPopup(provider)
-//     },
-//     logout() {
-//         firebase.auth().signOut()
-//     },
-//     onAuth() {
-//         firebase.auth().onAuthStateChanged(user => {
-//             user = user ? user : {};
-//             store.commit('onAuthStateChanged', user);
-//             store.commit('onUserStateChanged', user.uid ? true : false);
-//         });
-//     }
-// };

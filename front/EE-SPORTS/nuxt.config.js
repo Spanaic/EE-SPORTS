@@ -49,13 +49,9 @@ export default {
   ** Plugins to load before mounting the App
   */
   router: {
-    // middleware: ['notifications']
-    // middleware: ['authenticated']
   },
   plugins: [
     { src: '~/plugins/router' },
-    // "@/plugins/vuelidate"
-    // { src: '~/plugins/router', ssr: false },
     // '@/plugins/authCheck',
   ],
   /*
@@ -63,7 +59,6 @@ export default {
   */
   buildModules: [
     // Doc: https://github.com/nuxt-community/eslint-module
-    // '@nuxtjs/eslint-module',
     '@nuxtjs/vuetify',
 
   ],

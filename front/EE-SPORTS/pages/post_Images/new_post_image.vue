@@ -2,7 +2,7 @@
   <v-card class="mx-auto" color="#26c6da" dark max-width="400">
     <v-card-title>
       <v-icon large left>mdi-folder-upload-outline</v-icon>
-      <span class="title font-weight-light">プロフィール編集</span>
+      <span class="title font-weight-light">新規投稿</span>
     </v-card-title>
     <form @submit.prevent="handleSubmit" enctype="multipart/form-data">
       <v-text-field
@@ -89,29 +89,17 @@ export default {
     };
   },
   async mounted() {
-    console.log("notificationsCheck", this.$store.state.user);
     await this.$store.dispatch("notificationsCheck", this.$store.state.user);
   },
   methods: {
     onFileChange(e) {
-      console.log(e);
-      // const files = e.target.files;
-
-      // console.log("-------------");
-      // console.log(e.target.files);
-      // console.log("-------------");
-
       this.createImage(e);
-      // console.log(files[0]);
       this.file = e;
       this.img_name = e.name;
     },
-    // アップロードした画像を表示
     createImage(file) {
       const reader = new FileReader();
-      console.log(reader);
       reader.onload = e => {
-        console.log(e);
         this.uploadedImage = e.target.result;
       };
       reader.readAsDataURL(file);
@@ -123,96 +111,19 @@ export default {
       const formData = new FormData();
       var timestamp = new Date().getTime();
       var filename = "file" + timestamp + ".jpg";
-      console.log(this.uploadFile);
       formData.append("post_image[image]", this.file);
       formData.append("post_image[caption]", this.caption);
       formData.append("post_image[title]", this.title);
       formData.append("post_image[image_name]", filename);
-      // formData.append("post_image[image_name]", img_name);
       formData.append("post_image[end_user_id]", this.$store.state.user.id);
-      // formData.append("post_image[image]", this.caption);
       this.loading = true;
       var vm = this;
-      //   axios.get("http://localhost:3001/post_images.json").then(res => {
-      //     console.log(res.data);
-      //   });
-      console.log("----------------");
-      console.log(formData);
-      // const data = {
-      //   caption: this.caption,
-      //   name: filename
-      // };
       axios.post("http://localhost:3001/post_images", formData).then(res => {
-        // console.log(res);
         this.$router.push(`/post_Images/${res.data.id}`);
-        // .catch(err) = {
-        //   alert(err)
-        // }
-        // this.$router.push({
-        //   name: "post_Images-id",
-        //   params: { postImageId: res.data.id }
-        // });
       });
     }
   }
 };
-// export default {
-//   components: {},
-//   data() {
-//     return {
-//       uploadedImage: "",
-//       img_name: "",
-//       files: [],
-//       itemLength: 0,
-//       loading: false,
-//       caption: ""
-//     };
-//   },
-//   created() {
-//     var vm = this;
-//     var params = {
-//       TableName: "Faces"
-//     };
-//   },
-//   //   fetch() {},
-//   methods: {
-//     onFileChange(e) {
-//       console.log(e);
-//       const files = e.target.files;
-//       this.createImage(files[0]);
-//       console.log(files[0]);
-//       this.files = files;
-//       this.img_name = files[0].name;
-//     },
-//     // アップロードした画像を表示
-//     createImage(file) {
-//       const reader = new FileReader();
-//       console.log(reader);
-//       reader.onload = e => {
-//         console.log(e);
-//         this.uploadedImage = e.target.result;
-//       };
-//       reader.readAsDataURL(file);
-//     },
-//     remove() {
-//       this.uploadedImage = false;
-//     },
-//     handleSubmit() {
-//       const formData = new FormData();
-//       var timestamp = new Date().getTime();
-//       var filename = "file" + timestamp + ".jpg";
-//       console.log(this.uploadFile);
-//       formData.append("post_image[image]", this.files[0]);
-//       this.loading = true;
-//       var vm = this;
-//       //   axios.get("http://localhost:3001/post_images.json").then(res => {
-//       //     console.log(res.data);
-//       //   });
-//       console.log(formData);
-//       axios.post("http://localhost:3001/post_images", formData);
-//     }
-//   }
-// };
 </script>
 <style lang="scss" scoped>
 .preview-item {

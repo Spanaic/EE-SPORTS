@@ -1,4 +1,3 @@
-// firebaseでauthcheckしたユーザのじょうほうがpayloadで返ってくるので、それをstateに格納するメソッド
 const mutations = {
     setUser(state, payload) {
         state.user = payload;
