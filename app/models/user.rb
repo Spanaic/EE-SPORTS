@@ -5,16 +5,16 @@ class User < ApplicationRecord
         validates :name, presence: true, length: {minimum: 1, maximum: 20}
         validates :profile_name, presence: true, format: { with: /\A[a-zA-Z\d]+\z/ }, length: {minimum: 1, maximum: 100}
 
-  has_and_belongs_to_many :post_comments
+  has_and_belongs_to_many :post_comments, dependent: :destroy
 
-  has_many :post_images, dependent:  :destroy
-  has_many :post_comments, dependent:  :destroy
-  has_many :favorites, dependent:  :destroy
+  has_many :post_images, dependent: :destroy
+  has_many :post_comments, dependent: :destroy
+  has_many :favorites, dependent: :destroy
 
-  has_many :active_relationships, class_name: "Relationship", foreign_key: :following_id, dependent:  :destroy
-  has_many :followings, through: :active_relationships, source: :follower
-  has_many :passive_relationships, class_name: "Relationship", foreign_key:  :follower_id, dependent:  :destroy
-  has_many :followers, through: :passive_relationships, source: :following
+  # has_many :active_relationships, class_name: "Relationship", foreign_key: :following_id, dependent: :destroy
+  # has_many :followings, through: :active_relationships, source: :follower
+  # has_many :passive_relationships, class_name: "Relationship", foreign_key:  :follower_id, dependent: :destroy
+  # has_many :followers, through: :passive_relationships, source: :following
 
   has_many :active_notifications, class_name: "Notification", foreign_key: :visitor_id, dependent: :destroy
   has_many :passive_notifications, class_name: "Notification", foreign_key: :visited_id, dependent: :destroy

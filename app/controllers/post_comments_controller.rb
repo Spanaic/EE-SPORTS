@@ -1,14 +1,20 @@
 class PostCommentsController < ApplicationController
+    protect_from_forgery :except => [:create]
+
+
     def create
-        @post_image = PostImage.find(params[:post_image_id])
-        @post_comment = PostComment.new(post_comment_params)
-        @post_comment.post_image_id = @post_image.id
-        @post_comment.user_id = current_user.id
-        if  @post_comment.save
-            @post_image.create_notification_post_comment(current_user, @post_comment)
-            redirect_to post_image_path(params[:post_image_id])
+        @post_comment = PostImage.find(params[:post_image_id])
+        end_user = EndUser.find(params[:end_user][:id])
+        @new = @post_comment.post_comments.new(post_comment_params)
+        @new.end_user_id = end_user.id
+        if  @post_comment.save!
+            @post_comment.create_notification_post_comment(end_user, @post_comment.post_comments)
+            post_comments_list = @post_comment.to_json(include: [:favorites,:end_user, :hashtags, :notifications,:post_comments =>{ :include => :end_user}])
+            p post_comments_list
+            render :json => post_comments_list
         else
-            render template: "post_images/show"
+            puts @post_comment.errors.full_messages
+            render :json => post_comments_list , status: 500
         end
     end
 
@@ -21,7 +27,7 @@ class PostCommentsController < ApplicationController
 
     private
     def post_comment_params
-        params.require(:post_comment).permit(:comment)
+        params.require(:post_comment).permit(:comment, :end_user_id)
 
     end
 end

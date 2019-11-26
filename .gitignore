@@ -37,3 +37,7 @@ db/.DS_Store
 .DS_Store
 
 ubuntu-bionic-18.04-cloudimg-console.log
+
+MEMO.md
+
+mysql/data/*
