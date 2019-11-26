@@ -98,3 +98,15 @@ rails c
 rails db:migrate:reset
 rails s
 exit
+rails routes
+rails c
+rails rotues
+rails routes
+rails routes
+rails c
+rails routes
+post_image
+rails c
+rails c
+rails routes
+exit
