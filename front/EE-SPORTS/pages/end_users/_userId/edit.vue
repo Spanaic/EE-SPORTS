@@ -1,5 +1,93 @@
 l<template>
   <div>
+    <!-- <v-card class="mx-auto" color="#26c6da" dark max-width="400">
+      <v-card-title>
+        <v-icon large left>mdi-draw</v-icon>
+        <span class="title font-weight-light">新規登録</span>
+      </v-card-title>
+      <form action>
+        <v-text-field
+          class="ma-5"
+          v-model="email"
+          :error-messages="emailErrors"
+          label="Email"
+          required
+          @input="$v.email.$touch()"
+          @blur="$v.email.$touch()"
+        ></v-text-field>
+        <v-text-field
+          class="ma-5"
+          v-model="password"
+          :error-messages="passwordErrors"
+          label="パスワード"
+          required
+          @input="$v.password.$touch()"
+          @blur="$v.password.$touch()"
+        ></v-text-field>
+        <v-text-field
+          class="ma-5"
+          v-model="name"
+          :error-messages="nameErrors"
+          :counter="20"
+          label="お名前"
+          required
+          @input="$v.name.$touch()"
+          @blur="$v.name.$touch()"
+        ></v-text-field>
+        <v-text-field
+          class="ma-5"
+          v-model="profile_name"
+          :error-messages="profileNameErrors"
+          :counter="50"
+          label="ユーザー名"
+          required
+          @input="$v.profile_name.$touch()"
+          @blur="$v.profile_name.$touch()"
+        ></v-text-field>
+
+        <v-card-actions class="justify-center">
+          <v-btn class="btn" @click="submit" color="primary" dark>新規登録</v-btn>
+          <v-btn @click="testLogIn">テストユーザーで簡単ログイン</v-btn>
+        </v-card-actions>
+      </form>
+    </v-card>
+
+    <v-card class="mx-auto" color="#26c6da" dark max-width="400">
+      <v-card-title>
+        <v-icon large left>mdi-folder-upload-outline</v-icon>
+        <span class="title font-weight-light">新規投稿</span>
+      </v-card-title>
+      <form @submit.prevent="handleSubmit" enctype="multipart/form-data">
+        <v-text-field
+          class="ma-5"
+          v-model="title"
+          :error-messages="titleErrors"
+          :counter="30"
+          label="title"
+          required
+          @input="$v.title.$touch()"
+          @blur="$v.title.$touch()"
+        ></v-text-field>
+        <v-text-field
+          class="ma-5"
+          v-model="caption"
+          :error-messages="captionErrors"
+          :counter="300"
+          label="caption"
+          required
+          @input="$v.caption.$touch()"
+          @blur="$v.caption.$touch()"
+        ></v-text-field>
+        <v-file-input class="ma-5" label="File input" outlined dense @change="onFileChange"></v-file-input>
+
+        <v-card-actions class="justify-center">
+          <v-btn class="btn" color="primary" dark>
+            <input type="submit" id="apply-upload" />
+          </v-btn>
+        </v-card-actions>
+      </form>
+    </v-card>-->
+
     <!-- <form action @submit.prevent="handleSubmit" enctype="multipart/form-data">
       <input type="text" v-model="end_user.name" />
       <input type="text" v-model="end_user.profile_name" />
@@ -17,37 +105,51 @@ l<template>
       <input type="submit" id="apply-upload" v-show="uploadedImage" />
     </form>-->
 
-    <form @submit.prevent="handleSubmit" enctype="multipart/form-data">
-      <v-text-field
-        v-model="end_user.name"
-        :error-messages="nameErrors"
-        :counter="30"
-        label="名前"
-        required
-        @input="$v.name.$touch()"
-        @blur="$v.name.$touch()"
-      ></v-text-field>
-      <v-text-field
-        v-model="end_user.profile_name"
-        :error-messages="profileNameErrors"
-        :counter="300"
-        label="ユーザー名"
-        required
-        @input="$v.profile_name.$touch()"
-        @blur="$v.profile_name.$touch()"
-      ></v-text-field>
-      <!-- <label v-show="!uploadedImage" class="input-item__label">画像を選択</label> -->
+    <v-card class="mx-auto" color="#26c6da" dark max-width="400">
+      <v-card-title>
+        <v-icon large left>mdi-folder-upload-outline</v-icon>
+        <span class="title font-weight-light">新規投稿</span>
+      </v-card-title>
+      <form @submit.prevent="handleSubmit" enctype="multipart/form-data">
+        <v-text-field
+          class="ma-5"
+          v-model="end_user.name"
+          :error-messages="nameErrors"
+          :counter="30"
+          label="名前"
+          required
+          @input="$v.name.$touch()"
+          @blur="$v.name.$touch()"
+        ></v-text-field>
+        <v-text-field
+          class="ma-5"
+          v-model="end_user.profile_name"
+          :error-messages="profileNameErrors"
+          :counter="300"
+          label="ユーザー名"
+          required
+          @input="$v.profile_name.$touch()"
+          @blur="$v.profile_name.$touch()"
+        ></v-text-field>
+        <!-- <label v-show="!uploadedImage" class="input-item__label">画像を選択</label> -->
 
-      <v-file-input label="プロフィール画像をアップロード" outlined dense @change="onFileChange"></v-file-input>
+        <v-file-input label="プロフィール画像をアップロード" outlined dense @change="onFileChange"></v-file-input>
 
-      <!-- <label v-show="!uploadedImage" class="input-item__label">画像を選択</label>
-      <input type="file" @change="onFileChange" />-->
+        <!-- <label v-show="!uploadedImage" class="input-item__label">画像を選択</label>
+        <input type="file" @change="onFileChange" />-->
 
-      <v-btn class="mr-4">
-        <input type="submit" id="apply-upload" />
-      </v-btn>
-      <!-- <v-btn @click="clear">clear</v-btn> -->
-    </form>
+        <!-- <v-btn class="mr-4">
+          <input type="submit" id="apply-upload" />
+        </v-btn>-->
+
+        <!-- <v-btn @click="clear">clear</v-btn> -->
+        <v-card-actions class="justify-center">
+          <v-btn class="btn" color="primary" dark>
+            <input type="submit" id="apply-upload" />
+          </v-btn>
+        </v-card-actions>
+      </form>
+    </v-card>
   </div>
 </template>
 

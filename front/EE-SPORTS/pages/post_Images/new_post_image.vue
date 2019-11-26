@@ -2,7 +2,7 @@
   <v-card class="mx-auto" color="#26c6da" dark max-width="400">
     <v-card-title>
       <v-icon large left>mdi-folder-upload-outline</v-icon>
-      <span class="title font-weight-light">新規投稿</span>
+      <span class="title font-weight-light">プロフィール編集</span>
     </v-card-title>
     <form @submit.prevent="handleSubmit" enctype="multipart/form-data">
       <v-text-field

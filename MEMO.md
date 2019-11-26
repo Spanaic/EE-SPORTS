@@ -1692,6 +1692,12 @@ created() {
     console.log("type of this.notifications", typeof this.notifications);
     console.log("toString this.notifications",toString.call(this.notifications));
 ```
+
+### `storing => numberへの変換（javascript）`
+
+```
+parseInt(string型となっている変数や値)
+```
 ---
 
 ## `【whereのチェーンメソッド　"or"　の使い方】`
