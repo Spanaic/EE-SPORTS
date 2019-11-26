@@ -4,37 +4,19 @@ class EndUsersController < ApplicationController
 
     def index
         user = EndUser.find_by(email: params[:email])
-        # .to_json(include: [:favorites, :post_images, :post_comments, :active_relationships, :passive_relationships, :followings, :followers, :active_notifications, :passive_notifications])
-        # @user= EndUser.find(id: params[:profile_name])
         users = EndUser.all
-        # .to_json(include: [:favorites, :post_images, :post_comments, :active_relationships, :passive_relationships, :followings, :followers, :active_notifications, :passive_notifications])
 
         end_users = []
         end_users.push(user)
         end_users.push(users)
 
         render :json => end_users
-        # respond_to do |format|
-        #     format.json {
-        #         render json: {user: user, users: users}
-        #     }
-        # end
-        # render :json => user
-        # render :json => users
-        # render :json => @user
-
     end
 
     def show
         @user = EndUser.find(params[:id]).to_json(include: [:favorites, :post_images, :post_comments, :active_relationships, :passive_relationships, :followings, :followers, :active_notifications, :passive_notifications])
         p @user
-        # @user= EndUser.find_by(id: params[:profile_name])
         render :json => @user
-        # @user = User.find_by(profile_name: params[:profile_name])
-        # @post_images = @user.post_images.page(params[:page]).per(9).reverse_order
-        # respond_to do |format|
-            # format.json {render :json =>{:user => @user,:post_images => @post_images} }
-        # end
     end
 
     def new
@@ -43,11 +25,7 @@ class EndUsersController < ApplicationController
 
     def create
         user = EndUser.new(end_user_params)
-        # user.email = params[:end_user][:email]
-        # user.name = params[:end_user][:name]
-        # user.profile_name = params[:end_user][:profile_name]
         if user.save!
-
         else
         puts user.errors.full_messages
         end
@@ -85,7 +63,6 @@ class EndUsersController < ApplicationController
     def follows
         @user = EndUser.find(params[:id])
         @follows = @user.followings.all
-
         follows = @follows.to_json(include: [:favorites, :post_images, :post_comments, :active_relationships, :passive_relationships, :followers, :active_notifications, :passive_notifications])
         render :json => follows
     end
@@ -104,7 +81,5 @@ class EndUsersController < ApplicationController
     private
     def end_user_params
         params.require(:end_user).permit(:email, :name, :profile_name, :profile_image_name)
-
-        # params.require(:post_image).permit(:caption, :image_name, :end_user_id)
     end
 end

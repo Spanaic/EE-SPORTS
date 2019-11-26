@@ -6,15 +6,12 @@
           <template v-slot:badge>
             <span v-if="latestNotifications.length !== 0">{{latestNotifications.length}}</span>
           </template>
-          <!-- <v-btn color="primary" dark v-on="on"> -->
           <v-icon large v-on="on">mdi-bell</v-icon>
-          <!-- </v-btn> -->
         </v-badge>
       </template>
 
       <v-list>
         <template v-if="latestNotifications.length === 0">
-          <!-- {{ this.notifications }} -->
           <v-list-item-title>
             <span>新しい通知はありません。</span>
           </v-list-item-title>
@@ -68,7 +65,6 @@ export default {
         notification.id,
         this.$store.state.user.id
       ]);
-      // this.notifications = this.$store.state.notifications;
       this.notifications = this.$store.state.notifications.filter(
         notification => {
           return notification.checkted === false;

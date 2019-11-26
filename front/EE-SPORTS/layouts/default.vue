@@ -25,7 +25,6 @@
             </v-list-item-content>
           </v-list-item>
         </v-list>
-        <!-- <v-list > -->
 
         <template v-slot:append>
           <div class="pa-2">
@@ -34,14 +33,6 @@
             </v-btn>
           </div>
         </template>
-
-        <!-- <v-col :justify="center">
-          <v-btn @click.stop="drawer = !drawer">
-        <!-- <v-icon>mdi-{{ `chevron-${miniVariant ? 'right' : 'left'}` }}</v-icon>-->
-        <!-- <v-text>Close</v-text> -->
-        <!-- </v-btn> -->
-        <!-- </v-col> -->
-        <!-- </v-list> -->
       </v-navigation-drawer>
 
       <v-app-bar
@@ -60,61 +51,6 @@
         </nuxt-link>
 
         <v-spacer></v-spacer>
-
-        <!-- notification表示候補1 -->
-        <!-- <v-badge class="mr-5" :bottom="bottom" :color="color" :left="left" :overlap="overlap">
-          <template v-slot:badge>
-            <span>
-              2
-            </span>
-          </template>
-          <v-icon large color="grey lighten-1">mdi-bell</v-icon>
-        </v-badge>-->
-
-        <!-- <v-switch v-model="closeOnContentClick" label="Close on content click"></v-switch> -->
-        <!-- <v-menu top :close-on-content-click="closeOnContentClick"> -->
-        <!-- notification表示候補2 -->
-
-        <!-- <div v-if="currentUser.id">
-          <v-menu>
-            <template v-slot:activator="{ on }">
-              <v-badge color="purple" left overlap>
-                <template v-slot:badge>
-                  <span v-if="notifications.length !== 0">{{notifications.length}}</span>
-                </template>
-                <v-icon large v-on="on">mdi-bell</v-icon>
-              </v-badge>
-            </template>
-
-            <v-list>
-              <template v-if="notifications.length === 0">
-                <v-list-item-title>
-                  <span>新しい通知はありません。</span>
-                </v-list-item-title>
-              </template>
-              <template v-else>
-                <v-list-item v-for="(notification, index) in notifications" :key="index" @click>
-                  <v-list-item-title>
-                    <span v-if="notification.action == follow">
-                      <nuxt-link
-                        :to="`/end_users/${notification.visitor_id}`"
-                      >{{ notification.visitor.profile_name }}</nuxt-link>さんがあなたをフォローしました。
-                    </span>
-                    <span v-else-if="notification.action == favorite">
-                      さんが
-                      <nuxt-link :to="`post_Images/${notification.post_image._id}`">あなたの投稿</nuxt-link>にいいねしました。
-                    </span>
-                    <span v-else-if="notification.action = comment">
-                      さんが
-                      <nuxt-link :to="`post_Images/${notification.post_image._id}`">あなたの投稿</nuxt-link>にコメントしました。
-                    </span>
-                    <span v-else>新しい通知はありません。</span>
-                  </v-list-item-title>
-                </v-list-item>
-              </template>
-            </v-list>
-          </v-menu>
-        </div>-->
 
         <notifications />
 

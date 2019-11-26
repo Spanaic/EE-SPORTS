@@ -21,10 +21,8 @@ class UsersController < ApplicationController
         @user = User.find_by(profile_name: params[:profile_name])
         @user = current_user
         if @user.update(user_params)
-            # redirect_to user_path(@user.profile_name)
             render :json => {status: 'SUCCESS', data: @user}
         else
-            # render :edit
             render :json => {status: 'ERROR', data: @user}
         end
     end
@@ -47,7 +45,6 @@ class UsersController < ApplicationController
 
     def reply_user
         @user = User.find_by(profile_name: params[:profile_name])
-        # redirect_to user_path(params[:profile_name])
         render :json => @user
     end
 

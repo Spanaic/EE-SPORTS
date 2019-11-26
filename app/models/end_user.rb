@@ -1,9 +1,4 @@
 class EndUser < ApplicationRecord
-
-        # validates :name, presence: true, length: {minimum: 1, maximum: 20}
-        # validates :profile_name, presence: true, length: {minimum: 1, maximum: 100}
-        # validates :profile_name, presence: true, format: { with: /\A[a-zA-Z\d]+\z/ }, length: {minimum: 1, maximum: 100}
-
   has_and_belongs_to_many :post_comments
 
   has_many :post_images, dependent:  :destroy
@@ -20,23 +15,6 @@ class EndUser < ApplicationRecord
 
   def followed_by?(user)
     passive_relationships.find_by(following_id: user.id).present?
-  end
-
-  # attachment :profile_image
-
-  def self.find_for_oauth(auth)
-    user = User.where(uid: auth.uid, provider: auth.provider).first
-    unless user
-      user = User.create(
-        uid:      auth.uid,
-        provider: auth.provider,
-        name:     auth.info.name,
-        profile_name:  auth.uid,
-        email:    auth.info.email,
-        password: Devise.friendly_token[0,20]
-      )
-    end
-    user
   end
 
   def create_notification_follow(current_user, end_user)
