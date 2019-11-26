@@ -169,7 +169,7 @@
           <v-container fluid>
             <v-row>
               <v-col
-                v-for="(post_image, i) in this.end_user.post_images"
+                v-for="(post_image, i) in end_user.post_images"
                 :key="i"
                 class="d-flex child-flex"
                 cols="4"

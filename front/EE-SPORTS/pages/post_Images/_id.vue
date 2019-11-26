@@ -44,7 +44,9 @@
 
           <v-menu offset-y>
             <template v-slot:activator="{ on }">
-              <v-btn v-on="on" dark icon v-if="$store.state.user.id === $route.params.id">
+              <v-btn v-on="on" dark icon v-if="$store.state.user.id === post_image.end_user_id">
+                <!-- {{ $store.state.user.id }} -->
+                <!-- {{ post_image.end_user_id }} -->
                 <v-icon>mdi-dots-vertical</v-icon>
               </v-btn>
             </template>
