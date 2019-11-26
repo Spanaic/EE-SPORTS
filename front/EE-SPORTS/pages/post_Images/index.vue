@@ -380,23 +380,24 @@ export default {
           } catch (err) {
             console.log("err", err);
           }
-        } else {
-          try {
-            const res = await axios.get(url);
-            this.post_images = res.data.map(post_image => {
-              post_image.caption = post_image.caption.replace(
-                /[#＃][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー._-]+/gm,
-                ""
-              );
-              post_image.hashtags.map(hashtag => {
-                hashtag.hashname.replace(/[#＃]/gm, "");
-              });
-              return post_image;
-            });
-          } catch (err) {
-            console.log(err);
-          }
         }
+        // else {
+        //   try {
+        //     const res = await axios.get(url);
+        //     this.post_images = res.data.map(post_image => {
+        //       post_image.caption = post_image.caption.replace(
+        //         /[#＃][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー._-]+/gm,
+        //         ""
+        //       );
+        //       post_image.hashtags.map(hashtag => {
+        //         hashtag.hashname.replace(/[#＃]/gm, "");
+        //       });
+        //       return post_image;
+        //     });
+        //   } catch (err) {
+        //     console.log(err);
+        //   }
+        // }
       }
     );
   },
@@ -504,10 +505,10 @@ export default {
       this.$store.dispatch("cancelSearch");
       this.$router.push("/post_Images");
     }
-  },
-  async fetch({ store }) {
-    await store.dispatch("authCheck");
   }
+  // async fetch({ store }) {
+  //   await store.dispatch("authCheck");
+  // }
 };
 </script>
 

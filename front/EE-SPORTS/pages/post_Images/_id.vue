@@ -230,7 +230,7 @@ export default {
   },
   async created() {
     this.post_image = this.raw_post_image;
-    this.post_image.caption.replace(
+    this.post_image.caption = this.post_image.caption.replace(
       /[#＃][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー._-]+/gm,
       ""
     );
@@ -325,7 +325,8 @@ export default {
           `/post_images/${this.post_image.id}/post_comments`,
           comment
         );
-        this.post_image.post_comments = data;
+        // this.post_image.post_comments = data;
+        await this.updatePostImages();
         this.post_comment = "";
       } catch (error) {
         alert(error);
