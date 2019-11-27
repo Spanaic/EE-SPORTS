@@ -12,7 +12,8 @@ const { APP_ID } = process.env;
 export default {
   mode: 'spa',
   env: {
-    baseUrl: process.env.BASE_URL,
+    // baseUrl: process.env.BASE_URL,
+    baseUrl: process.env.BASE_URL ? "https://ee-sports.net" : "http://localhost:3001/",
     API_KEY,
     AUTH_DOMAIN,
     DATABASE_URL,

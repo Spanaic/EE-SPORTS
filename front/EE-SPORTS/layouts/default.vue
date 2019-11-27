@@ -225,7 +225,7 @@ export default {
 .bg {
   background-size: cover;
   background-position: top;
-  background-image: url("http://localhost:3001/301618-abstract.jpeg");
+  background-image: url("/301618-abstract.jpeg");
   background-attachment: fixed;
   background-repeat: no-repeat;
   min-height: 100vh;
