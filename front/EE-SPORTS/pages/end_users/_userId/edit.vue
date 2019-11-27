@@ -53,6 +53,7 @@ export default {
   },
   data() {
     return {
+      baseUrl: process.env.BASE_URL,
       end_user: {},
       uploadedImage: "",
       img_name: "",
@@ -113,10 +114,7 @@ export default {
       this.loading = true;
       var vm = this;
       axios
-        .put(
-          `http://localhost:3001/end_users/${this.$route.params.userId}`,
-          formData
-        )
+        .put(`${baseUrl}/end_users/${this.$route.params.userId}`, formData)
         .then(res => {
           this.$router.push(
             `/end_users/${this.$route.params.userId}`,

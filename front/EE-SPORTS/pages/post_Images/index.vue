@@ -300,8 +300,6 @@ import { mdiThumbUpOutline } from "@mdi/js";
 import { mdiWaterOff } from "@mdi/js";
 import firebase from "@/plugins/firebase";
 
-const url = "http://localhost:3001/post_images";
-
 export default {
   data() {
     return {
@@ -327,7 +325,7 @@ export default {
   },
   async created() {
     try {
-      const res = await axios.get(url);
+      const res = await axios.get(`${baseUrl}/post_images`);
       this.post_images = res.data.map(post_image => {
         post_image.favorites.forEach(fav => {
           if (fav.end_user_id === this.user.id) {
@@ -356,7 +354,7 @@ export default {
       async (newUser, oldUser) => {
         if (newUser && newUser.id != 0) {
           try {
-            const res = await axios.get(url);
+            const res = await axios.get(`${baseUrl}/post_images`);
             let current_user_id = this.user.id;
             this.post_images = res.data.map(post_image => {
               post_image.favorites.forEach(fav => {
@@ -381,23 +379,6 @@ export default {
             console.log("err", err);
           }
         }
-        // else {
-        //   try {
-        //     const res = await axios.get(url);
-        //     this.post_images = res.data.map(post_image => {
-        //       post_image.caption = post_image.caption.replace(
-        //         /[#＃][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー._-]+/gm,
-        //         ""
-        //       );
-        //       post_image.hashtags.map(hashtag => {
-        //         hashtag.hashname.replace(/[#＃]/gm, "");
-        //       });
-        //       return post_image;
-        //     });
-        //   } catch (err) {
-        //     console.log(err);
-        //   }
-        // }
       }
     );
   },
@@ -426,7 +407,7 @@ export default {
     },
 
     async updatePostImages() {
-      const res = await axios.get(url);
+      const res = await axios.get(`${baseUrl}/post_images`);
       const favorite = {
         end_user_id: this.user.id
       };

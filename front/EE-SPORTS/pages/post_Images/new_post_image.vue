@@ -53,6 +53,7 @@ export default {
 
   data() {
     return {
+      baseUrl: process.env.BASE_URL,
       uploadedImage: "",
       img_name: "",
       file: null,
@@ -118,7 +119,7 @@ export default {
       formData.append("post_image[end_user_id]", this.$store.state.user.id);
       this.loading = true;
       var vm = this;
-      axios.post("http://localhost:3001/post_images", formData).then(res => {
+      axios.post(`${baseUrl}/post_images`, formData).then(res => {
         this.$router.push(`/post_Images/${res.data.id}`);
       });
     }

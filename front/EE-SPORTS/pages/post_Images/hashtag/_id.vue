@@ -19,8 +19,8 @@
                   <nuxt-link :to="`/post_Images/${post_image.id}`">
                     <v-card flat tile class="d-flex">
                       <v-img
-                        :src="'http://localhost:3001/post_images/' + `${post_image.image_name}`"
-                        :lazy-src="'http://localhost:3001/post_images/' + `${post_image.image_name}`"
+                        :src="`${baseUrl}/post_images/${post_image.image_name}`"
+                        :lazy-src="`${baseUrl}/post_images/${post_image.image_name}`"
                         aspect-ratio="1"
                         class="grey lighten-2"
                       >
@@ -48,6 +48,7 @@ import axios from "@/plugins/axios";
 export default {
   data() {
     return {
+      baseUrl: process.env.BASE_URL,
       hashtag_post_images: []
     };
   },

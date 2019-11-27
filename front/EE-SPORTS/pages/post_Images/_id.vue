@@ -204,8 +204,6 @@ import { mdiThumbUp } from "@mdi/js";
 import { mdiThumbUpOutline } from "@mdi/js";
 import firebase from "@/plugins/firebase";
 
-const url = "http://localhost:3001/post_images";
-
 export default {
   data() {
     return {
@@ -245,7 +243,9 @@ export default {
       async (newUser, oldUser) => {
         if (newUser.id) {
           try {
-            const res = await axios.get(url + `/${this.$route.params.id}`);
+            const res = await axios.get(
+              `${baseUrl}/post_images/${this.$route.params.id}`
+            );
             let current_user_id = this.user.id;
             this.post_image = res.data;
 
@@ -275,7 +275,7 @@ export default {
   },
   async asyncData({ params }) {
     try {
-      const res = await axios.get(url + `/${params.id}`);
+      const res = await axios.get(`${baseUrl}/post_images/${params.id}`);
       return {
         raw_post_image: res.data
       };
@@ -297,7 +297,9 @@ export default {
     },
 
     async updatePostImages() {
-      const res = await axios.get(url + `/${this.$route.params.id}`);
+      const res = await axios.get(
+        `${baseUrl}/post_images/${this.$route.params.id}`
+      );
       const favorite = {
         end_user_id: this.user.id
       };
