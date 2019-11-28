@@ -275,7 +275,9 @@ export default {
   },
   async asyncData({ params }) {
     try {
-      const res = await axios.get(`${this.baseUrl}/post_images/${params.id}`);
+      const res = await axios.get(
+        `${process.env.BASE_URL}/post_images/${params.id}`
+      );
       return {
         raw_post_image: res.data
       };

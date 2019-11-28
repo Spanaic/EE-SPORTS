@@ -1,6 +1,6 @@
  <template>
   <div>
-    <v-card class="mx-auto" color="#26c6da" dark max-width="400">
+    <v-card class="mx-auto" color="#F57F17" dark max-width="400">
       <v-card-title>
         <v-icon large left>mdi-login</v-icon>
         <span class="title font-weight-light">ログイン</span>
@@ -56,7 +56,6 @@ export default {
     test_email: "test@gmail.com",
     test_password: "password"
   }),
-
   computed: {
     emailErrors() {
       const errors = [];
@@ -75,7 +74,7 @@ export default {
       return errors;
     }
   },
-
+  middlewara: "loginUser",
   methods: {
     submit() {
       this.$store.dispatch("logIn", [this.email, this.password]);

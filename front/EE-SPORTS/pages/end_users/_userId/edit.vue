@@ -1,6 +1,6 @@
 l<template>
   <div>
-    <v-card class="mx-auto" color="#26c6da" dark max-width="400">
+    <v-card class="mx-auto" color="#AB47BC" dark max-width="400">
       <v-card-title>
         <v-icon large left>mdi-account-edit</v-icon>
         <span class="title font-weight-light">プロフィール編集</span>
