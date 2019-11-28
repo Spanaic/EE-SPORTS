@@ -84,6 +84,7 @@ export default {
   },
 
   created() {
+    console.log(this.baseUrl);
     var vm = this;
     var params = {
       TableName: "Faces"
@@ -119,7 +120,7 @@ export default {
       formData.append("post_image[end_user_id]", this.$store.state.user.id);
       this.loading = true;
       var vm = this;
-      axios.post(`${baseUrl}/post_images`, formData).then(res => {
+      axios.post(`${this.baseUrl}/post_images`, formData).then(res => {
         this.$router.push(`/post_Images/${res.data.id}`);
       });
     }

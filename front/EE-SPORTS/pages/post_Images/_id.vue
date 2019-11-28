@@ -207,7 +207,7 @@ import firebase from "@/plugins/firebase";
 export default {
   data() {
     return {
-      baseUrl: process.env.baseUrl,
+      baseUrl: process.env.BASE_URL,
       post_image: {},
       raw_post_image: {},
       current_user: [],
@@ -244,7 +244,7 @@ export default {
         if (newUser.id) {
           try {
             const res = await axios.get(
-              `${baseUrl}/post_images/${this.$route.params.id}`
+              `${this.baseUrl}/post_images/${this.$route.params.id}`
             );
             let current_user_id = this.user.id;
             this.post_image = res.data;
@@ -275,7 +275,7 @@ export default {
   },
   async asyncData({ params }) {
     try {
-      const res = await axios.get(`${baseUrl}/post_images/${params.id}`);
+      const res = await axios.get(`${this.baseUrl}/post_images/${params.id}`);
       return {
         raw_post_image: res.data
       };
@@ -298,7 +298,7 @@ export default {
 
     async updatePostImages() {
       const res = await axios.get(
-        `${baseUrl}/post_images/${this.$route.params.id}`
+        `${this.baseUrl}/post_images/${this.$route.params.id}`
       );
       const favorite = {
         end_user_id: this.user.id

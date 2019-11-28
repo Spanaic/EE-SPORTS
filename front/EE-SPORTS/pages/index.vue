@@ -86,13 +86,13 @@
                 <v-row class="text-xs-center">
                   <v-col cols="12" md="2"></v-col>
                   <v-col cols="12" md="3" justify-content="center">
-                    <nuxt-link :to="`${baseUrl}/signUp`">
+                    <nuxt-link to="/signUp">
                       <v-btn outlined rounded>新規登録</v-btn>
                     </nuxt-link>
                   </v-col>
                   <v-col cols="12" md="2"></v-col>
                   <v-col cols="12" md="3">
-                    <nuxt-link :to="`${baseUrl}/logIn`">
+                    <nuxt-link to="/login">
                       <v-btn outlined rounded>ログイン</v-btn>
                     </nuxt-link>
                   </v-col>
@@ -111,7 +111,7 @@ export default {
   layout: "top",
   data() {
     return {
-      baseUrl: process.env.baseUrl
+      baseUrl: process.env.BASE_URL
     };
   }
 };

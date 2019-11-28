@@ -17,6 +17,7 @@
       <v-text-field
         class="ma-5"
         v-model="password"
+        :type="'password'"
         :error-messages="passwordErrors"
         label="パスワード"
         required

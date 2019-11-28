@@ -21,6 +21,7 @@
           :error-messages="passwordErrors"
           label="パスワード"
           required
+          :type="'password'"
           @input="$v.password.$touch()"
           @blur="$v.password.$touch()"
         ></v-text-field>

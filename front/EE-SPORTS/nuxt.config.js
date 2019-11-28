@@ -8,12 +8,13 @@ const { PROJECT_ID } = process.env;
 const { STORAGE_BUCKET } = process.env;
 const { MESSAGING_SENDER_ID } = process.env;
 const { APP_ID } = process.env;
+const { BASE_URL } = process.env;
 
 export default {
   mode: 'spa',
   env: {
     // baseUrl: process.env.BASE_URL,
-    baseUrl: process.env.BASE_URL ? "https://ee-sports.net" : "http://localhost:3001/",
+    BASE_URL,
     API_KEY,
     AUTH_DOMAIN,
     DATABASE_URL,

@@ -31,6 +31,7 @@ import axios from "@/plugins/axios";
 export default {
   data() {
     return {
+      baseUrl: process.env.BASE_URL,
       follows: []
     };
   },
@@ -43,9 +44,7 @@ export default {
         let itemsArray = [{ header: "フォローリスト" }];
         this.follows.forEach(following => {
           itemsArray.push({
-            avatar:
-              process.env.baseUrl +
-              `/end_users/${following.profile_image_name}`,
+            avatar: `${this.baseUrl}/end_users/${following.profile_image_name}`,
             tilte: following.profile_name,
             subtitle: following.email,
             id: following.id

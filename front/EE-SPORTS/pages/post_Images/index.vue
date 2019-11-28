@@ -37,7 +37,7 @@
             </v-toolbar>
 
             <v-card class="mx-auto mb-5" height="100%" max-width="800">
-              <nuxt-link :to="`/post_images/${ post_image.id }`">
+              <nuxt-link :to="`/post_Images/${ post_image.id }`">
                 <v-img
                   class="white--text"
                   height="400px"
@@ -303,7 +303,7 @@ import firebase from "@/plugins/firebase";
 export default {
   data() {
     return {
-      baseUrl: process.env.baseUrl,
+      baseUrl: process.env.BASE_URL,
       keyword: "",
       post_images: [],
       post_image: {},
@@ -325,7 +325,7 @@ export default {
   },
   async created() {
     try {
-      const res = await axios.get(`${baseUrl}/post_images`);
+      const res = await axios.get(`${this.baseUrl}/post_images`);
       this.post_images = res.data.map(post_image => {
         post_image.favorites.forEach(fav => {
           if (fav.end_user_id === this.user.id) {
@@ -354,7 +354,7 @@ export default {
       async (newUser, oldUser) => {
         if (newUser && newUser.id != 0) {
           try {
-            const res = await axios.get(`${baseUrl}/post_images`);
+            const res = await axios.get(`${this.baseUrl}/post_images`);
             let current_user_id = this.user.id;
             this.post_images = res.data.map(post_image => {
               post_image.favorites.forEach(fav => {
@@ -407,7 +407,7 @@ export default {
     },
 
     async updatePostImages() {
-      const res = await axios.get(`${baseUrl}/post_images`);
+      const res = await axios.get(`${this.baseUrl}/post_images`);
       const favorite = {
         end_user_id: this.user.id
       };
