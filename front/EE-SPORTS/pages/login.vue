@@ -1,6 +1,6 @@
  <template>
   <div>
-    <v-card class="mx-auto" color="#F57F17" dark max-width="400">
+    <v-card class="mx-auto" color="#7CB342" dark max-width="400">
       <v-card-title>
         <v-icon large left>mdi-login</v-icon>
         <span class="title font-weight-light">ログイン</span>
@@ -74,7 +74,7 @@ export default {
       return errors;
     }
   },
-  middlewara: "loginUser",
+  middleware: "loginUser",
   methods: {
     submit() {
       this.$store.dispatch("logIn", [this.email, this.password]);

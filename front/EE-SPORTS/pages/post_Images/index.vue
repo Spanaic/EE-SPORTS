@@ -422,6 +422,8 @@ export default {
         post_image.hashtags.map(hashtag => {
           hashtag.hashname.replace(/[#＃]/gm, "");
         });
+        post_image.isActive = true;
+        post_image.showBtn = false;
         return post_image;
       });
     },
