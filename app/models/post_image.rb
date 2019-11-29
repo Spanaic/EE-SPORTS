@@ -43,11 +43,9 @@ class PostImage < ApplicationRecord
     def create_notification_post_comment(current_user, post_comment_id)
         temp_ids = PostComment.select(:end_user_id).where(post_image_id: id).where.not(end_user_id: current_user.id).distinct
         temp_ids.each do |temp_id|
-            save_notification_post_comment(current_user, @new_post_comment, temp_id['end_user_id'])
+            save_notification_post_comment(current_user, post_comment_id, temp_id['end_user_id'])
         end
-        save_notification_post_comment(current_user, @new_post_comment, end_user_id) if temp_ids.blank?
-
-        # save_notification_post_comment(current_user, @new_post_comment, end_user_id)
+        save_notification_post_comment(current_user, post_comment_id, end_user_id) if temp_ids.blank?
     end
 
     def save_notification_post_comment(current_user, comment_id, visited_id)
