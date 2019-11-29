@@ -1822,6 +1822,8 @@ authCheck({ commit }) {
 
 ### asyncDataとは？
 
+`詳細は下記に記しております。`
+
 1. コンポーネントがレンダリングされる前にdataに値をセットするために使用する
 2. セットした値はstoreに格納することなく、参照することが出来る。
 3. ※まだ実際に使ったことがないので,使ったらメモします！
@@ -2329,7 +2331,370 @@ middleware: ["authenticated", "userAuth"],
 ---
 
 
-## `【EC2にdockerをインストールする方法】`
+## `【EC2にdockerをインストールしてデプロイする方法】`
+
+### 今回使用した[Dockerfile]と[docker-compose.yml]
+
+1. rails側
+
+```
+FROM ruby:2.5.5
+RUN apt-get update -qq && \
+    apt-get install -y \
+    build-essential \
+    libpq-dev \
+    node.js
+RUN mkdir /myapi
+
+ENV HOME /myapi
+WORKDIR $HOME
+
+COPY ./Gemfile $HOME/
+COPY ./Gemfile.lock $HOME/
+
+ENV Bundler version 2.0.2
+RUN gem install bundler && bundle
+ADD . $HOME
+```
+
+2. Nuxt.js(Vue.js)
+
+```
+FROM node:12.11.1
+
+WORKDIR /app
+
+COPY package*.json ./
+
+RUN npm install
+
+ENV HOST 0.0.0.0
+EXPOSE 3000
+```
+
+3. docker-compose.yml
+
+```
+version: '3'
+services:
+  db:
+    image: mysql:5.7
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/conf/my.cnf:/etc/mysql/my.cnf
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: root
+    ports:
+      - "3306:3306"
+  api:
+    build: .
+    command: bash -c "rm -f tmp/pids/server.pid && rails s -p 3001 -b '0.0.0.0'"
+    volumes:
+      - .:/myapi
+      - /myapi/temp/
+    ports:
+      - "3001:3001"
+    depends_on:
+      - db
+    tty: true
+    stdin_open: true
+
+    <!-- コメントアウトしてますが、外せば動きます -->
+    <!-- 動作が重くなったのでVue.js側はローカルで動かしてました（自分のパソコンスペック不足） -->
+  # front:
+  #   container_name: nuxt
+  #   build: ./front/EE-SPORTS
+  #   command: npm run dev
+  #   volumes:
+  #     - ./front/EE-SPORTS:/app
+  #     - /app/node_modules/
+  #   ports:
+  #     - "3000:3000"
+  #   tty: true
+```
+
+### `EC2にインスタンスを作成`
+
+1. ECインスタンスを作成（dockerなのでlinux2を選択）。
+ * 30GBまで無料なので容量はmax。キーはあるものを使うか新規作成でも良し。
+    * 基本的には `~/.ssh/`のディレクトリ直下に格納されている。
+      * 無くすと入れなくなるので要注意
+
+2. 〇〇.pemを`~/.ssh/`に移動
+
+```
+mv deploy-aws.pem ~/.ssh
+
+<move ファイル名 移動先のディレクトリの絶対パス)
+(移動したいファイルのディレクトリ直下でコマンドを入力)
+```
+
+3. .ssh内に移動して、ssh接続でec2に入る。
+
+```
+cd .ssh
+```
+```
+ssh -i ~/.ssh/deploy-aws.pem ec2-user@3.136.147.65
+
+（ssh -i ~/.ssh/〇〇.pem ec2-user@IPアドレス）
+```
+
+*  permission denied 66*など、権限で怒られる時
+
+```
+chmod 600 ~/.ssh/deploy-aws.pem
+
+(チェンジモード 600 権限を変更するファイルまでの絶対パス)
+```
+
+4. EC2内で、セキュリティグループにカスタムTCPを追加
+  1. インバウンドルールを設定
+  2. カスタムTCP/p 3001/ 0.0.0.0/0
+  3. 保存
+
+### `EC2にdockerをインストール`
 
 [Qiita参考記事](https://qiita.com/reoring/items/0d1f556064d363f0ccb8)
 
+1. ec2にssh接続した状態でdockerをインストール
+
+```
+sudo yum install -y docker
+```
+
+2. ec2内でdockerを起動
+
+```
+sudo service docker start
+```
+
+3. ec2-userにdockerコマンドのアクセス権限を付与(root権限権限以外でもコマンドを受け付けるようにするため)
+
+```
+sudo usermod -a -G docker ec2-user
+```
+
+4. dockerの自動起動を有効化
+
+```
+sudo systemctl enable docker
+```
+
+5. 現行バージョン(現在は1.24.1)のdocker-composeをインストール
+
+```
+sudo curl -L https://github.com/docker/compose/releases/download/1.24.1/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+```
+```
+sudo chmod +x /usr/local/bin/docker-compose
+```
+
+* dockerがインストールされているか確認
+
+```
+docker info
+
+or
+
+yum list installed
+```
+
+* dockerへの権限がec2-userに付与されているか確認
+
+```
+group
+```
+
+6. gitをec2にインストール
+
+```
+$ sudo yum -y install git
+```
+
+7. git cloneを行う
+  * sshでクローンするのではなく、httpsでクローンしてきたものを貼り付ける
+
+```
+git clone https://github.com/Spanaic/EE-SPORTS.git
+
+(git clone リポジトリのURL)
+```
+
+8. cloneしてきたファイルに移動する
+
+```
+cd EE-SPORTS
+
+(cd ファイル名)
+```
+
+9. docker-composeファイルからbuildする
+
+[docker-copose逆引きコマンドの参考記事](https://qiita.com/okyk/items/a374ddb3f853d1688820)
+
+```
+docker-compose build
+```
+
+* もしpermissionで怒られたら、ec2に再接続すると、権限の変更関連がしっかり適用されるかも。
+
+```
+exit
+```
+```
+ssh -i ~/.ssh/deploy-aws.pem ec2-user@3.136.147.65
+```
+
+10. buildが成功したらupする
+
+```
+docker-compose up -d
+```
+
+* upは基本的に-dオプションを付けて`バックグラウンド`で立ち上げる
+  * ログを見るなら`attach`, railsなどのコンソールに接続するなら`run /bin/bash`する
+
+11. rails apiに接続して”database”を作成する
+
+  1. docker内でrailsコマンドを打ち込むため、/bin/bashを起動
+
+```
+docker-compose run api /bin/bash
+
+(docker-compose run image名 /bin/bash)
+```
+
+  2. railsに接続出来たら、databaseの作成とmigrateを行う
+
+```
+rails db:create
+```
+```
+rails db:migrate
+```
+
+12. 実際にawsのIPに接続できれば完了！
+
+---
+
+## `【firebaseホスティングによるデプロイ】`
+
+0. firebaseがシステムにインストールされていない場合
+[Qiita参考記事](https://qiita.com/kohashi/items/43ea22f61ade45972881)
+  1. firebaseをインストール
+
+```
+npm install -g firebase-tools
+
+```
+
+  2. firebaseにログイン
+
+```
+firebase login
+```
+
+1. プロジェクトのフロントエンドディレクトリ直下にfirebaseを入れる
+
+```
+firebase init
+```
+* ディレクトリ直下にfirebase.jsonが作成されていればOK
+
+2. nuxtのプロジェクトファイルををコンパイルする
+
+```
+npm run generate
+```
+
+3. コンパイルされたNuxtでローカル開発環境を立ち上げる
+
+```
+firebase serve
+```
+
+4. デプロイする
+
+```
+firebase deploy
+```
+
+アクセスして、表示がされたら完了！
+
+---
+
+## `【firebaseホスティングとdockerによるデプロイ後の更新方法】`
+
+### `firebaseホスティング側`
+
+1. ローカルの環境でコマンドを順に打ち込むのみ!
+
+```
+npm run generate
+
+firebase serve
+
+firebase deploy
+```
+
+  * 環境変数を入れる場合
+
+  ```
+  BASE_URL=http://ec2-3-136-147-65.us-east-2.compute.amazonaws.com:3001 npm run generate
+
+  (環境変数 = デプロイ後のURL npm run generate)
+
+  ```
+
+### `dockerデプロイ側`
+
+0. githubのリモートリポジトリ(master)を最新にする
+
+```
+git add
+git commit -m ""
+git push origin 〇〇
+```
+* github上でmergeする。
+  * 一応ローカルのブランチをmasterに切り替えてpullして更新しておいたほうが良いかも。
+
+1. ec2にssh接続する。
+
+2. ec2上(ssh接続状態)でdockerをダウンさせる。
+
+```
+docker-compose down
+```
+
+3. ec2上でgithubからpullしてくる。
+   * gitからpullすることでec2上のプロジェクトの状態を最新に更新する。
+
+```
+git pull origin master
+```
+
+4. ec2上でdockerを立ち上げる。
+
+```
+docker-compose up -d
+```
+
+5. 接続チェックが出来ればOK！
+
+### `開発の確認順序`
+
+1. firebase local + api local
+
+2. firebase local(generate後のlocalhost:5000) + api awsのステージング環境 or local
+
+3. firebase deploy + api awsのステージング環境 or local
+
+4. firebase deploy + api aws 本番環境
+
+
+
+## `【AWSでドメインを取得して、https化する方法】`
+
+[参考記事](https://recipe.kc-cloud.jp/archives/11084)

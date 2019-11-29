@@ -1,24 +1,61 @@
-# README
+# EE-SPORTS
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+「EE-SPORTS」は**eスポーツプレイヤー向けの画像共有サイト**です。
 
-Things you may want to cover:
+## DIAGRAM
+---
 
-* Ruby version
+![構成図](https://user-images.githubusercontent.com/54741027/69805397-e1393700-1223-11ea-93ae-4cf729d4d2ac.jpg)
 
-* System dependencies
+- 状態管理パターン+ライブラリ: __Vuex__
+- コンポーネントフレームワーク: __Vuetify__
 
-* Configuration
+## Build Setup
+----
 
-* Database creation
+- Ruby: 2.5.5
+- Rails 5.2.3
+- Bundler version 2.0.2
+- Node:12.11.1
+- npm: 6.11.3
+- mysql:5.7
+- Docker: 19.03.5
 
-* Database initialization
+## Dependencies
+---
 
-* How to run the test suite
+### **frontend**
+- @mdi/font: "^4.5.95",
+- @mdi/js: "^4.5.95",
+- @nuxtjs/axios: "^5.8.0",
+- @nuxtjs/dotenv: "^1.4.1",
+- @nuxtjs/vuetify: "^1.0.0",
+- dependencies: "0.0.1",
+- firebase: "^7.2.3",
+- nuxt: "^2.0.0",
+- nuxt-property-decorator: "^2.5.0",
+- peer: "^0.2.10",
+- vuelidate: "^0.7.4"
+- vuex: "^3.1.1"
 
-* Services (job queues, cache servers, search engines, etc.)
 
-* Deployment instructions
+### **backend**
+- gem 'rack-cors'
+- gem 'mysql2'
 
-* ...
+
+## Features
+---
+
+1. 画像投稿機能
+2. FirebaseAuthによるログイン認証
+3. フォロー機能
+4. いいね機能
+5. ハッシュタグ機能
+6. リアルタイム検索機能
+7. 検索機能
+
+## Author
+---
+
+Takeru Yamanaka

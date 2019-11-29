@@ -1,5 +1,5 @@
  <template>
-  <v-card class="mx-auto" color="#26c6da" dark max-width="400">
+  <v-card class="mx-auto" color="#26A69A" dark max-width="400">
     <v-card-title>
       <v-icon large left>mdi-draw</v-icon>
       <span class="title font-weight-light">新規登録</span>
@@ -17,6 +17,7 @@
       <v-text-field
         class="ma-5"
         v-model="password"
+        :type="'password'"
         :error-messages="passwordErrors"
         label="パスワード"
         required
@@ -117,6 +118,8 @@ export default {
       return errors;
     }
   },
+
+  middleware: "loginUser",
 
   methods: {
     submit() {

@@ -31,6 +31,7 @@ import axios from "@/plugins/axios";
 export default {
   data() {
     return {
+      baseUrl: process.env.BASE_URL,
       end_users: []
     };
   },
@@ -53,8 +54,7 @@ export default {
         });
         end_users_list.forEach(user => {
           itemsArray.push({
-            avatar:
-              process.env.baseUrl + `/end_users/${user.profile_image_name}`,
+            avatar: `${this.baseUrl}/end_users/${user.profile_image_name}`,
             title: user.profile_name,
             subtitle: user.email,
             id: user.id

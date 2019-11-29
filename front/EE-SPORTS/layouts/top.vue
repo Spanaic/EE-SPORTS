@@ -97,7 +97,7 @@ export default {
   },
   data() {
     return {
-      baseUrl: process.env.baseUrl,
+      baseUrl: process.env.BASE_URL,
       collapseOnScroll: true,
       clipped: false,
       drawer: false,
@@ -223,7 +223,7 @@ export default {
 .bg {
   background-size: cover;
   background-position: center;
-  background-image: url("http://localhost:3001/gamer-background-2.png");
+  background-image: url("/gamer-background-2.png");
   background-attachment: fixed;
   background-repeat: no-repeat;
   min-height: 100vh;

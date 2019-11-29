@@ -1,8 +1,8 @@
 l<template>
   <div>
-    <v-card class="mx-auto" color="#26c6da" dark max-width="400">
+    <v-card class="mx-auto" color="#AB47BC" dark max-width="400">
       <v-card-title>
-        <v-icon large left>mdi-folder-upload-outline</v-icon>
+        <v-icon large left>mdi-account-edit</v-icon>
         <span class="title font-weight-light">プロフィール編集</span>
       </v-card-title>
       <form @submit.prevent="handleSubmit" enctype="multipart/form-data">
@@ -44,6 +44,7 @@ import axios from "@/plugins/axios";
 import { validationMixin } from "vuelidate";
 import { required, maxLength } from "vuelidate/lib/validators";
 import firebase from "@/plugins/firebase";
+import { mdiAccountEdit } from "@mdi/js";
 
 export default {
   mixins: [validationMixin],
@@ -53,6 +54,7 @@ export default {
   },
   data() {
     return {
+      baseUrl: process.env.BASE_URL,
       end_user: {},
       uploadedImage: "",
       img_name: "",
@@ -113,10 +115,7 @@ export default {
       this.loading = true;
       var vm = this;
       axios
-        .put(
-          `http://localhost:3001/end_users/${this.$route.params.userId}`,
-          formData
-        )
+        .put(`${this.baseUrl}/end_users/${this.$route.params.userId}`, formData)
         .then(res => {
           this.$router.push(
             `/end_users/${this.$route.params.userId}`,
