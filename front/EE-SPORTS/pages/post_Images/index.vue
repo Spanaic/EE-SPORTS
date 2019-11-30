@@ -120,7 +120,7 @@
                       <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn>
-                        <v-btn color="blue darken-1" text @click="saveComment()">Save</v-btn>
+                        <v-btn color="blue darken-1" text @click="saveCommentAtIndex()">Save</v-btn>
                       </v-card-actions>
                     </v-card>
                   </v-dialog>
@@ -427,7 +427,7 @@ export default {
         return post_image;
       });
     },
-    async saveComment() {
+    async saveCommentAtIndex() {
       try {
         this.dialog = false;
         const comment = {

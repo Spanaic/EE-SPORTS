@@ -212,3 +212,15 @@ EndUser.last.delete
 EndUser.last
 EndUser.last.delete
 exit
+temp_ids = PostComment.select(:end_user_id).where(post_image_id: 1).where.not(end_user_id: 1).distinct
+a = Notification.all
+a.delete_all
+a
+a = EndUser.last
+a = EndUser.all
+a.delete_all
+exit
+EndUser.all
+PostImage.all
+Notification.all
+PostComment.all

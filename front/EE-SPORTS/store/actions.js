@@ -57,7 +57,7 @@ const actions = {
                 axios.post("/end_users", { end_user })
                     .then(user => {
                         commit("setUser", user.data)
-                        this.$router.push(`/post_images/`)
+                        this.$router.push(`/post_Images/`)
                         this.email = "";
                         this.password = "";
                         this.name = "";

@@ -110,3 +110,5 @@ rails c
 rails c
 rails routes
 exit
+rails c
+exit

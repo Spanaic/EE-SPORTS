@@ -249,11 +249,13 @@ export default {
             let current_user_id = this.user.id;
             this.post_image = res.data;
 
-            this.post_image.favorites.forEach(fav => {
+            this.post_image.favorites.each(fav => {
               if (fav.end_user_id === current_user_id) {
-                return (res.data.isFav = true);
+                res.data.isFav = true;
+                // return true;
               } else {
-                return (res.data.isFav = false);
+                // return
+                res.data.isFav = false;
               }
             });
             this.post_image.caption.replace(
