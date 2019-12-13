@@ -112,3 +112,8 @@ rails routes
 exit
 rails c
 exit
+rails c
+rails db:migrate:reset
+rails c
+exit
+exit

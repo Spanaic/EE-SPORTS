@@ -100,7 +100,7 @@ mounted() {
 
 ---
 
-## `【axiosでmthodsの@clickイベントからgetで値を取ってくる方法】`
+## `【axiosでmethodsの@clickイベントからgetで値を取ってくる方法】`
 
 ```
   methods: {
@@ -1794,7 +1794,7 @@ logOut({ commit }) {
 2. async await dispatchを駆使することで、promiseを受け取ってからコンポーネントをレンダリングさせることが可能
 3. fetchはVuexのstoreにstateをセットするために使う。その値をthisなどで参照することは出来ない。あくまでstore経由で呼び出して使う
 
-```
+```javascript
 <コンポーネント側>
 
   async fetch({ store }) {
@@ -1802,7 +1802,7 @@ logOut({ commit }) {
   }
 ```
 
-```
+```javascript
 <actions.js側>
 
 authCheck({ commit }) {
@@ -2698,3 +2698,49 @@ docker-compose up -d
 ## `【AWSでドメインを取得して、https化する方法】`
 
 [参考記事](https://recipe.kc-cloud.jp/archives/11084)
+
+1. セキュリティグループのインバウンドのルールを編集する
+2. 設定のソースはmy IPではなく(その場で取得したIPしか使用出来ないため)`0.0.0.0/0`で設定を行う
+3. フロントから受け取った値をバックエンド側に渡すための設定をロードバランサーで行う。
+
+---
+
+## `【Dockerでコンテナにbashするコマンド】`
+
+```
+docker exec  -it insta_api_1 /bash
+
+docker exec -it (コンテナ名) /bash
+```
+* コンテナのbashに接続するコマンド
+
+---
+
+## `【環境変数(.env)のURLの設定分け】`
+
+```
+BASE_URL="https://ee-sports.net"
+
+BASE_URL=“http://localhost:3001”
+```
+
+* 条件分岐で、開発環境と本番環境をwatchして、接続先によって環境変数を変更する記述を追記する、。
+
+## `【api側が全然動かない時】`
+
+1. firebaseにアクセスしてaxiosでapiを叩いた時に`<!doctype>`のようなHTMLが返ってきたら？
+2. 検証ツールのnetworkを確認して通信してるかどうかを見る。
+3. Networkで叩いている様子がなければ,axiosで叩けていない可能性が大
+  1. .envでBASE_URLを設定している場合はそこを疑う。
+  2. 環境変数を.envしてなければ、直接叩いているURLを疑う
+
+```javascript
+  created() {
+    console.log("process.env.BASE_URL", process.env.BASE_URL);
+    console.log("process.env.API_KEY", process.env.API_KEY);
+  },
+```
+
+4. console.logで環境変数に値（URL）が正しく代入されているか確認する。
+
+

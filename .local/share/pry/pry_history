@@ -224,3 +224,16 @@ EndUser.all
 PostImage.all
 Notification.all
 PostComment.all
+HashtagsPostImage.all
+HashtagsPostImages.all
+PostCommentUser.all
+PostCommentsUser.all
+Notification.all
+EndUsers.all
+PostImage.all
+EndUser.all
+EndUser.find(8)
+exi
+exit
+EndUser.all
+exit

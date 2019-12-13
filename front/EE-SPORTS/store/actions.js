@@ -47,6 +47,7 @@ const actions = {
                 payload[1],
             )
             .then(user => {
+                console.log("user", user)
                 commit('setUser', user)
 
                 const end_user = {
@@ -54,6 +55,9 @@ const actions = {
                     name: payload[2],
                     profile_name: payload[3]
                 }
+                console.log("end_user", end_user)
+                console.log("axios", axios)
+                console.log("process.env.BASE_URL", process.env.BASE_URL)
                 axios.post("/end_users", { end_user })
                     .then(user => {
                         commit("setUser", user.data)

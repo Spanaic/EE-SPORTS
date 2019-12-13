@@ -54,8 +54,13 @@ export default {
     email: "",
     password: "",
     test_email: "test@gmail.com",
-    test_password: "password"
+    test_password: "password",
+    base_url: process.env.BASE_URL
   }),
+  created() {
+    console.log("process.env.BASE_URL", process.env.BASE_URL);
+    console.log("process.env.API_KEY", process.env.API_KEY);
+  },
   computed: {
     emailErrors() {
       const errors = [];

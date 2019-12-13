@@ -83,6 +83,10 @@ export default {
     test_email: "test@gmail.com",
     test_password: "password"
   }),
+  mounted() {
+    console.log({ axios });
+    console.log(process.env.BASE_URL);
+  },
 
   computed: {
     nameErrors() {
@@ -119,7 +123,7 @@ export default {
     }
   },
 
-  middleware: "loginUser",
+  // middleware: "loginUser",
 
   methods: {
     submit() {
