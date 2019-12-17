@@ -2743,4 +2743,27 @@ BASE_URL=“http://localhost:3001”
 
 4. console.logで環境変数に値（URL）が正しく代入されているか確認する。
 
+---
 
+## `【コピペした時のバグに気をつける】`
+
+1. .envのBASE_URLの値をメモからコピペした時に起きた
+
+コピペ直後: `BASE_URL=“http://localhost:3001”`
+
+修正後: `BASE_URL="http://localhost:3001"`
+
+2. ダブルクオテーションの形が違う
+3. 何故か`http://localhost:3000/%E2%80%9Chttp://localhost:3001%E2%80%9C/xxx`というrequestURLになる(Network by 検証ツール)
+
+## `【replaceの使い方(注意)】`
+
+```javascript
+     this.post_image.caption = this.post_image.caption.replace(
+        /[#＃][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー._-]+/gm,
+        ""
+      );
+```
+
+1. replaceした後の文章を代入する先`this.post_image.caption`を用意する必要がある。
+2. return(戻り値)が使えるのであれば、元の値を置換するのもあり。

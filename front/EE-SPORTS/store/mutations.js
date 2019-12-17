@@ -10,6 +10,9 @@ const mutations = {
     },
     setNotifications(state, payload) {
         state.notifications = payload;
+    },
+    changeLoading(state, payload) {
+        state.loading = payload
     }
 };
 

@@ -1,6 +1,9 @@
 <template>
   <v-app>
-    <v-card class="overflow-hidden">
+    <div v-if="loading">
+      <Loading />
+    </div>
+    <v-card v-if="currentUser" class="overflow-hidden">
       <v-navigation-drawer
         v-model="drawer"
         :mini-variant="miniVariant"
@@ -92,10 +95,12 @@ import { mdiLogout } from "@mdi/js";
 import { mdiBell } from "@mdi/js";
 import axios from "@/plugins/axios";
 import Notifications from "@/components/Notifications";
+import Loading from "@/components/Loading";
 
 export default {
   components: {
-    Notifications
+    Notifications,
+    Loading
   },
   data() {
     return {
@@ -139,6 +144,9 @@ export default {
   computed: {
     currentUser() {
       return this.$store.state.user;
+    },
+    loading() {
+      return this.$store.state.loading;
     },
     items() {
       if (this.currentUser.id) {
@@ -190,25 +198,25 @@ export default {
       }
     }
   },
-  created() {
-    const unwatch = this.$store.watch(
-      state => state.user,
-      async (newUser, oldUser) => {
-        if (newUser.id) {
-          try {
-            const res = await axios.get(`/notifications/${newUser.id}`);
-            this.notifications = res.data.filter(notification => {
-              return notification.checked === false;
-            });
-          } catch (err) {
-            console.log("Notifications err", err);
-            return null;
-          }
-          unwatch();
-        }
-      }
-    );
-  },
+  // created() {
+  //   const unwatch = this.$store.watch(
+  //     state => state.user,
+  //     async (newUser, oldUser) => {
+  //       if (newUser.id) {
+  //         try {
+  //           const res = await axios.get(`/notifications/${newUser.id}`);
+  //           this.notifications = res.data.filter(notification => {
+  //             return notification.checked === false;
+  //           });
+  //         } catch (err) {
+  //           console.log("Notifications err", err);
+  //           return null;
+  //         }
+  //         unwatch();
+  //       }
+  //     }
+  //   );
+  // },
   methods: {
     logOut() {
       this.$store.dispatch("logOut");

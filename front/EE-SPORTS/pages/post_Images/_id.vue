@@ -91,45 +91,54 @@
           <v-btn color="orange" text></v-btn>
 
           <!-- お気に入り機能ボタン -->
-          <template v-if="post_image.isFav !== true || undefined">
-            <v-btn icon @click="createFavorite(post_image)">
-              <v-icon>mdi-thumb-up-outline</v-icon>
-            </v-btn>
-          </template>
-          <template v-else>
-            <v-btn text icon color="deep-orange" @click="destroyFavorite(post_image)">
-              <v-icon>mdi-thumb-up</v-icon>
-            </v-btn>
-          </template>
+          <template v-if="user.id !== 0">
+            <template v-if="post_image.isFav !== true || undefined">
+              <v-btn icon @click="createFavorite(post_image)">
+                <v-icon>mdi-thumb-up-outline</v-icon>
+              </v-btn>
+            </template>
+            <template v-else>
+              <v-btn text icon color="deep-orange" @click="destroyFavorite(post_image)">
+                <v-icon>mdi-thumb-up</v-icon>
+              </v-btn>
+            </template>
 
-          <!-- コメント入力のダイアログ -->
-          <v-row justify="center">
-            <v-dialog v-model="dialog" persistent max-width="600px">
-              <template v-slot:activator="{ on }">
-                <v-btn color="primary" dark v-on="on" @click="setPostImage(post_image); ">コメントする</v-btn>
-              </template>
-              <v-card>
-                <v-card-title>
-                  <span class="headline">コメント入力フォーム</span>
-                </v-card-title>
-                <v-card-text>
-                  <v-container>
-                    <v-row>
-                      <v-col cols="12" sm="6" md="4" lg="12">
-                        <v-text-field label="Outlined" outlined v-model="post_comment"></v-text-field>
-                      </v-col>
-                    </v-row>
-                  </v-container>
-                  <medium>とてもポジティブなコメントで応援してあげよう！</medium>
-                </v-card-text>
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn>
-                  <v-btn color="blue darken-1" text @click="saveComment()">Save</v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
-          </v-row>
+            <!-- コメント入力のダイアログ -->
+            <v-row justify="center">
+              <v-dialog v-model="dialog" persistent max-width="600px">
+                <template v-slot:activator="{ on }">
+                  <!-- コメント入力ボタン -->
+                  <v-btn
+                    v-if="user"
+                    color="primary"
+                    dark
+                    v-on="on"
+                    @click="setPostImage(post_image); "
+                  >コメントする</v-btn>
+                </template>
+                <v-card>
+                  <v-card-title>
+                    <span class="headline">コメント入力フォーム</span>
+                  </v-card-title>
+                  <v-card-text>
+                    <v-container>
+                      <v-row>
+                        <v-col cols="12" sm="6" md="4" lg="12">
+                          <v-text-field label="Outlined" outlined v-model="post_comment"></v-text-field>
+                        </v-col>
+                      </v-row>
+                    </v-container>
+                    <medium>とてもポジティブなコメントで応援してあげよう！</medium>
+                  </v-card-text>
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn>
+                    <v-btn color="blue darken-1" text @click="saveComment()">Save</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+            </v-row>
+          </template>
         </v-card-actions>
 
         <v-container fluid>
@@ -228,10 +237,47 @@ export default {
   },
   async created() {
     this.post_image = this.raw_post_image;
+
+    // いいね機能レンダリング;
+    // if (this.user !== 0) {
+    //   console.log("this.user", this.user);
+    //   let current_user_id = this.user.id;
+    //   console.log("this.post_image", this.post_image);
+    //   this.post_image.favorites.map(fav => {
+    //     console.log("fav", fav);
+    //     console.log(
+    //       "fav.end_user_id === current_user_id",
+    //       fav.end_user_id === current_user_id
+    //     );
+    //     console.log("typeOf fav.end_user_id", typeof fav.end_user_id);
+    //     console.log("fav.end_user_id", fav.end_user_id);
+    //     console.log("typeof current_user_id", typeof current_user_id);
+    //     console.log("current_user_id", current_user.id);
+    //     console.log("this.user_id", this.user_id);
+    //     if (fav.end_user_id === current_user_id) {
+    //       this.post_image.isFav = true;
+    //       console.log("this.post_image.isFav", this.post_image.isFav);
+    //       return true;
+    //     } else {
+    //       this.post_image.isFav = false;
+    //       return false;
+    //     }
+    //   });
+    //   console.log("this.post_image", this.post_image);
+    //   console.log(
+    //     "this.post_image.isFav !== true || undefined",
+    //     this.post_image.isFav === true
+    //   );
+    // }
+
+    // caption内のハッシュタグを削除する処理
     this.post_image.caption = this.post_image.caption.replace(
       /[#＃][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー._-]+/gm,
       ""
     );
+
+    console.log("this.post_image.caption", this.post_image.caption);
+
     this.post_image.hashtags.map(hashtag => {
       hashtag.hashname.replace(/[#＃]/gm, "");
     });
@@ -247,21 +293,45 @@ export default {
               `${this.baseUrl}/post_images/${this.$route.params.id}`
             );
             let current_user_id = this.user.id;
+            // console.log("current_user_id", current_user_id);
             this.post_image = res.data;
 
-            this.post_image.favorites.each(fav => {
+            // this.post_image.favorites.each(fav => {
+            //   if (fav.end_user_id === current_user_id) {
+            //     res.data.isFav = true;
+            //     // return true;
+            //   } else {
+            //     // return
+            //     res.data.isFav = false;
+            //   }
+            // });
+
+            this.post_image.favorites.map(fav => {
+              // console.log("fav", fav);
+              // console.log(
+              //   "fav.end_user_id === current_user_id",
+              //   fav.end_user_id === current_user_id
+              // );
+              // console.log("typeOf fav.end_user_id", typeof fav.end_user_id);
+              // console.log("fav.end_user_id", fav.end_user_id);
+              // console.log("typeof current_user_id", typeof current_user_id);
+              // console.log("current_user_id", current_user_id);
+              // console.log("this.user_id", this.user.id);
               if (fav.end_user_id === current_user_id) {
-                res.data.isFav = true;
-                // return true;
+                this.post_image.isFav = true;
+                // console.log("this.post_image.isFav", this.post_image.isFav);
+                return true;
               } else {
-                // return
-                res.data.isFav = false;
+                this.post_image.isFav = false;
+                return false;
               }
             });
-            this.post_image.caption.replace(
+
+            this.post_image.caption = this.post_image.caption.replace(
               /[#＃][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー._-]+/gm,
               ""
             );
+            console.log("this.post_image.caption", this.post_image.caption);
 
             this.post_image.hashtags.map(hashtag => {
               hashtag.hashname.replace(/[#＃]/gm, "");
@@ -311,10 +381,13 @@ export default {
       this.post_image.isFav = this.post_image.favorites.some(
         fav => fav.end_user_id === favorite.end_user_id
       );
-      this.post_image.caption.replace(
+
+      this.post_image.caption = this.post_image.caption.replace(
         /[#＃][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー._-]+/gm,
         ""
       );
+      console.log("this.post_image.caption", this.post_image.caption);
+
       this.post_image.hashtags.map(hashtag => {
         hashtag.hashname.replace(/[#＃]/gm, "");
       });
@@ -385,10 +458,10 @@ export default {
       post_image.isActive = true;
       post_image.showBtn = false;
     }
-  },
-  async fetch({ store }) {
-    await store.dispatch("authCheck");
   }
+  // async fetch({ store }) {
+  //   await store.dispatch("authCheck");
+  // }
 };
 </script>
 

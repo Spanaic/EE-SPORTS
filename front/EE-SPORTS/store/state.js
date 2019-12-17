@@ -4,7 +4,8 @@ const state = {
     },
     status: false,
     search: [],
-    notifications: []
+    notifications: [],
+    loading: true
 }
 
 export default state;
