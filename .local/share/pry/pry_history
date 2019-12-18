@@ -237,3 +237,6 @@ exi
 exit
 EndUser.all
 exit
+EndUser.all
+Favorite.all
+exit

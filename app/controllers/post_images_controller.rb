@@ -47,7 +47,7 @@ class PostImagesController < ApplicationController
 
     def update
         @post_image = PostImage.find(params[:id])
-        @post_image.user = current_user
+        @post_image.user = current_user #FIXME:current_userを取得する必要あり
         if @post_image.update(post_image_params)
             # redirect_to post_image_path(@post_image.id)
         else

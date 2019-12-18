@@ -2801,4 +2801,24 @@ end
   ```rb
     devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
   ```
+---
 
+## `【gemをuninstall(アンインストール)する方法】`
+
+### `deviseのアンインストール`
+
+[deviseのアンインストール](https://qiita.com/NT90957869/items/8c5285775a67a51f03e1)
+
+1. `rails db:rollback`などでtableをどうにかする。
+2. `rails destroy devise:install`下記のファイルが削除される。
+```rb
+=> Running via Spring preloader in process 56238
+      remove  config/initializers/devise.rb
+      remove  config/locales/devise.en.yml
+```
+3. router.rbの`devise_for`を削除
+4. gemfileを削除
+  [GemfileでインストールしたGemを削除する](https://qiita.com/sys_cat/items/16d55e7cd8a3f177863a)
+  1. `gem uninstall gem名`
+  2. Gemfileから該当のgemを削除
+  3. `bundle update` or `bundle install`でGemfile.lockの中身を更新する
