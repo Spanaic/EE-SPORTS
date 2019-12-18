@@ -20,6 +20,7 @@ const actions = {
             .signInWithEmailAndPassword(payload[0], payload[1])
             .then(user => {
                 commit("setUser", user);
+                commit("changeLoading", false)
                 this.$router.push("/post_Images");
             })
             .catch(function (error) {

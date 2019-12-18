@@ -53,8 +53,10 @@ export default {
   router: {
   },
   plugins: [
-    // { src: '~/plugins/router' },
-    '@/plugins/authCheck',
+    // ログイン認証のチェック&notificationのチェック
+    { src: '~/plugins/router' },
+    // ログイン認証のチェック
+    // '@/plugins/authCheck',
   ],
   /*
   ** Nuxt.js dev-modules

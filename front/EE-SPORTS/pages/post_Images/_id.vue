@@ -237,38 +237,39 @@ export default {
   },
   async created() {
     this.post_image = this.raw_post_image;
+    // console.log("this.$store.state.user.id", this.$store.state.user.id);
 
-    // いいね機能レンダリング;
-    // if (this.user !== 0) {
-    //   console.log("this.user", this.user);
-    //   let current_user_id = this.user.id;
-    //   console.log("this.post_image", this.post_image);
-    //   this.post_image.favorites.map(fav => {
-    //     console.log("fav", fav);
-    //     console.log(
-    //       "fav.end_user_id === current_user_id",
-    //       fav.end_user_id === current_user_id
-    //     );
-    //     console.log("typeOf fav.end_user_id", typeof fav.end_user_id);
-    //     console.log("fav.end_user_id", fav.end_user_id);
-    //     console.log("typeof current_user_id", typeof current_user_id);
-    //     console.log("current_user_id", current_user.id);
-    //     console.log("this.user_id", this.user_id);
-    //     if (fav.end_user_id === current_user_id) {
-    //       this.post_image.isFav = true;
-    //       console.log("this.post_image.isFav", this.post_image.isFav);
-    //       return true;
-    //     } else {
-    //       this.post_image.isFav = false;
-    //       return false;
-    //     }
-    //   });
-    //   console.log("this.post_image", this.post_image);
-    //   console.log(
-    //     "this.post_image.isFav !== true || undefined",
-    //     this.post_image.isFav === true
-    //   );
-    // }
+    // いいね機能レンダリング
+    if (this.$store.state.user !== 0) {
+      console.log("this.user", this.user);
+      let current_user_id = this.$store.state.user.id;
+      console.log("this.post_image", this.post_image);
+      this.post_image.favorites.map(fav => {
+        console.log("fav", fav);
+        console.log(
+          "fav.end_user_id === current_user_id",
+          fav.end_user_id === current_user_id
+        );
+        console.log("typeOf fav.end_user_id", typeof fav.end_user_id);
+        console.log("fav.end_user_id", fav.end_user_id);
+        console.log("typeof current_user_id", typeof current_user_id);
+        console.log("current_user_id", current_user_id);
+        console.log("this.user_id", this.user_id);
+        if (fav.end_user_id === current_user_id) {
+          this.post_image.isFav = true;
+          console.log("this.post_image.isFav", this.post_image.isFav);
+          return true;
+        } else {
+          this.post_image.isFav = false;
+          return false;
+        }
+      });
+      console.log("this.post_image", this.post_image);
+      console.log(
+        "this.post_image.isFav !== true || undefined",
+        this.post_image.isFav === true
+      );
+    }
 
     // caption内のハッシュタグを削除する処理
     this.post_image.caption = this.post_image.caption.replace(
@@ -284,66 +285,70 @@ export default {
     this.post_image.isActive = true;
     this.post_image.showBtn = false;
 
-    const unwatch = this.$store.watch(
-      state => state.user,
-      async (newUser, oldUser) => {
-        if (newUser.id) {
-          try {
-            const res = await axios.get(
-              `${this.baseUrl}/post_images/${this.$route.params.id}`
-            );
-            let current_user_id = this.user.id;
-            // console.log("current_user_id", current_user_id);
-            this.post_image = res.data;
+    // watchしなくても("this.$store.state.user")からcurrentUserを取得出来ている可能性あり()
+    // currentUserの取得をwatchしなくても最初から取れている場合、値のセットをcreatedのみにしたほうが処理が被らなくて良さそう。
 
-            // this.post_image.favorites.each(fav => {
-            //   if (fav.end_user_id === current_user_id) {
-            //     res.data.isFav = true;
-            //     // return true;
-            //   } else {
-            //     // return
-            //     res.data.isFav = false;
-            //   }
-            // });
+    // const unwatch = this.$store.watch(
+    //   state => state.user,
+    //   async (newUser, oldUser) => {
+    //     if (newUser.id) {
+    //       try {
+    //         const res = await axios.get(
+    //           `${this.baseUrl}/post_images/${this.$route.params.id}`
+    //         );
+    //         let current_user_id = this.$store.state.user.id;
+    //         // let current_user_id = this.user.id;
+    //         console.log("this.$store.stae.user.id", this.$store.state.user.id);
+    //         this.post_image = res.data;
 
-            this.post_image.favorites.map(fav => {
-              // console.log("fav", fav);
-              // console.log(
-              //   "fav.end_user_id === current_user_id",
-              //   fav.end_user_id === current_user_id
-              // );
-              // console.log("typeOf fav.end_user_id", typeof fav.end_user_id);
-              // console.log("fav.end_user_id", fav.end_user_id);
-              // console.log("typeof current_user_id", typeof current_user_id);
-              // console.log("current_user_id", current_user_id);
-              // console.log("this.user_id", this.user.id);
-              if (fav.end_user_id === current_user_id) {
-                this.post_image.isFav = true;
-                // console.log("this.post_image.isFav", this.post_image.isFav);
-                return true;
-              } else {
-                this.post_image.isFav = false;
-                return false;
-              }
-            });
+    //         // this.post_image.favorites.each(fav => {
+    //         //   if (fav.end_user_id === current_user_id) {
+    //         //     res.data.isFav = true;
+    //         //     // return true;
+    //         //   } else {
+    //         //     // return
+    //         //     res.data.isFav = false;
+    //         //   }
+    //         // });
 
-            this.post_image.caption = this.post_image.caption.replace(
-              /[#＃][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー._-]+/gm,
-              ""
-            );
-            console.log("this.post_image.caption", this.post_image.caption);
+    //         this.post_image.favorites.map(fav => {
+    //           // console.log("fav", fav);
+    //           // console.log(
+    //           //   "fav.end_user_id === current_user_id",
+    //           //   fav.end_user_id === current_user_id
+    //           // );
+    //           // console.log("typeOf fav.end_user_id", typeof fav.end_user_id);
+    //           // console.log("fav.end_user_id", fav.end_user_id);
+    //           // console.log("typeof current_user_id", typeof current_user_id);
+    //           // console.log("current_user_id", current_user_id);
+    //           // console.log("this.user_id", this.user.id);
+    //           if (fav.end_user_id === current_user_id) {
+    //             this.post_image.isFav = true;
+    //             // console.log("this.post_image.isFav", this.post_image.isFav);
+    //             return true;
+    //           } else {
+    //             this.post_image.isFav = false;
+    //             return false;
+    //           }
+    //         });
 
-            this.post_image.hashtags.map(hashtag => {
-              hashtag.hashname.replace(/[#＃]/gm, "");
-            });
-            this.post_image.isActive = true;
-            this.post_image.showBtn = false;
-          } catch (err) {
-            console.log("err", err);
-          }
-        }
-      }
-    );
+    //         this.post_image.caption = this.post_image.caption.replace(
+    //           /[#＃][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー._-]+/gm,
+    //           ""
+    //         );
+    //         console.log("this.post_image.caption", this.post_image.caption);
+
+    //         this.post_image.hashtags.map(hashtag => {
+    //           hashtag.hashname.replace(/[#＃]/gm, "");
+    //         });
+    //         this.post_image.isActive = true;
+    //         this.post_image.showBtn = false;
+    //       } catch (err) {
+    //         console.log("err", err);
+    //       }
+    //     }
+    //   }
+    // );
   },
   async asyncData({ params }) {
     try {

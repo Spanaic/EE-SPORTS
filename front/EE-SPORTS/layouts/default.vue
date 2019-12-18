@@ -63,7 +63,7 @@
               <template v-slot:label>
                 <strong>"#"</strong> or
                 <strong>画像タイトル</strong>
-                <v-icon style="vertical-align: middle">find_in_page</v-icon>
+                <v-icon style="vertical-align: middle"></v-icon>
               </template>
             </v-text-field>
           </v-container>
@@ -198,25 +198,25 @@ export default {
       }
     }
   },
-  // created() {
-  //   const unwatch = this.$store.watch(
-  //     state => state.user,
-  //     async (newUser, oldUser) => {
-  //       if (newUser.id) {
-  //         try {
-  //           const res = await axios.get(`/notifications/${newUser.id}`);
-  //           this.notifications = res.data.filter(notification => {
-  //             return notification.checked === false;
-  //           });
-  //         } catch (err) {
-  //           console.log("Notifications err", err);
-  //           return null;
-  //         }
-  //         unwatch();
-  //       }
-  //     }
-  //   );
-  // },
+  created() {
+    const unwatch = this.$store.watch(
+      state => state.user,
+      async (newUser, oldUser) => {
+        if (newUser.id) {
+          try {
+            const res = await axios.get(`/notifications/${newUser.id}`);
+            this.notifications = res.data.filter(notification => {
+              return notification.checked === false;
+            });
+          } catch (err) {
+            console.log("Notifications err", err);
+            return null;
+          }
+          unwatch();
+        }
+      }
+    );
+  },
   methods: {
     logOut() {
       this.$store.dispatch("logOut");
