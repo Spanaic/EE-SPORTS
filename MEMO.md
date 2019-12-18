@@ -2767,3 +2767,38 @@ BASE_URL=“http://localhost:3001”
 
 1. replaceした後の文章を代入する先`this.post_image.caption`を用意する必要がある。
 2. return(戻り値)が使えるのであれば、元の値を置換するのもあり。
+
+---
+
+## `【dockerのプロセスゾンビ化（read timeout=70）】`
+
+[dockerのエラー](http://surdon.hateblo.jp/entry/2017/12/07/131649)
+
+` UnixHTTPConnectionPool(host='localhost', port=None): Read timed out. (read timeout=70)`
+
+1. 謎のエラーが起こったら、docker for Macをrestartする。
+
+---
+
+## `【railsのmodel削除方法】`
+
+[不要になったモデルの削除方法](https://bokuranotameno.com/post-9880/)
+
+1. `rails g migration drop_table_テーブル名`
+2. マイグレーションファイルを編集
+
+```rb
+def change
+  drop_table :テーブル名
+end
+```
+
+3. `rails db:migrate`
+4. `app/models/user.rb`モデル手動削除
+5. `test/models/user_test.rb`テストファイル削除
+6. `test/fixtures/users.yml`fixturesの削除
+  7. deviseの記述などが残っている場合はroutes.rbから記述を削除する
+  ```rb
+    devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
+  ```
+

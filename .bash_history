@@ -117,3 +117,7 @@ rails db:migrate:reset
 rails c
 exit
 exit
+exi
+exit
+rails c
+rails routes

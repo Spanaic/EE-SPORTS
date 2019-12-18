@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_13_064828) do
+ActiveRecord::Schema.define(version: 2019_12_18_070020) do
 
   create_table "end_users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "email"
@@ -65,15 +65,6 @@ ActiveRecord::Schema.define(version: 2019_11_13_064828) do
     t.integer "end_user_id"
   end
 
-  create_table "post_comments_users", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
-    t.bigint "post_comment_id"
-    t.bigint "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["post_comment_id"], name: "index_post_comments_users_on_post_comment_id"
-    t.index ["user_id"], name: "index_post_comments_users_on_user_id"
-  end
-
   create_table "post_images", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.text "caption"
     t.datetime "created_at", null: false
@@ -91,31 +82,6 @@ ActiveRecord::Schema.define(version: 2019_11_13_064828) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
-    t.string "email", default: "", null: false
-    t.string "encrypted_password", default: "", null: false
-    t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
-    t.datetime "current_sign_in_at"
-    t.datetime "last_sign_in_at"
-    t.string "current_sign_in_ip"
-    t.string "last_sign_in_ip"
-    t.string "name"
-    t.string "profile_name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "profile_image_id"
-    t.text "introduction"
-    t.string "uid"
-    t.string "provider"
-    t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["profile_name"], name: "index_users_on_profile_name", unique: true
-    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
-  end
-
   add_foreign_key "hashtags_post_images", "hashtags"
   add_foreign_key "hashtags_post_images", "post_images"
-  add_foreign_key "post_comments_users", "post_comments"
-  add_foreign_key "post_comments_users", "users"
 end
