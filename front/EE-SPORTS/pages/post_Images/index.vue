@@ -22,10 +22,12 @@
               <nuxt-link :to="`/end_users/${post_image.end_user.id}`">
                 <v-list-item>
                   <v-list-item-avatar>
+                    <!-- プロフィール画像の表示 -->
                     <v-img
                       v-if="post_image.end_user.profile_image_name"
                       :src="`${baseUrl}/end_users/${post_image.end_user.profile_image_name}`"
                     ></v-img>
+                    <!-- プロフィール画像未設定のno_imageの条件分岐 -->
                     <v-img v-else :src="`${baseUrl}/no_image.jpg`"></v-img>
                   </v-list-item-avatar>
                   <v-list-item-content>

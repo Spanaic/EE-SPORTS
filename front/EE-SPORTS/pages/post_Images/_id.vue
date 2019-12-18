@@ -6,7 +6,13 @@
           <nuxt-link :to="`/end_users/${post_image.end_user.id}`">
             <v-list-item>
               <v-list-item-avatar>
-                <v-img :src="`${baseUrl}/end_users/${post_image.end_user.profile_image_name}`"></v-img>
+                <!-- プロフィール画像の表示 -->
+                <v-img
+                  v-if="post_image.end_user.profile_image_name"
+                  :src="`${baseUrl}/end_users/${post_image.end_user.profile_image_name}`"
+                ></v-img>
+                <!-- プロフィール画像未設定のno_imageの条件分岐 -->
+                <v-img v-else :src="`${baseUrl}/no_image.jpg`"></v-img>
               </v-list-item-avatar>
               <v-list-item-content>
                 <v-list-item-title class="headline">{{ post_image.title }}</v-list-item-title>
@@ -464,6 +470,7 @@ export default {
       post_image.showBtn = false;
     }
   }
+  // fetchでuserをsetしなくてもrouter.jsでセットされるため、必要なし。
   // async fetch({ store }) {
   //   await store.dispatch("authCheck");
   // }
