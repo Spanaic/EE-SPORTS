@@ -123,7 +123,7 @@ export default {
     }
   },
 
-  // middleware: "loginUser",
+  middleware: "loginUser",
 
   methods: {
     submit() {

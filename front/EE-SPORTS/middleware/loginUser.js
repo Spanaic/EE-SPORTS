@@ -1,5 +1,5 @@
 export default function ({ store, redirect, route }) {
-    // ユーザーが認証されていないとき
+    // ログイン済みユーザーをredirectさせるmiddleware
 
     if (store.state.user.id !== 0) {
         return redirect('/post_Images')

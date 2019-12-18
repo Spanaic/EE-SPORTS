@@ -1,3 +1,6 @@
+// currentUserのセットとnotificationsのセットを行う
+// ページの遷移毎、もしくはリロード毎に処理される
+
 import firebase from '@/plugins/firebase';
 import axios from '@/plugins/axios';
 

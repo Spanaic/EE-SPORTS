@@ -79,7 +79,7 @@ export default {
       return errors;
     }
   },
-  middleware: "loginUser",
+  middleware: "loginUser", //ログイン済みユーザーはredirect
   methods: {
     submit() {
       this.$store.dispatch("logIn", [this.email, this.password]);

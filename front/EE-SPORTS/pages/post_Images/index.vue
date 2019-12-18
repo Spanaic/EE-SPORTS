@@ -198,14 +198,14 @@
 
               <v-btn
                 block
-                v-if="post_image.isActive === true"
+                v-if="post_image.isActive === true && post_image.post_comments.length !== 0"
                 @click="showComments(post_image)"
                 :class="{ showBtn: post_image.showBtn }"
               >続きを読む</v-btn>
 
               <v-btn
                 block
-                v-if="post_image.showBtn === true"
+                v-if="post_image.showBtn === true && post_image.post_comments.length !== 0"
                 @click="closeComments(post_image)"
               >コメントを閉じる</v-btn>
 
@@ -329,6 +329,7 @@ export default {
     try {
       const res = await axios.get(`${this.baseUrl}/post_images`);
       this.post_images = res.data.map(post_image => {
+        console.log("post_image", post_image);
         post_image.favorites.forEach(fav => {
           if (fav.end_user_id === this.user.id) {
             return (post_image.isFav = true);

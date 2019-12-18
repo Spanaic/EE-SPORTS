@@ -67,7 +67,10 @@ export default {
     nameErrors() {},
     profileNameErrors() {}
   },
-  middleware: ["authenticated", "userAuth"],
+  middleware: [
+    "authenticated", // 未ログインのユーザーをredirectさせる
+    "userAuth" // 現在のユーザーとリクエストされたユーザーが違う場合
+  ],
   created() {
     var vm = this;
     var params = {
