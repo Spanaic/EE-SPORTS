@@ -58,8 +58,8 @@ class PostImagesController < ApplicationController
     def destroy
         post_image = PostImage.find(params[:id])
         post_image.destroy
-        json = post_image.to_json
-        render :json => json
+        # json = post_image.to_json
+        # render :json => json
     end
 
     def hashtag

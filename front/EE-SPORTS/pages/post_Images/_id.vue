@@ -2,6 +2,7 @@
   <div>
     <div>
       <v-card class="mx-auto mb-5" height="100%" max-width="800">
+        <!-- カードのheader部分 -->
         <v-toolbar color="indigo" dark>
           <nuxt-link :to="`/end_users/${post_image.end_user.id}`">
             <v-list-item>
@@ -20,6 +21,31 @@
               </v-list-item-content>
             </v-list-item>
           </nuxt-link>
+
+          <!-- メニュー用の空間を作ってる -->
+          <v-row>
+            <v-col cols="12" sm="6" offset-sm="3">
+              <v-spacer></v-spacer>
+            </v-col>
+          </v-row>
+
+          <!-- 編集&削除用アイコンメニュー -->
+          <!-- currentUserが投稿者でなければメニューは表示されない -->
+          <v-menu v-if="post_image.end_user_id === this.$store.state.user.id" bottom left>
+            <template v-slot:activator="{ on }">
+              <v-btn dark icon v-on="on">
+                <v-icon>mdi-dots-vertical</v-icon>
+              </v-btn>
+            </template>
+
+            <v-list>
+              <v-list-item v-for="(item, i) in items" :key="i">
+                <v-list-item-title v-if="item.title === '編集'" @click="editImage">{{ item.title }}</v-list-item-title>
+                <v-list-item-title v-if="item.title === '削除'" @click="deleteImage">{{ item.title }}</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+          <!-- <button v-if="post_image.end_user.id === $store.state.user.id" @click="deleteImage">削除</button> -->
         </v-toolbar>
 
         <v-img
@@ -233,7 +259,9 @@ export default {
       favorite_list: [],
       absolute: true,
       overlay: false,
-      isActive: false
+      isActive: false,
+      // 編集&削除メニュー
+      items: [{ title: "編集" }, { title: "削除" }]
     };
   },
   filters: {
@@ -242,6 +270,7 @@ export default {
     }
   },
   async created() {
+    console.log("this.$route", this.$route);
     this.post_image = this.raw_post_image;
     // console.log("this.$store.state.user.id", this.$store.state.user.id);
 
@@ -461,13 +490,29 @@ export default {
       this.post_image = res.data;
       this.$router.push("/post_Images");
     },
-    showComments(post_image) {
-      post_image.isActive = false;
-      post_image.showBtn = true;
+    //TODO:続きを読むを実装するなら使用する、しないなら削除
+    // showComments(post_image) {
+    //   post_image.isActive = false;
+    //   post_image.showBtn = true;
+    // },
+    // closeComments(post_image) {
+    //   post_image.isActive = true;
+    //   post_image.showBtn = false;
+    // },
+    async deleteImage() {
+      try {
+        if (confirm("本当に削除してよろしいですか")) {
+          await axios.delete(`/post_images/${this.$route.params.id}`);
+          this.$router.push("/post_Images");
+        }
+      } catch (err) {
+        console.log("delete err", err);
+      }
     },
-    closeComments(post_image) {
-      post_image.isActive = true;
-      post_image.showBtn = false;
+    editImage() {
+      this.$router.push(`/post_Images/${this.$route.params.id}/edit`);
+      console.log("this.$route.params.id", this.$route.params.id);
+      console.log("edit");
     }
   }
   // fetchでuserをsetしなくてもrouter.jsでセットされるため、必要なし。

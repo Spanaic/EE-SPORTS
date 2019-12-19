@@ -2847,3 +2847,17 @@ end
 * Docker内で起きたハプニングだが、Gemfile.lockが`bundle update`で更新されてしまったことに原因があるため、Dockerで解決することは出来ない気がする...
 
 ---
+
+## `【（削除）する際の確認ダイアログの出し方】`
+
+```javascript
+if(confirm("本当に削除してよろしいですか？")){
+  axios.delete("path")
+}
+```
+1. 上記の記述だけで確認向けのダイアログが表示される
+2. *alertとconfirmの違いは戻り値*
+  [confirm()とalert()の根本的な違いについて](https://qiita.com/riotam/items/b722a28a4e2bb81b366a)
+  1. alert => 戻り値はundefined
+  2. confirm => 戻り値はbool型(true/false)
+---
