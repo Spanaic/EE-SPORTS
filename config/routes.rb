@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  # devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
   root "post_images#index"
   get '/post/hashtag/:name', to: "post_images#hashtag"
   get 'notifications/:id' => 'notifications#index', as: 'notifications'

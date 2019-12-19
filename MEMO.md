@@ -2822,3 +2822,28 @@ end
   1. `gem uninstall gem名`
   2. Gemfileから該当のgemを削除
   3. `bundle update` or `bundle install`でGemfile.lockの中身を更新する
+    * `bundle update`は要注意！！！全てのbundleをupdateしてしまうためエラーを起こしやすい
+    * `bundle update gem名`　引数にgem名を渡せば、それだけupdateをすることが可能
+
+---
+
+## `【gemのバージョンを下げたり,変更したい時(間違えてbundle updateしてしまった)】`
+
+[bundle install と bundle update の違い](https://forest-valley17.hatenablog.com/entry/2018/09/08/120108)
+[Bundlerのバージョンを戻す](https://medium.com/@rukurx/bundler%E3%81%AE%E3%83%90%E3%83%BC%E3%82%B8%E3%83%A7%E3%83%B3%E3%82%92%E6%88%BB%E3%81%99-874738a4da82)
+
+1. `gem list`でバージョンを確認
+2. `gem uninstall gem名 -v "version"`で不必要なgemをuninstall or `gem uninstall gem名`=>`gem install gem名 -v "version"`
+  * path/vendor してる場合とグローバルのgemを使ってる場合で若干変わるかも...
+3. *Gemfile.lockを削除*  => これをしないとGemfile.lockがバージョンを固定するためにインストールしてないバージョンまでfetchしてしまう
+4. `bundle install`
+  * fetchingで勝手にアップデートが始まったら、gemのバージョンがあってない可能性が高い。
+  * Gemfileの`source 'https://rubygems.org'`をコメントアウトすると原因となっているgemについてのエラーが吐かれる
+    1. 上記のサイトにアクセスして、gemのバージョンが存在しているか確かめる
+    [bundle install すると Could not find xxx in any of the sources と怒られる場合の対処法](https://qiita.com/jnchito/items/44ab1df134369ed76911)
+    2. Githubから元気だった頃のGemfile.lockを確認する。エラーのgemのバージョンを確認して、合ってなければ指定のバージョンに合わせたgemをinstall or update
+    3. 再度`bundle install`する
+5. Gemfile.lockの中身を確認
+* Docker内で起きたハプニングだが、Gemfile.lockが`bundle update`で更新されてしまったことに原因があるため、Dockerで解決することは出来ない気がする...
+
+---
