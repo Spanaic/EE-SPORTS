@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row>
-      <v-col cols="7">
+      <v-col xs="12" md="7">
         <div>
           <v-btn
             class="ma-2"
@@ -215,8 +215,9 @@
         </div>
       </v-col>
 
-      <v-col cols="1"></v-col>
-      <v-col cols="4">
+      <v-col xs="0" md="1"></v-col>
+      <v-col xs="12" md="4" align="center">
+        <!-- NOTE:リアルタイム検索バー -->
         <v-text-field
           v-model="keyword"
           label="Filled"
