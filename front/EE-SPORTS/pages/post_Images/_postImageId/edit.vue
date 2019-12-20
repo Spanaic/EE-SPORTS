@@ -25,7 +25,7 @@ export default {
   methods: {
     async handleSubmit() {
       try {
-        const res = await axios.post(
+        const res = await axios.patch(
           `/edit/${this.$route.params.postImageId}`,
           this.post_image
         );

@@ -2861,3 +2861,19 @@ if(confirm("本当に削除してよろしいですか？")){
   1. alert => 戻り値はundefined
   2. confirm => 戻り値はbool型(true/false)
 ---
+
+## `【vueの基本イベント一覧】`
+
+[Vue の基本イベント全17実例！](https://blog.capilano-fw.com/?p=2787)
+
+---
+
+## `【v-forの中でv-dialogを使用する方法】`
+
+[VuetifyのDialogsコンポーネントがv-for内でうまく表示できない。](https://teratail.com/questions/213378)
+[コードペン](https://codepen.io/yuhigash/pen/eYOxONv?editors=1010)
+
+1. vuetifyの<v-dialog>を使う前提
+2. v-forの中でモーダルを開こうとすると上手くいかないので,モーダルのcardはv-forの後に記述する。
+3. @clickをイベントハンドラーにすると楽
+4. `isDialog: false`のようにdataに初期値を設定して、@clickでtrueにすることでモーダルを展開するようにする。(詳細はpost_Imagesの詳細ページで)

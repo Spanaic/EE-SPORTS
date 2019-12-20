@@ -40,11 +40,95 @@
 
             <v-list>
               <v-list-item v-for="(item, i) in items" :key="i">
-                <v-list-item-title v-if="item.title === '編集'" @click="editImage">{{ item.title }}</v-list-item-title>
+                <!-- 編集モーダル -->
+                <!-- <template v-slot:activator="{ on }"> -->
+                <v-list-item-title v-if="item.title === '編集'" @click.stop="openEditPage">
+                  <!-- <v-btn color="primary" dark v-on="on">{{ item.title }}</v-btn> -->
+                  {{ item.title }}
+                </v-list-item-title>
+                <!-- <v-list-item-title v-if="item.title === '編集'" @click="editImage">{{ item.title }}</v-list-item-title> -->
+                <!-- </template> -->
                 <v-list-item-title v-if="item.title === '削除'" @click="deleteImage">{{ item.title }}</v-list-item-title>
               </v-list-item>
+              <!-- モーダルの中身 -->
+              <v-dialog v-model="edit_dialog" persistent max-width="600px">
+                <v-card>
+                  <v-card-title>
+                    <span class="headline">画像編集ページ</span>
+                  </v-card-title>
+                  <v-card-text>
+                    <v-container>
+                      <v-row>
+                        <!-- <v-col cols="12" sm="6" md="4">
+                          <v-text-field label="Legal first name*" required></v-text-field>
+                        </v-col>
+
+                        <v-col cols="12" sm="6" md="4">
+                          <v-text-field
+                            label="Legal middle name"
+                            hint="example of helper text only on focus"
+                          ></v-text-field>
+                        </v-col>
+
+                        <v-col cols="12" sm="6" md="4">
+                          <v-text-field
+                            label="Legal last name*"
+                            hint="example of persistent helper text"
+                            persistent-hint
+                            required
+                          ></v-text-field>
+                        </v-col>-->
+
+                        <v-col cols="12">
+                          <!-- <v-text-field label="Email*" required></v-text-field> -->
+                          <v-text-field auto-grow label="title" v-model="post_image.title" required></v-text-field>
+                        </v-col>
+
+                        <v-col cols="12">
+                          <!-- <v-text-field label="Password*" type="password" required></v-text-field> -->
+                          <!-- TODO:captionにハッシュタグを含める形で表示する or hashtagsテーブルを利用する？ -->
+                          <!-- 取得時にcaptionからhashtagを弾かず、view側で弾くように仕様を変更する。 -->
+                          <v-textarea
+                            auto-grow
+                            label="caption"
+                            v-model="post_image.caption"
+                            required
+                          ></v-textarea>
+                        </v-col>
+
+                        <!-- <v-col cols="12" sm="6">
+                          <v-select
+                            :items="['0-17', '18-29', '30-54', '54+']"
+                            label="Age*"
+                            required
+                          ></v-select>
+                        </v-col>
+
+                        <v-col cols="12" sm="6">
+                          <v-autocomplete
+                            :items="['Skiing', 'Ice hockey', 'Soccer', 'Basketball', 'Hockey', 'Reading', 'Writing', 'Coding', 'Basejump']"
+                            label="Interests"
+                            multiple
+                          ></v-autocomplete>
+                        </v-col>-->
+                      </v-row>
+                    </v-container>
+                    <small>※最低でも1文字は入力してね！</small>
+                  </v-card-text>
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="blue darken-1" text @click="edit_dialog = false">Close</v-btn>
+                    <v-btn
+                      color="blue darken-1"
+                      text
+                      @click="edit_dialog = false && updatePostImage"
+                    >Save</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
             </v-list>
           </v-menu>
+
           <!-- <button v-if="post_image.end_user.id === $store.state.user.id" @click="deleteImage">削除</button> -->
         </v-toolbar>
 
@@ -57,7 +141,8 @@
           <v-card-title></v-card-title>
         </v-img>
 
-        <v-card-title>
+        <!-- 削除予定 -->
+        <!-- <v-card-title>
           <v-spacer></v-spacer>
 
           <v-menu offset-y>
@@ -73,7 +158,7 @@
               </v-list-item>
             </v-list>
           </v-menu>
-        </v-card-title>
+        </v-card-title>-->
 
         <v-overlay :absolute="absolute" :value="overlay">
           <v-btn icon @click="overlay = false">
@@ -261,7 +346,9 @@ export default {
       overlay: false,
       isActive: false,
       // 編集&削除メニュー
-      items: [{ title: "編集" }, { title: "削除" }]
+      items: [{ title: "編集" }, { title: "削除" }],
+      // 編集用dialog
+      edit_dialog: false
     };
   },
   filters: {
@@ -307,6 +394,7 @@ export default {
     }
 
     // caption内のハッシュタグを削除する処理
+    // FIXME:関数化してページ内の表示では関数、モーダル内はthis.で呼び出すようにする
     this.post_image.caption = this.post_image.caption.replace(
       /[#＃][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー._-]+/gm,
       ""
@@ -320,6 +408,7 @@ export default {
     this.post_image.isActive = true;
     this.post_image.showBtn = false;
 
+    // TODO:このまま処理に問題がなければ削除予定
     // watchしなくても("this.$store.state.user")からcurrentUserを取得出来ている可能性あり()
     // currentUserの取得をwatchしなくても最初から取れている場合、値のセットをcreatedのみにしたほうが処理が被らなくて良さそう。
 
@@ -482,14 +571,15 @@ export default {
         alert(error);
       }
     },
-    async deletePostImage(post_image) {
-      const res = await axios.delete(
-        `/post_images/${post_image.id}`,
-        post_image.id
-      );
-      this.post_image = res.data;
-      this.$router.push("/post_Images");
-    },
+    //TODO:削除予定
+    // async deletePostImage(post_image) {
+    //   const res = await axios.delete(
+    //     `/post_images/${post_image.id}`,
+    //     post_image.id
+    //   );
+    //   this.post_image = res.data;
+    //   this.$router.push("/post_Images");
+    // },
     //TODO:続きを読むを実装するなら使用する、しないなら削除
     // showComments(post_image) {
     //   post_image.isActive = false;
@@ -513,9 +603,26 @@ export default {
       this.$router.push(`/post_Images/${this.$route.params.id}/edit`);
       console.log("this.$route.params.id", this.$route.params.id);
       console.log("edit");
+    },
+    // 編集ページ用のdialogを開く
+    openEditPage() {
+      this.edit_dialog = true;
+    },
+    // editモーダルで編集した内容を保存する
+    async updatePostImage() {
+      try {
+        const res = await axios.patch(
+          `/edit/${this.$route.params.postImageId}`,
+          this.post_image
+        );
+        this.$router.push(`/post_Images/${this.$route.params.postImageId}`);
+        debugger;
+      } catch (err) {
+        console.log("post_err", err);
+      }
     }
   }
-  // fetchでuserをsetしなくてもrouter.jsでセットされるため、必要なし。
+  // TODO:fetchでuserをsetしなくてもrouter.jsでセットされるため、必要なし。
   // async fetch({ store }) {
   //   await store.dispatch("authCheck");
   // }
