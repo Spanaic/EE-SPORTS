@@ -1,5 +1,5 @@
 class PostImagesController < ApplicationController
-    protect_from_forgery :except => [:create, :destroy]
+    protect_from_forgery :except => [:create, :destroy, :update]
 
     def index
 
@@ -47,11 +47,13 @@ class PostImagesController < ApplicationController
 
     def update
         @post_image = PostImage.find(params[:id])
-        @post_image.user = current_user #FIXME:current_userを取得する必要あり
-        if @post_image.update(post_image_params)
+        # @post_image = EndUser.find(params[:end_user_id])
+        #FIXME:current_userを取得する必要あり
+        # @post_image.user = current_user
+        if @post_image.update(post_params)
             # redirect_to post_image_path(@post_image.id)
         else
-            render :edit
+            # render :edit
         end
     end
 

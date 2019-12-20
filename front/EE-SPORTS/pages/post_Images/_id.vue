@@ -2,17 +2,17 @@
   <div>
     <div>
       <v-card class="mx-auto mb-5" height="100%" max-width="800">
-        <!-- カードのheader部分 -->
+        <!--NOTE: カードのheader部分 -->
         <v-toolbar color="indigo" dark>
           <nuxt-link :to="`/end_users/${post_image.end_user.id}`">
             <v-list-item>
               <v-list-item-avatar>
-                <!-- プロフィール画像の表示 -->
+                <!--NOTE: プロフィール画像の表示 -->
                 <v-img
                   v-if="post_image.end_user.profile_image_name"
                   :src="`${baseUrl}/end_users/${post_image.end_user.profile_image_name}`"
                 ></v-img>
-                <!-- プロフィール画像未設定のno_imageの条件分岐 -->
+                <!--NOTE: プロフィール画像未設定のno_imageの条件分岐 -->
                 <v-img v-else :src="`${baseUrl}/no_image.jpg`"></v-img>
               </v-list-item-avatar>
               <v-list-item-content>
@@ -22,14 +22,14 @@
             </v-list-item>
           </nuxt-link>
 
-          <!-- メニュー用の空間を作ってる -->
+          <!--NOTE: メニュー用の空間を作ってる -->
           <v-row>
             <v-col cols="12" sm="6" offset-sm="3">
               <v-spacer></v-spacer>
             </v-col>
           </v-row>
 
-          <!-- 編集&削除用アイコンメニュー -->
+          <!--NOTE: 編集&削除用アイコンメニュー -->
           <!-- currentUserが投稿者でなければメニューは表示されない -->
           <v-menu v-if="post_image.end_user_id === this.$store.state.user.id" bottom left>
             <template v-slot:activator="{ on }">
@@ -40,7 +40,7 @@
 
             <v-list>
               <v-list-item v-for="(item, i) in items" :key="i">
-                <!-- 編集モーダル -->
+                <!--NOTE: 編集モーダル -->
                 <!-- <template v-slot:activator="{ on }"> -->
                 <v-list-item-title v-if="item.title === '編集'" @click.stop="openEditPage">
                   <!-- <v-btn color="primary" dark v-on="on">{{ item.title }}</v-btn> -->
@@ -50,7 +50,7 @@
                 <!-- </template> -->
                 <v-list-item-title v-if="item.title === '削除'" @click="deleteImage">{{ item.title }}</v-list-item-title>
               </v-list-item>
-              <!-- モーダルの中身 -->
+              <!--NOTE: モーダルの中身 -->
               <v-dialog v-model="edit_dialog" persistent max-width="600px">
                 <v-card>
                   <v-card-title>
@@ -59,35 +59,11 @@
                   <v-card-text>
                     <v-container>
                       <v-row>
-                        <!-- <v-col cols="12" sm="6" md="4">
-                          <v-text-field label="Legal first name*" required></v-text-field>
-                        </v-col>
-
-                        <v-col cols="12" sm="6" md="4">
-                          <v-text-field
-                            label="Legal middle name"
-                            hint="example of helper text only on focus"
-                          ></v-text-field>
-                        </v-col>
-
-                        <v-col cols="12" sm="6" md="4">
-                          <v-text-field
-                            label="Legal last name*"
-                            hint="example of persistent helper text"
-                            persistent-hint
-                            required
-                          ></v-text-field>
-                        </v-col>-->
-
                         <v-col cols="12">
-                          <!-- <v-text-field label="Email*" required></v-text-field> -->
                           <v-text-field auto-grow label="title" v-model="post_image.title" required></v-text-field>
                         </v-col>
 
                         <v-col cols="12">
-                          <!-- <v-text-field label="Password*" type="password" required></v-text-field> -->
-                          <!-- TODO:captionにハッシュタグを含める形で表示する or hashtagsテーブルを利用する？ -->
-                          <!-- 取得時にcaptionからhashtagを弾かず、view側で弾くように仕様を変更する。 -->
                           <v-textarea
                             auto-grow
                             label="caption"
@@ -95,22 +71,6 @@
                             required
                           ></v-textarea>
                         </v-col>
-
-                        <!-- <v-col cols="12" sm="6">
-                          <v-select
-                            :items="['0-17', '18-29', '30-54', '54+']"
-                            label="Age*"
-                            required
-                          ></v-select>
-                        </v-col>
-
-                        <v-col cols="12" sm="6">
-                          <v-autocomplete
-                            :items="['Skiing', 'Ice hockey', 'Soccer', 'Basketball', 'Hockey', 'Reading', 'Writing', 'Coding', 'Basejump']"
-                            label="Interests"
-                            multiple
-                          ></v-autocomplete>
-                        </v-col>-->
                       </v-row>
                     </v-container>
                     <small>※最低でも1文字は入力してね！</small>
@@ -118,11 +78,7 @@
                   <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn color="blue darken-1" text @click="edit_dialog = false">Close</v-btn>
-                    <v-btn
-                      color="blue darken-1"
-                      text
-                      @click="edit_dialog = false && updatePostImage"
-                    >Save</v-btn>
+                    <v-btn color="blue darken-1" text @click="editPostImage">Save</v-btn>
                   </v-card-actions>
                 </v-card>
               </v-dialog>
@@ -141,7 +97,7 @@
           <v-card-title></v-card-title>
         </v-img>
 
-        <!-- 削除予定 -->
+        <!--FIXME: 削除予定 -->
         <!-- <v-card-title>
           <v-spacer></v-spacer>
 
@@ -207,7 +163,7 @@
 
           <v-btn color="orange" text></v-btn>
 
-          <!-- お気に入り機能ボタン -->
+          <!--NOTE: お気に入り機能ボタン -->
           <template v-if="user.id !== 0">
             <template v-if="post_image.isFav !== true || undefined">
               <v-btn icon @click="createFavorite(post_image)">
@@ -220,7 +176,7 @@
               </v-btn>
             </template>
 
-            <!-- コメント入力のダイアログ -->
+            <!--NOTE: コメント入力のダイアログ -->
             <v-row justify="center">
               <v-dialog v-model="dialog" persistent max-width="600px">
                 <template v-slot:activator="{ on }">
@@ -335,7 +291,7 @@ export default {
     return {
       baseUrl: process.env.BASE_URL,
       post_image: {},
-      // hashtagを含んだcaption
+      // NOTE: hashtagを含んだcaption
       caption_nohashtags: "",
       raw_post_image: {},
       current_user: [],
@@ -347,9 +303,9 @@ export default {
       absolute: true,
       overlay: false,
       isActive: false,
-      // 編集&削除メニュー
+      // NOTE:編集&削除メニュー
       items: [{ title: "編集" }, { title: "削除" }],
-      // 編集用dialog
+      // NOTE:編集用dialog
       edit_dialog: false
     };
   },
@@ -363,7 +319,7 @@ export default {
     this.post_image = this.raw_post_image;
     // console.log("this.$store.state.user.id", this.$store.state.user.id);
 
-    // いいね機能レンダリング
+    // NOTE:いいね機能レンダリング
     if (this.$store.state.user !== 0) {
       console.log("this.user", this.user);
       let current_user_id = this.$store.state.user.id;
@@ -395,7 +351,7 @@ export default {
       );
     }
 
-    // caption内のハッシュタグを削除する処理
+    // NOTE:caption内のハッシュタグを削除する処理
     // FIXME:関数化してページ内の表示では関数、モーダル内はthis.で呼び出すようにする
     // this.post_image.caption = this.post_image.caption.replace(
     //   /[#＃][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー._-]+/gm,
@@ -514,12 +470,13 @@ export default {
       this.post_image.isFav = this.post_image.favorites.some(
         fav => fav.end_user_id === favorite.end_user_id
       );
-
-      this.post_image.caption = this.post_image.caption.replace(
-        /[#＃][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー._-]+/gm,
-        ""
-      );
-      console.log("this.post_image.caption", this.post_image.caption);
+      // TODO:関数が上手く機能すれば削除予定
+      // this.post_image.caption = this.post_image.caption.replace(
+      //   /[#＃][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー._-]+/gm,
+      //   ""
+      // );
+      // console.log("this.post_image.caption", this.post_image.caption);
+      this.replaceHashtags();
 
       this.post_image.hashtags.map(hashtag => {
         hashtag.hashname.replace(/[#＃]/gm, "");
@@ -594,7 +551,7 @@ export default {
     //   post_image.showBtn = false;
     // },
 
-    // 画像削除
+    // NOTE:画像削除
     async deleteImage() {
       try {
         if (confirm("本当に削除してよろしいですか")) {
@@ -613,26 +570,29 @@ export default {
       console.log("edit");
     },
 
-    // 編集ページ用のdialogを開く
+    // NOTE:編集ページ用のdialogを開く
     openEditPage() {
       this.edit_dialog = true;
     },
 
-    // editモーダルで編集した内容を保存する
-    async updatePostImage() {
+    // NOTE:editモーダルで編集した内容を保存する
+    async editPostImage() {
+      console.log("this.$route.params.id", this.$route.params.id);
       try {
         const res = await axios.patch(
-          `/edit/${this.$route.params.postImageId}`,
+          `/post_images/${this.$route.params.id}`,
           this.post_image
         );
-        this.$router.push(`/post_Images/${this.$route.params.postImageId}`);
-        debugger;
+        // this.$router.push(`/post_Images/${this.$route.params.id}`);
+        this.updatePostImages();
+        this.edit_dialog = false;
       } catch (err) {
         console.log("post_err", err);
+        this.edit_dialog = false;
       }
     },
 
-    // 説明文表示用にhashtagsを抜いた説明文
+    // NOTE:説明文表示用にhashtagsを抜いた説明文
     replaceHashtags() {
       this.caption_nohashtags = this.post_image.caption.replace(
         /[#＃][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー._-]+/gm,

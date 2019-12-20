@@ -8,7 +8,7 @@
 
 ### `シンプルかつ、返すモデルが一つの場合`
 
-```
+```rb
     def index
         @users = User.page(params[:page]).per(20).reverse_order
         render :json => @users
@@ -18,7 +18,7 @@
 
 ### `返すモデルが複数の場合`
 
-```
+```rb
     def show
         @user = User.find_by(profile_name: params[:profile_name])
         @post_images = @user.post_images.page(params[:page]).per(9).reverse_order
@@ -32,14 +32,14 @@
 
 ### `ルーティング設定を変更する(jsonファイルを返すように)`
 
-```
+```rb
   get '/users/:profile_name' + '.json', to: "users#show" ,as: 'user_json'
 ```
 ---
 
 ### `あまりないことだけど,viewのリンクからjsonファイルを返す場合`
 
-```
+```html
 <li class="list-icon">
     <%= link_to user_json_path(current_user.profile_name) do %>
         <i class="fas fa-user-alt"></i>
@@ -72,7 +72,7 @@
 
 ## `【axiosの.thenで取ってくる方法】`
 
-```
+```javascript
 mounted() {
   axios.get("http://localhost:3001//post_images.json")
   .then(response => {this.post_images = response.data.post_images})
@@ -84,7 +84,7 @@ mounted() {
 
 ## `【axiosのasyncで取ってくる】`
 
-```
+```javascript
   mounted: async function() {
     const response = await axios.get(url)
     // console.log(response.data.post_images);
@@ -102,7 +102,7 @@ mounted() {
 
 ## `【axiosでmethodsの@clickイベントからgetで値を取ってくる方法】`
 
-```
+```javascript
   methods: {
   async handleSubmit () {
     const url = "http://localhost:3001//post_images.json"
@@ -118,11 +118,11 @@ template内に<form></form>や<button></button>を設けて@clickイベントを
 ## `【apiサーバーとしてフロントからフォームを渡す時の設定】`
 
 1. development.rb
-```
+```rb
   config.action_controller.forgery_protection_origin_check = false
 ```
 2. application_controller.rb
-```
+```rb
     protect_from_forgery with: :null_session
 ```
 
@@ -132,7 +132,7 @@ template内に<form></form>や<button></button>を設けて@clickイベントを
 
 1. dotenvモジュールをインストール
 2. firebase.jsの記述を以下に変更する。
-```
+```javascript
 import firebase from "firebase"
 
 
@@ -166,7 +166,7 @@ APP_ID="1:636627745511:web:86d8560ba4d67b4f890042"
 
 4. nuxt.configの記述を変更する
 
-```
+```javascript
 require('dotenv').config();
 const { API_KEY } = process.env;
 const { AUTH_DOMAIN } = process.env;
@@ -201,7 +201,7 @@ envは定数を記述する。
 
 [firebase.jsの設定方法](https://qiita.com/_takeshi_24/items/419b9d0d879351f641f3)
 
-```
+```javascript
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig)
 }
@@ -221,7 +221,7 @@ user = user? user : {};
 
 ## `【firebaseのログイン認証をvuexで管理する方法】`
 【参考URL】[Vueでvuexで認証情報を保持する](https://qiita.com/ErgoFriend/items/bd1bb445e185bf45e272)
-```
+```javascript
 export default {
     init() {
         firebase.initializeApp(config);
@@ -245,7 +245,7 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
 `
 ユーザがログアウトするまで残る。
 
-```
+```javascript
     login() {
         const provider = new firebase.auth.GoogleAuthProvider();
         firebase.auth().signInWithPopup(provider)
@@ -256,13 +256,13 @@ firebase.auth().signInWithPopup(provider)
 `
 プロバイダを指定してログイン画面をポップアップさせる。
 定数にプロバイダを指定する。
-```
+```javascript
     logout() {
         firebase.auth().signOut()
     },
 ```
 sessionを終了させる(ログアウトさせる)
-```
+```javascript
     onAuth() {
         firebase.auth().onAuthStateChanged(user => {
             user = user ? user : {};
@@ -275,7 +275,7 @@ sessionを終了させる(ログアウトさせる)
 promiseでログインが完了した後に、ユーザー情報をvuexのstorへ保存します。
 `userがログアウトした後にuserのstateを{}の状態にして保存する。`
 
-```
+```javascript
 var user = firebase.auth().currentUser
 ```
 `ユーザ情報を取得できる。`
@@ -289,7 +289,7 @@ var user = firebase.auth().currentUser
 store.jsでその他のファイルをまとめて管理する。
 
 [index.js]
-```
+```javascript
 import Vuex from 'vuex';
 import mutations from "./mutations"
 import state from "./state"
@@ -328,7 +328,7 @@ export defaultするのは 関数を代入した[createStore]となる。
 
 ### `state.js`
 
-```
+```javascript
 const state = {
     user: {
     },
@@ -346,7 +346,7 @@ statusはログイン状態を真偽値で管理するための記述。
 
 ### `mutations.js`
 
-```
+```javascript
 const mutations = {
     setUser(state, payload) {
         state.user = payload;
@@ -368,7 +368,7 @@ stateの値を変更する関数を定義する。直接は使わずactions.js�
 
 ### `actions.js`
 
-```
+```javascript
 
 import firebase from "@/plugins/firebase"
 <!-- firebase認証を使用しているので,importでfirebase.jsを読み込む -->
@@ -415,7 +415,7 @@ pluginsとmiddlewareはbeforeCreateよりも前に最初に読み込まれるフ
 
 ### `【例外】actions.js　payloadに入っている配列をactions側で受け取るもう一つの方法`
 
-```
+```javascript
     logIn({ commit }, [email, password]) {
         firebase
             .auth()
@@ -442,7 +442,7 @@ pluginsとmiddlewareはbeforeCreateよりも前に最初に読み込まれるフ
 
 ## `【docker-compose.yml】`
 
-```
+```yml
 version: '3'
 services:
   db:
@@ -487,7 +487,7 @@ services:
 
 ## `【databas.yml】`
 
-```
+```yml
 development:
   <<: *default
   database: api
@@ -538,7 +538,7 @@ npm -i dotenv
 3. firebaseのプロジェクトのコンフィグからアプリケーションを選択　＝> CDNで出てきたAPI_KEYなどなどをコピー
 4. [.env]の中に記述する
 
-```.env
+```env
 任意の名前="値"
 
 API_KEY="***"
@@ -553,7 +553,7 @@ APP_ID="1:***:web:***"
 5. Nuxtは記述済みだが,念の為.gitignoreをチェック！なければ[.env]を追記する
 6. `[nuxt.config.js]に環境変数を記述する`
 
-```
+```javascript
 require('dotenv').config();
 const { API_KEY } = process.env;
 const { AUTH_DOMAIN } = process.env;
@@ -583,7 +583,7 @@ export default {
   1. [.plugins/firebase.js]を作成
   2. [.env]で作成した記述を元に中身を編集する。
 
-```
+```javascript
   import firebase from "firebase"
 
 
@@ -612,7 +612,7 @@ export default firebase
 
 `userに空の値、statusにfalseを設定しておく`
 
-```
+```javascript
 const state = {
     user: {
     },
@@ -626,7 +626,7 @@ export default state;
 
 `commitされたときの引数を[state.js]のどこに渡すかを記述する`
 
-```
+```javascript
 const mutations = {
     setUser(state, payload) {
         state.user = payload;
@@ -643,7 +643,7 @@ export default mutations;
 
 `firebaseで認証成功 => commitでstate変更 => axios.postでapiサーバーのdbに追加`
 
-```
+```javascript
 import firebase from "@/plugins/firebase"
 
 const actions = {
@@ -696,7 +696,7 @@ export default actions
 
 `plugins配下に作成することでリロードされてもライフサイクルが始まる前に読み込ませる事ができる（リロードされても認証を維持できる）`
 
-```
+```javascript
 import firebase from '@/plugins/firebase';
 import axios from 'axios';
 
@@ -729,7 +729,7 @@ export default (context) => {
 1. actions.jsに渡すpayload内の配列をdispatchの第2引数に記述する。
 2. actions.js内で処理を完了させたい場合は、dispatchを呼び出すだけにする（axiosの記述も全てactions.jsに記述する）
 
-```
+```javascript
  hundleSubmit() {
       this.$store.dispatch("signUp", [
         this.email,
@@ -763,7 +763,7 @@ export default (context) => {
 
 ### `actions.js側の記述`
 
-```
+```javascript
 signUp({ commit }, payload) {
     firebase
         .auth()
@@ -793,7 +793,7 @@ signUp({ commit }, payload) {
 
 ### `end_users.controller.rbの記述`
 
-```
+```rb
     def create
         user = EndUser.new(end_user_params)
         if user.save
@@ -811,14 +811,14 @@ signUp({ commit }, payload) {
 
 1. 基本的にインスタンス変数は使う必要がない。
 
-```
+```rb
         @user.email = params[:end_user][:email]
         @user.name = params[:end_user][:name]
         @user.profile_name = params[:end_user][:profile_name]
 ```
 2. `paramsをカラムに代入するのはストロングパラメータの記述一行で済む`
 
-```
+```rb
     private
     def end_user_params
         params.require(:end_user).permit(:email, :name, :profile_name)
@@ -827,7 +827,7 @@ signUp({ commit }, payload) {
 ```
 3. デバックする時はエラーメッセージをrollbackに仕込んでおく
 
-```
+```rb
         if user.save
         else
         puts user.errors.full_messages
@@ -837,7 +837,7 @@ signUp({ commit }, payload) {
 
 4. モデルへの記述は気をつける（deviseから移行してきた時）
 
-```
+```rb
   devise :database_authenticatable, :registerable,
         :recoverable, :rememberable, :validatable, :omniauthable
 ```
@@ -846,7 +846,7 @@ signUp({ commit }, payload) {
 
 5. route.rbへの記述を行いaxiosでurlを叩けるようにしておく
 
-```
+```rb
   resources :end_users, param: :profile_name do
     resource :relationships, param: :profile_name, only: [:create, :destroy]
     get :follows, on: :member
@@ -862,7 +862,7 @@ signUp({ commit }, payload) {
 
 * `基本的には[./.nuxt/router.js]を確認すればルーティングに必要な情報はすべて手に入る。`
 
-```
+```javascript
 router: {
   routes: [
     {
@@ -885,7 +885,7 @@ router: {
 
 `dockerでdbを使用する場合は、dbの永続化をしなければならない`
 
-```docker-compose.yml
+```yml
 version: '3'
 services:
   db:
@@ -961,7 +961,7 @@ mysql/data/*
 ## `【this.$router.pushとnuxt-linkの使い方(動的URL編)】`
 
 1. this.$router.push
-```
+```javascript
 this.$router.push({
     name: "post_Images-id",
     params: { postImageId: res.data.id }
@@ -969,7 +969,7 @@ this.$router.push({
 ```
 2. nuxt-link
 
-```
+```html
 <nuxt-link :to="{name: 'post_Images-id',params: { postImageId: res.data.id }}">
     <img v-bind:src="'http://localhost:3001/post_images/' + post_image.image_name" />
 </nuxt-link>
@@ -989,7 +989,7 @@ this.$router.push({
 
 ## `【jsonの渡し方】`
 
-```
+```rb
 def show
      @post_image = PostImage.find_by(id: params[:id])
     # @new_post_comment = PostComment.new
@@ -1009,7 +1009,7 @@ def show
 end
 ```
 上記のJsonの渡し方では、
-```
+```json
 {
     -post_image: {
         id: hogehoge
@@ -1018,7 +1018,7 @@ end
 }
 ```
 と階層が一個下になってしまう。これでもパラメータとしては渡ってるので、使い方次第ではキチンとした値を取得出来るはず。
-```
+```rb
 def show
     post_image = PostImage.find(params[:id])
     render :json => post_image
@@ -1030,13 +1030,13 @@ end
 
 ## `【axiosのparamsの渡し方】`
 
-```
+```javascript
     axios.post(`/post_images/${id}/post_comments`, this.post_comment);
 ```
 
 このまま送ってしまうと、
 
-```
+```bash
 Parameters: {"こめんと"=>nil, "post_image_id"=>"4"}
 api_1  | Can't verify CSRF token authenticity.
 ```
@@ -1044,7 +1044,7 @@ api_1  | Can't verify CSRF token authenticity.
 [this.post_comment]がparamsのキーとなってしまう。
 paramsの渡し方にもよるけど、渡したい値がキーとなってしまう場合や、基本的にparamsをpostするときはオブジェクトで渡してあげたほうがいい。
 
-```
+```javascript
       axios.post(`/post_images/${id}/post_comments`, {comment: this.post_comment});
 ```
 
@@ -1056,28 +1056,28 @@ paramsの渡し方にもよるけど、渡したい値がキーとなってし�
 
 [Qiita参考記事](https://qiita.com/eggc/items/29a3c9a41d77227fb10a)
 
-```
+```rb
 @post_image = PostImage.all.to_json(include: [:子モデル,:子モデル])
 ```
 
 変数に一つずついれてjsonで返すのはdb的にも良くないので、アソシエーションが組まれているモデルに関しては、[to_json(include:)]を使って必要な子モデルを含めたカタチでjsonファイルをフロントに渡して上げる。
 
-```
+```rb
 render :json => @post_image
 ```
 これだけで全てが渡るイメージ。
 `新規作成するときに必要だった[.new]などはjsonとして渡さなくてok`
 
-```
+```rb
 @post_image = PostImage.all.to_json(include: [:post_comments, :favorites])
 ```
 allで取得する場合
 
-```
+```rb
 @post_image = PostImage.find(params[:id]).to_json(include: [:post_comments, :favorites])
 ```
 showページ向けなどにデータを取得してくる場合
-```
+```rb
 render :json => @post_image
 
 ```
@@ -1089,7 +1089,7 @@ frontへの返し方は一緒。
 
 ## `【axiosを使った通信をするときなど】`
 
-```
+```javascript
   methods: {
     async saveComment(id) {
       try {
@@ -1118,14 +1118,14 @@ async await try =>　axiosの通信が動的に行われ、成功したらthis.$
 
 ## `【find_by(カラム名: params[:パラメータ])の使い方に注意！】`
 
-```
+```rb
  @post_comment = PostImage.find_by(post_image: params[:post_image_id])
 ```
 
 [find_by]を使うと指定したカラムを探しに行っちゃう。
 しかし、もしそのカラムがdbやモデルに存在しないとdbさんに怒られてしまうので要注意！ `no colmun!!!`
 
-```
+```rb
 @post_comment = PostImage.find(params[:post_image_id])
 ```
 
@@ -1134,7 +1134,7 @@ idが渡ってきてるので、普通にfind(prams[:hogehoge])で大丈夫。
 ---
 
 ## `【nuxt-linkのpathをリアクティブなデータから取得する方法】`
-```
+```html
 <nuxt-link :to="`/end_users/${end_user.id}`">{{ end_user.name }}</nuxt-link>
 ```
 
@@ -1145,7 +1145,7 @@ idが渡ってきてるので、普通にfind(prams[:hogehoge])で大丈夫。
 [動的にネストされたルート](https://qiita.com/notsunohito/items/46bc9c6ad88fed46ea14)
 [$route.params取得のタイミングとライフサイクルの理解](https://qiita.com/wata01/items/314c0bdc25f116d6f50c)
 
-```
+```javascript
 axios.get(`/end_users/${this.$route.params.userId}/edit`)
 ```
 
@@ -1156,7 +1156,7 @@ axios.get(`/end_users/${this.$route.params.userId}/edit`)
 
 ## `【respond_to do を使わずに複数の値をjsonファイルで渡したい】`
 
-```
+```rb
       user = EndUser.find_by(email: params[:email])
         users = EndUser.all
 
@@ -1169,7 +1169,7 @@ axios.get(`/end_users/${this.$route.params.userId}/edit`)
 この記述（respond_to do）だと、vue側で[axios.get("".json)]で受け取らないとundefineでエラーになる。
 URL.jsonをすれば表示されるが、が通常のURLだとエラーが返される。
 
-```
+```rb
         user = EndUser.find_by(email: params[:email])
         users = EndUser.all
 
@@ -1194,7 +1194,7 @@ URL.jsonをすれば表示されるが、が通常のURLだとエラーが返さ
 
 [appendの中身を見たい！](https://qiita.com/_Keitaro_/items/6a3342735d3429175300)
 
-```
+```javascript
 console.log(...formData.entries());
 ```
 ES6より追加されたスプレッド演算子を使えば、値を見ることが出来る。
@@ -1215,7 +1215,7 @@ formDataを渡すときにtokenを要求される.
 
 今回は②の方法で進める。
 
-```
+```rb
 (apllication.controller)
 protect_from_forgery with: :null_session
 ```
@@ -1234,7 +1234,7 @@ protect_from_forgery :except => [:許可したいアクション名]
 
 ### `OKパターン`
 
-```
+```html
 <v-img
   :src="'http://localhost:3001/end_users/' + `${this.$store.state.user.profile_image_name}`"
   height="300px"
@@ -1244,7 +1244,7 @@ protect_from_forgery :except => [:許可したいアクション名]
 
 ### `NGパターン(ベタ打ち)`
 
-```
+```html
 <v-img
   :src="`http://localhost:3001/end_users/${this.$store.state.user.profile_image_name}`"
   height="300px"
@@ -1254,7 +1254,7 @@ protect_from_forgery :except => [:許可したいアクション名]
 
 ### `NGパターン(require(これはvue-loaderをうまくインストール出来ればいけるかも...))`
 
-```
+```html
 <v-img
   :src="require(`http://localhost:3001/end_users/${this.$store.state.user.profile_image_name}`)"
   height="300px"
@@ -1266,7 +1266,7 @@ protect_from_forgery :except => [:許可したいアクション名]
 
 ### `vue側：検索したいindexにサーチを投げる(axios)`
 
-```
+```rb
 <div class="search-box">
         <%= form_tag(items_path,method: :get) do %>
           <%= text_field_tag :search, "", placeholder: "アーティストやタイトルで検索" %>
@@ -1279,7 +1279,7 @@ protect_from_forgery :except => [:許可したいアクション名]
 
 ### `コントローラの書き方`
 
-```
+```rb
 def index
     unless params[:search].blank?
       artist = Item.joins(:artist).where("artist_name LIKE ?", "%#{params[:search]}%")
@@ -1307,7 +1307,7 @@ def index
 ※ 同一コンポーネント内で検索フォームを設ける場合はかなり有効な気がする...
 `残念ながら上記のURLの方法では実装出来ず...`
 
-```
+```javascript
 <html>
 <body>
 <div id="app">
@@ -1381,7 +1381,7 @@ def index
 
 ### `記事の記述`
 
-```
+```javascript
 computed: {
     filteredList() {
       return this.postList.filter(post => {
@@ -1395,7 +1395,7 @@ computed: {
 
 ### `自分の記述`
 
-```
+```javascript
     filterdPostImages() {
       return this.post_images.filter(post_image => {
         return (
@@ -1413,7 +1413,7 @@ computed: {
 
 ### `templateの記述`
 
-```
+```html
 <div v-for="(post_image, i) in filterdPostImages" :key="i">
 ```
 
@@ -1423,7 +1423,7 @@ computed: {
 
 ## `【自己結合のclass_nameオプションについて】`
 
-```
+```rb
     belongs_to :visitor, class_name: 'EndUser', foreign_key: :visitor_id, optional: true
     belongs_to :visited, class_name: 'EndUser', foreign_key: :visited_id, optional: true
 ```
@@ -1433,7 +1433,7 @@ computed: {
 
 ## `【検索のクエリの投げ方】`
 
-```
+```javascript
     const res = await axios.get(
       `/searches?hashname=${this.keyword}&title=${this.keyword}`
     );
@@ -1461,7 +1461,7 @@ computed: {
 ```
 例)
 
-```
+```javascript
 computed: {
     items() {
       let itemsArray = [{ header: "ユーザーリスト" }];
@@ -1494,7 +1494,7 @@ computed: {
 ```
 例）
 
-```
+```javascript
  handleSubmit() {
       const formData = new FormData();
       var timestamp = new Date().getTime();
@@ -1518,7 +1518,7 @@ computed: {
 
 1. currentUser以外の値を取得したい場合
 
-```
+```javascript
     items() {
       if (this.$store.state.user && this.$store.state.user != undefined);
       console.log("currentUser", this.currentUser);
@@ -1542,7 +1542,7 @@ computed: {
 
 2. filter関数を実行している部分
 
-```
+```javascript
 let end_users_list = this.end_users.filter(user => {
         return user.id !== this.currentUser.id;
       });
@@ -1551,7 +1551,7 @@ let end_users_list = this.end_users.filter(user => {
 3. 各要素のidを比較演算子でcurrentUser.idと比較する
 4. !==なのでcurrentUser.idとmatchしなかったものを戻り値としてreturnする。
 
-```
+```javascript
       end_users_list.forEach(user => {
         itemsArray.push({
           avatar: `http://localhost:3001/end_users/${user.profile_image_name}`,
@@ -1574,7 +1574,7 @@ let end_users_list = this.end_users.filter(user => {
 
 0. 前準備(全て同じ関数内の処理)
 
-```
+```javascript
 const res = await axios.get(url);
     let current_user_id = this.user.id;
     this.post_images = res.data.map(post_image => {
@@ -1592,7 +1592,7 @@ const res = await axios.get(url);
 
 1. mapしてきたpost_imageをしようして,captionのhashを置換する
 
-```
+```javascript
       post_image.caption = post_image.caption.replace(
         /[#＃][\w\p{Han}ぁ-ヶｦ-ﾟー]+/,
         this.post_image.hashtag.hashname
@@ -1601,7 +1601,7 @@ const res = await axios.get(url);
 
 2. 受け取ったhashnameを<a>タグのリンクに変換
 
-```
+```javascript
       post_image.hashtag_list = post_image.hashtags.map(hashtag => {
         hashtag.hashname = hashtag.hashname
           .split(["#", "＃"])
@@ -1618,7 +1618,7 @@ const res = await axios.get(url);
 * `watchは値が変更される度に処理が繰り返さえる。`
 * `if文内の処理が終われば、unwatch();でwatch処理をストップさせる`
 
-```
+```javascript
 created() {
     const unwatch = this.$store.watch(
       state => state.user,
@@ -1649,7 +1649,7 @@ created() {
 ---
 ## `【秦さん流、asyncで処理を遅らせて値をセットする方法】`
 
-```
+```javascript
   computed: {
     currentUser() {
        if (this.$store.state.user && this.$store.state.user.id != undefined) {
@@ -1688,21 +1688,21 @@ created() {
 
 ## `【型変換のdebug方法】`
 
-```
+```javascript
     console.log("type of this.notifications", typeof this.notifications);
     console.log("toString this.notifications",toString.call(this.notifications));
 ```
 
 ### `storing => numberへの変換（javascript）`
 
-```
+```javascript
 parseInt(string型となっている変数や値)
 ```
 ---
 
 ## `【whereのチェーンメソッド　"or"　の使い方】`
 
-```
+```rb
 post_images = PostImage.where("title LIKE ?", "%#{params[:search]}%").or(PostImage.where("caption LIKE ?", "%#{params[:search]}%"))
 ```
 
@@ -1715,7 +1715,7 @@ post_images = PostImage.where("title LIKE ?", "%#{params[:search]}%").or(PostIma
 
 1. コンポーネントのdataと同じように初期値を入れておくことが出来る
 
-```
+```javascript
 <state.js>
 
 user: {}
@@ -1741,7 +1741,7 @@ if(user.id) => false
 ```
 4. 最初からnullを入れておく方法もある
 5. nullを入れておく場合、nullを考慮に入れた条件分岐を掛ける必要がある.
-```
+```javascript
 <state.js>
 
 user: null
@@ -1758,7 +1758,7 @@ if(user) => false
 1. Vuexのaction.jsを経由する場合、axiosなどの非同期通信が発生する。
 2. dispatchの後にpushを記述すると、axiosなどの非同期通信を待たずにpushしてしまうため、push先でresを必要としている場合エラーがでる。
 
-```
+```javascript
 <悪い例>
     logOut() {
       this.$store.dispatch("logOut");
@@ -1767,7 +1767,7 @@ if(user) => false
 
 3. action.jsで axios -> commit -> push のような流れでresを受け取るのをasyncで待った後にpushすることで値を持ったまま遷移できてエラーも起きない...はず。
 
-```
+```javascript
 <良い例>
 logOut({ commit }) {
   firebase
@@ -1834,12 +1834,12 @@ authCheck({ commit }) {
 
 [参考Qiita](https://qiita.com/DecoratedKnight/items/aa2522d6f6291cac8961)
 
-```
+```javascript
   let byeFav = ps.slice(-1)[0];
 ```
 1. .slice(-1)[0]を指定すると取得した配列の一番最後のみ変数へと入れる事ができる。
 
-```
+```javascript
 let byeFav = ps[ps.length - 1];
 ```
 
@@ -1877,7 +1877,7 @@ console.log("this.$route.params.id", this.$route.params.userId);
 
 [参考記事](https://javascript.programmer-reference.com/js-url-encode-decode/)
 
-```
+```html
 <template>
   <div>
     <v-text>{{ decodeHashtag($route.hash) }}</v-text>
@@ -1908,7 +1908,7 @@ methods: {
 [is not defined on the instance](https://forum.vuejs.org/t/vue-warn-property-or-method-name-is-not-defined-on-the-instance-but-referenced-during-render/34887)
 
 * 解決方法は、methodsの外側に定義されていた関数を内側に戻すだけ。インデントをあわせる時にミスをした模様。
-```
+```javascript
 methods: {
   function(){
 
@@ -1923,7 +1923,7 @@ function(){
 
 ## `【複数画像のアップロード】`
 
-```
+```html
 <template>
    <form action @submit.prevent="handleSubmit" enctype="multipart/form-data">
       <!-- <input type="text" v-model="end_user.email" /> -->
@@ -1944,7 +1944,8 @@ function(){
       <input type="submit" id="apply-upload" v-show="uploadedImage" />
     </form>
 </template>
-
+```
+```javascript
 <script>
 
 data() {
@@ -2023,7 +2024,7 @@ methods: {
 5. 各ページで認証をベタ書きする場合も多い
 6. 今回はSPAなのでpluginsにpromiseを返す記述をした。
 
-```
+```javascript
 import firebase from '@/plugins/firebase';
 import axios from '@/plugins/axios';
 // import { functions } from 'firebase';
@@ -2064,7 +2065,7 @@ export default async (context, inject) => {
 
 ## `【ストロングパラメータの指定とparamsの参照の仕方】`
 
-```
+```bash
  Parameters: {"comment"=>"こここ", "end_user"=>{"id"=>3, "email"=>"test@gmail.com", "name"=>"test", "profile_name"=>"test_user", "profile_image_name"=>"file1574415602533.jpg", "created_at"=>"2019-11-19T04:31:20.000Z", "updated_at"=>"2019-11-22T09:40:02.000Z"}, "post_image_id"=>"5", "post_comment"=>{"comment"=>"こここ"}}
 ```
 
@@ -2073,7 +2074,7 @@ export default async (context, inject) => {
 paramsの最後のpost_commentの部分を見ている。
 この部分にparamsとして渡った値をストロングパラメータでnewレコードに挿入することが出来る
 
-```
+```rb
 def post_comment_params
         params.require(:post_comment).permit(:comment, :end_user_id)
     end
@@ -2085,7 +2086,7 @@ def post_comment_params
 
 ## `【関連テーブル（孫テーブル）のjsonを取得する記述方法】`
 
-```
+```rb
 @post_images = post_images.to_json(include: [:favorites,:end_user, :hashtags, :notifications,:post_comments =>{ :include => :end_user}])
 ```
 
@@ -2113,7 +2114,7 @@ def post_comment_params
 
 watch内にあとでさせたい処理を記述して、先に描画に必要な部分を処理させることが出来る
 
-```
+```javascript
 async created() {
     this.post_image = this.raw_post_image;
     this.post_image.caption.replace(
@@ -2190,7 +2191,7 @@ async created() {
 
 1. 空の配列が初期値に入っている場合,　commitで空の初期値を入れ直して上げることでデータを初期化させることが出来る。
 
-```
+```javascript
     cancelSearch({ commit }) {
         commit('setSearchResult', [])
         this.$router.push("/post_Images/")
@@ -2201,7 +2202,7 @@ async created() {
 
 2. stateの配列の中の数で判定する。空の場合は"0になるので" `length !== 0`などで判定できる。
 
-```
+```html
 <v-btn v-if="$store.state.search.length !== 0 " @click="cancelSearch">画像一覧に戻る</v-btn>
 ```
 
@@ -2215,7 +2216,7 @@ async created() {
 
 ## `【デプロイ後の環境変数の設定】`
 
-```
+```javascript
 export default {
   env: {
     API_URL: process.env.IIKANKYO ? "http://123.456.789/" : "http://localhost:3000/"
@@ -2225,7 +2226,7 @@ export default {
 1. nuxt.configに下記の記述を書き加える
 2. 本番環境とデプロイ環境で見に行くURLを分ける
 
-```
+```javascript
   mounted () {
       console.log(process.env.API_URL);
   }
@@ -2248,7 +2249,7 @@ $ IIKANKYO=unko yarn generate
 2. 公式では,`state.userの値がセットされていなければ"/"へと飛ばす処理のみ`を記述している。
 3. 未ログインユーザなど絶対に弾きたいPageコンポーネントでのみ、middlewareを記述して読み込ませる
 
-```
+```javascript
 export default function ({ store, redirect }) {
     // ユーザーが認証されていないとき
 
@@ -2260,7 +2261,7 @@ export default function ({ store, redirect }) {
 
 4. middlewareに`authenticated.js`を作成して上記の記述を行う。
 
-```
+```javascript
 middleware: "authenticated",
 ```
 
@@ -2281,7 +2282,7 @@ middleware: "authenticated",
 
 ## `【v-timelineの縦線の色を変える方法】`
 
-```
+```javascript
 <style scoped>
 .v-timeline:before { background-color: red; }
 </style>
@@ -2296,7 +2297,7 @@ middleware: "authenticated",
 1. layout/〇〇.vueという新たなファイルを作成
 2. 新たに作成したstyleを適用したいページで読み込む
 
-```
+```javascript
 export default {
   layout: "〇〇",
   data (){
@@ -2310,7 +2311,7 @@ export default {
 
 1. middlewareの中に新しいファイルを作成する
 
-```
+```javascript
 <userAuth.js>
 export default function ({ store, redirect, route }) {
     // 現在のユーザーとリクエストされたユーザーが食い違う場合
@@ -2322,7 +2323,7 @@ export default function ({ store, redirect, route }) {
 
 2. バリデーションをかけたいページにmiddlewareを差し込む(export default内)
 
-```
+```javascript
 middleware: ["authenticated", "userAuth"],
 ```
 
@@ -2337,7 +2338,7 @@ middleware: ["authenticated", "userAuth"],
 
 1. rails側
 
-```
+```dockerfile
 FROM ruby:2.5.5
 RUN apt-get update -qq && \
     apt-get install -y \
@@ -2359,7 +2360,7 @@ ADD . $HOME
 
 2. Nuxt.js(Vue.js)
 
-```
+```dockerfile
 FROM node:12.11.1
 
 WORKDIR /app
@@ -2374,7 +2375,7 @@ EXPOSE 3000
 
 3. docker-compose.yml
 
-```
+```yml
 version: '3'
 services:
   db:
@@ -2877,3 +2878,32 @@ if(confirm("本当に削除してよろしいですか？")){
 2. v-forの中でモーダルを開こうとすると上手くいかないので,モーダルのcardはv-forの後に記述する。
 3. @clickをイベントハンドラーにすると楽
 4. `isDialog: false`のようにdataに初期値を設定して、@clickでtrueにすることでモーダルを展開するようにする。(詳細はpost_Imagesの詳細ページで)
+
+---
+
+## `【todo highlightをカスタマイズする方法】`
+
+[vscode TODO-HIGHLIGHTの非公式Document](https://qiita.com/__mick/items/e146979e797e9a433768)
+
+1. 下記のコードをsetting.jsonに追加すると、highlightが一列に掛かる & 角が丸くなって見やすくなる
+
+```Todohighlight Default Style setting.json
+"todohighlight.defaultStyle": {
+    "color": "red",
+    "backgroundColor": "#ffab00",
+    "overviewRulerColor": "#ffab00",
+    "cursor": "pointer",
+    "border": "1px solid #eee",
+    "borderRadius": "10px",
+    "isWholeLine": true,
+},
+```
+
+---
+
+## `【Vue.jsでv-onで複数の関数を実行したい場合】`
+
+[【Vue】v-onで複数の関数を呼び出す方法](https://qiita.com/_Keitaro_/items/375c5274bebf367f24e0)
+
+1. 一応方法はあるけど、複数の関数や複数の処理を実行させたい場合は関数をラッパー（複合関数）させると良い
+2. これは公式がそう推奨しているから。
