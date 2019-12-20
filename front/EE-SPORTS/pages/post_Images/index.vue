@@ -227,7 +227,7 @@
           outlined
         ></v-text-field>
 
-        <!-- サイドバーのプロフィール画面 -->
+        <!--NOTE: サイドバーのプロフィール画面 -->
         <div v-if="$store.state.user.id">
           <v-card max-width="375" class="mx-auto">
             <nuxt-link :to="`/end_users/${user.id}`">

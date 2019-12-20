@@ -120,6 +120,8 @@ export default {
       axios
         .put(`${this.baseUrl}/end_users/${this.$route.params.userId}`, formData)
         .then(res => {
+          console.log("res", res);
+          this.$store.dispatch("authCheck", res.data);
           this.$router.push(
             `/end_users/${this.$route.params.userId}`,
             this.$store.state.user
