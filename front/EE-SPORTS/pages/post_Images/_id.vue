@@ -198,7 +198,7 @@
             <v-divider class="my-4 info" style="opacity: 0.22"></v-divider>
           </v-item-group>
           <v-subheader>説明</v-subheader>
-          <div>{{post_image.caption}}</div>
+          <div>{{caption_nohashtags}}</div>
           <v-divider class="my-4 info" style="opacity: 0.22"></v-divider>
         </v-card-text>
 
@@ -335,6 +335,8 @@ export default {
     return {
       baseUrl: process.env.BASE_URL,
       post_image: {},
+      // hashtagを含んだcaption
+      caption_nohashtags: "",
       raw_post_image: {},
       current_user: [],
       dialog: false,
@@ -395,10 +397,12 @@ export default {
 
     // caption内のハッシュタグを削除する処理
     // FIXME:関数化してページ内の表示では関数、モーダル内はthis.で呼び出すようにする
-    this.post_image.caption = this.post_image.caption.replace(
-      /[#＃][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー._-]+/gm,
-      ""
-    );
+    // this.post_image.caption = this.post_image.caption.replace(
+    //   /[#＃][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー._-]+/gm,
+    //   ""
+    // );
+    this.replaceHashtags();
+    console.log("this.replaceHashtags", this.replaceHashtags);
 
     console.log("this.post_image.caption", this.post_image.caption);
 
@@ -589,6 +593,8 @@ export default {
     //   post_image.isActive = true;
     //   post_image.showBtn = false;
     // },
+
+    // 画像削除
     async deleteImage() {
       try {
         if (confirm("本当に削除してよろしいですか")) {
@@ -599,15 +605,19 @@ export default {
         console.log("delete err", err);
       }
     },
+
+    // FIXME:編集用モーダルが上手くいけば削除
     editImage() {
       this.$router.push(`/post_Images/${this.$route.params.id}/edit`);
       console.log("this.$route.params.id", this.$route.params.id);
       console.log("edit");
     },
+
     // 編集ページ用のdialogを開く
     openEditPage() {
       this.edit_dialog = true;
     },
+
     // editモーダルで編集した内容を保存する
     async updatePostImage() {
       try {
@@ -620,6 +630,15 @@ export default {
       } catch (err) {
         console.log("post_err", err);
       }
+    },
+
+    // 説明文表示用にhashtagsを抜いた説明文
+    replaceHashtags() {
+      this.caption_nohashtags = this.post_image.caption.replace(
+        /[#＃][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー._-]+/gm,
+        ""
+      );
+      return this.caption_nohashtags;
     }
   }
   // TODO:fetchでuserをsetしなくてもrouter.jsでセットされるため、必要なし。
