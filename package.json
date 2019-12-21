@@ -1,5 +1,9 @@
 {
   "name": "insta",
   "private": true,
-  "dependencies": {}
+  "dependencies": {
+    "moment": "^2.24.0",
+    "nl2br": "0.0.3",
+    "vue-nl2br": "^0.1.2"
+  }
 }

@@ -48,13 +48,23 @@
               <v-list-item-subtitle>
                 <nuxt-link :to="`/end_users/${this.end_user.id}/follows`">フォローリスト</nuxt-link>
               </v-list-item-subtitle>
+
+              <!-- NOTE:仮のルーム作成ボタン -->
+              <v-list-item-subtitle>
+                <button v-if="roomExist === false" @click="chatRoomCreate">メッセージ</button>
+                <button v-else>
+                  <nuxt-link
+                    :to="`/end_users/${this.$route.params.id}/chat/${this.currentUser.id}`"
+                  >メッセージ</nuxt-link>
+                </button>
+              </v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
         </v-col>
       </v-row>
     </v-card>
 
-    <!-- サムネイル表示 -->
+    <!-- NOTE:サムネイル表示 -->
     <v-row>
       <v-col cols="12" sm="6" offset-sm="3">
         <v-card>
@@ -94,6 +104,9 @@
 <script>
 import axios from "@/plugins/axios";
 import Vuex from "vuex";
+import firebase from "@/plugins/firebase";
+
+const db = firebase.firestore();
 
 export default {
   data() {
@@ -105,7 +118,9 @@ export default {
       follow_list: [],
       isFol: false,
 
-      overlay: false
+      // TODO:overlayを使用したモーダルを表示しないのなら削除する
+      overlay: false,
+      roomExist: false
     };
   },
   computed: {
@@ -116,7 +131,7 @@ export default {
   middleware: "authenticated",
 
   async created() {
-    console.log("aaa");
+    // console.log("aaa");
     await this.updateFollowers();
     await this.$store.dispatch("notificationsCheck", this.$store.state.user);
   },
@@ -124,43 +139,55 @@ export default {
   // currentUserがend_userのpassive_relationshipのfollowingsにいるかどうか
   methods: {
     async updateFollowers() {
-      console.log("bbbb");
+      // console.log("bbbb");
       let para = `${this.$route.params.id}`;
       let url = "/end_users/" + para;
       const res = await axios.get(url);
       this.end_user = res.data; //チェックされてるユーザー
-      console.log("res.data", res.data);
+      // console.log("res.data", res.data);
       const vm = this.end_user;
       const following = {
         //ここが怪しい...
         end_user_id: vm.id //follower
       };
-      console.log("cccc");
+      // console.log("cccc");
       this.followers = res.data.passive_relationships.map(follower => {
-        console.log("dddd");
-        console.log("follower", follower);
-        console.log("this.currentUser", this.currentUser);
-        console.log("follower.following_id", follower.following_id);
-        console.log(
-          "follower.following_id === this.currentUser.id",
-          follower.following_id === this.currentUser.id
-        );
+        // console.log("dddd");
+        // console.log("follower", follower);
+        // console.log("this.currentUser", this.currentUser);
+        // console.log("follower.following_id", follower.following_id);
+        // console.log(
+        //   "follower.following_id === this.currentUser.id",
+        //   follower.following_id === this.currentUser.id
+        // );
         // follower.following_id === vm.id && //follower.folllowing.idはcurrentUser.idと等しいかどうかcheckされる
         if (
           follower.following_id === this.currentUser.id &&
           follower.follower_id === parseInt(`${this.end_user.id}`)
         ) {
           //res.dataの情報をthis.end_userに代入している
-          console.log(
-            "follower.follower_id === parseInt(`${this.end_user.id}`",
-            follower.follower_id === parseInt(`${this.end_user.id}`)
-          );
+          // console.log(
+          //   "follower.follower_id === parseInt(`${this.end_user.id}`",
+          //   follower.follower_id === parseInt(`${this.end_user.id}`)
+          // );
           this.isFol = true;
         }
         return follower;
       });
+      let room = db
+        .collection("users")
+        .doc(`${this.currentUser.id}` + `${this.end_user.id}`);
+      console.log("room", room);
+      console.log(
+        "`${this.currentUser.id}` + `${this.end_user.id}`",
+        `${this.currentUser.id}` + `${this.end_user.id}`
+      );
+      if (room) {
+        this.roomExist = true;
+      }
     },
     // FIXME:isFolを与える部分がおかしくなってる
+    // TODO:createFollowのthis.updateFollowers()の後のisFOLの記述が必要かどうか確かめる。
     async createFollow(end_user) {
       const vm = { id: this.currentUser.id };
       try {
@@ -193,6 +220,18 @@ export default {
       } catch (err) {
         alert(err);
       }
+    },
+    // NOTE:chatルーム作成
+    chatRoomCreate() {
+      // console.log("typeof this.end_user.id", typeof this.end_user.id);
+      // console.log("typeof this.currentUser.id", typeof this.currentUser.id);
+      db.collection("users")
+        .doc(`${this.currentUser.id}` + `${this.end_user.id}`)
+        .set({
+          user_id: this.end_user.id,
+          current_user_id: this.currentUser.id
+        });
+      this.updateFollowers();
     }
   }
 };

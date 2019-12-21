@@ -2955,3 +2955,22 @@ remove：削除（ファイル）
   5. xl
 
 ---
+
+## `【firebase firestore のカスタムidの作成方法】`
+
+[Cloud Firestore にデータを追加する](https://firebase.google.com/docs/firestore/manage-data/add-data?hl=ja)
+
+```javascript
+      db.collection("users")
+        .doc(`${this.currentUser.id}` + `${this.end_user.id}`)
+        .set({
+          user_id: this.end_user.id,
+          current_user_id: this.currentUser.id
+        });
+```
+
+1. doc()の引数にカスタムidとしてsetしたい値を入れる。
+2. set()の引数にはドキュメント内のフィールドを追加する。
+3. add()を使用する時は自動でidを付与させたい時に使う.
+  * update処理や複数のidをコレクション検索(レコード)の条件として設定したい時に便利。
+    * なぜならwhereなどの処理で検索させると複合的な検索ができないため。Nosqlは全部同じなのかな？

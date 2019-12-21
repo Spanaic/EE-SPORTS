@@ -240,3 +240,6 @@ gem uninstall activesupport -v "5.2.4.1"
 gem uninstall rake -v "13.0.1"
 gem list
 bundle install
+rails routes
+rails c
+exit
