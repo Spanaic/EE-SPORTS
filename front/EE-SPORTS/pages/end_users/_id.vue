@@ -22,6 +22,7 @@
           </v-list-item>
         </v-col>
 
+        <!-- NOTE:フォロー -->
         <v-col>
           <v-list-item color="rgba(0, 0, 0, .4)" dark>
             <v-list-item-content>
@@ -113,28 +114,53 @@ export default {
     }
   },
   middleware: "authenticated",
-  async mounted() {
+
+  async created() {
+    console.log("aaa");
     await this.updateFollowers();
     await this.$store.dispatch("notificationsCheck", this.$store.state.user);
   },
 
+  // currentUserがend_userのpassive_relationshipのfollowingsにいるかどうか
   methods: {
     async updateFollowers() {
+      console.log("bbbb");
       let para = `${this.$route.params.id}`;
       let url = "/end_users/" + para;
       const res = await axios.get(url);
-      this.end_user = res.data;
+      this.end_user = res.data; //チェックされてるユーザー
+      console.log("res.data", res.data);
       const vm = this.end_user;
       const following = {
-        end_user_id: vm.id
+        //ここが怪しい...
+        end_user_id: vm.id //follower
       };
+      console.log("cccc");
       this.followers = res.data.passive_relationships.map(follower => {
-        follower.following_id === vm.id &&
-          follower.follower_id === parseInt(`${this.end_user.id}`);
-        this.isFol = true;
+        console.log("dddd");
+        console.log("follower", follower);
+        console.log("this.currentUser", this.currentUser);
+        console.log("follower.following_id", follower.following_id);
+        console.log(
+          "follower.following_id === this.currentUser.id",
+          follower.following_id === this.currentUser.id
+        );
+        // follower.following_id === vm.id && //follower.folllowing.idはcurrentUser.idと等しいかどうかcheckされる
+        if (
+          follower.following_id === this.currentUser.id &&
+          follower.follower_id === parseInt(`${this.end_user.id}`)
+        ) {
+          //res.dataの情報をthis.end_userに代入している
+          console.log(
+            "follower.follower_id === parseInt(`${this.end_user.id}`",
+            follower.follower_id === parseInt(`${this.end_user.id}`)
+          );
+          this.isFol = true;
+        }
         return follower;
       });
     },
+    // FIXME:isFolを与える部分がおかしくなってる
     async createFollow(end_user) {
       const vm = { id: this.currentUser.id };
       try {

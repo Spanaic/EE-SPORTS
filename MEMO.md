@@ -2934,3 +2934,24 @@ add：新規（ファイル）機能追加
 update：機能修正（バグではない）
 remove：削除（ファイル）
 ```
+
+---
+
+## `【Vuetifyのgrid system(グリッドシステム)について】`
+
+[【v-col v-row】 Vuetify2.0になってグリッドが刷新！ – レイアウトの作り方 編](https://blog.proglearn.com/2019/08/15/vuetify%E3%81%8C2-0%E3%81%AB%E3%81%AA%E3%81%A3%E3%81%9F%E3%82%88%EF%BC%81-%E3%83%AC%E3%82%A4%E3%82%A2%E3%82%A6%E3%83%88%E3%81%AE%E4%BD%9C%E3%82%8A%E6%96%B9%E3%81%8C%E3%81%A8%E3%81%A6%E3%82%82/)
+
+```html
+<v-col xs="0" md="1"></v-col>
+      <v-col xs="12" md="4" align="center">
+```
+1. `v-layout, v-flex`は`v-row, v-col`にupdateされた
+2. `<v-col cols="~12">`という書き方もできるが、絶対的なcol数になってしまうので、レスポンシブなら`xs=""`などサイズを指定してcol数を記述する
+3. 基本的に小さいサイズから記述して整合性を合わせていく
+  1. xs
+  2. sm
+  3. md
+  4. lg
+  5. xl
+
+---

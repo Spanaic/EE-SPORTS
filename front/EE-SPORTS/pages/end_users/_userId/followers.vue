@@ -10,7 +10,11 @@
 
             <v-list-item v-else :key="item.title">
               <v-list-item-avatar>
-                <v-img :src="item.avatar"></v-img>
+                <v-img
+                  v-if="item.avatar === `${baseUrl}/end_users/null`"
+                  :src="`${baseUrl}/no_image.jpg`"
+                ></v-img>
+                <v-img v-else :src="item.avatar"></v-img>
               </v-list-item-avatar>
 
               <v-list-item-content>

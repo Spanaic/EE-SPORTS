@@ -23,6 +23,7 @@ export default async (context, inject) => {
                 });
                 store.commit('setNotifications', notifications)
             } else {
+                // reject(err)
                 store.commit("changeLoading", false)
             }
 

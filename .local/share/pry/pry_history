@@ -240,3 +240,14 @@ exit
 EndUser.all
 Favorite.all
 exit
+EndUser.all
+EndUser.find(id: 1)
+EndUser.find(1)
+a = EndUser.find(1)
+a.delete
+EndUser.all
+Relationship.all
+EndUser.all
+Relationship.al
+Relationship.all
+Relationship.all.count
