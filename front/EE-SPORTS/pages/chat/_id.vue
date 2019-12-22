@@ -7,7 +7,6 @@
         :key="message.id"
         :class="[ message.name === currentUser.name ? 'message-own' : 'message']"
       >
-        <!-- FIXME:class bindingは書き換える必要あり -->
         <div class="item-image">
           <img v-if="!message.photoURL" :src="`${baseUrl}/no_image.jpg`" width="40" height="40" />
           <img v-else :src="`${baseUrl}/end_users/${message.photoURL}`" width="40" height="40" />
@@ -23,7 +22,6 @@
 
     <!-- NOTE:入力フォーム -->
     <form action @submit.prevent="doSend" class="form">
-      <!-- FIXME:currentUser.uidは書き換える必要があるかも... -->
       <textarea
         v-model="input"
         required="true"
@@ -40,10 +38,12 @@ import axios from "@/plugins/axios";
 import firebase from "@/plugins/firebase";
 import Nl2br from "vue-nl2br";
 import moment from "moment";
+import chatAuthCheck from "@/middleware/chatAuthCheck";
 
 const db = firebase.firestore();
 
 export default {
+  middleware: "chatAuthCheck",
   components: { Nl2br },
   data() {
     return {
@@ -103,7 +103,7 @@ export default {
           .collection("messages")
           .add({
             msg: this.input,
-            name: this.currentUser.name, //変更の必要有り
+            name: this.currentUser.name,
             date: Date.now(),
             photoURL: this.currentUser.profile_image_name,
             uid: this.currentUser.id
@@ -122,6 +122,7 @@ export default {
 * {
   margin: 0;
   box-sizing: border-box;
+  color: black;
 }
 .content {
   margin: 0 auto;
