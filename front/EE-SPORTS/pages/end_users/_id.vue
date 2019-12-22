@@ -49,8 +49,8 @@
                 <nuxt-link :to="`/end_users/${this.end_user.id}/follows`">フォローリスト</nuxt-link>
               </v-list-item-subtitle>
 
-              <!-- NOTE:ルーム作成ボタン or roomに移動するボタン -->
-              <v-list-item-subtitle>
+              <!-- NOTE:ルーム作成ボタン or roomに移動するボタン 　※相互フォローで表示される-->
+              <v-list-item-subtitle v-if="isFol === true && isActiveFol === true">
                 <button v-if="roomExist === false" @click="chatRoomCreate">メッセージ</button>
                 <button v-else>
                   <nuxt-link :to="`/chat/${chatId}`">メッセージ</nuxt-link>
@@ -112,11 +112,15 @@ export default {
       baseUrl: process.env.BASE_URL,
       end_user: {},
       followers: [],
-      follower: "",
-      follow_list: [],
+      // follower: "",
+      // follow_list: [],
       isFol: false, //followしているかどうか
       roomExist: false, //roomが作成されているかどうか
       chatId: "", //chatroomへ飛ばすためのdata
+
+      // NOTE:相互フォローがあるかどうかをチェックする
+      isActiveFol: false, //followされているかどうか
+      followings: [],
 
       // TODO:overlayを使用したモーダルを表示しないのなら削除する
       overlay: false
@@ -141,6 +145,8 @@ export default {
       const res = await axios.get(url);
       this.end_user = res.data; //チェックされてるユーザー
       const vm = this.end_user;
+
+      // NOTE:フォローしているかチェック
       const following = {
         end_user_id: vm.id //follower
       };
@@ -153,6 +159,15 @@ export default {
         }
         return follower;
       });
+
+      //NOTE:フォローされているかチェック
+      this.followings = res.data.active_relationships.map(following => {
+        if (following.follower_id === this.currentUser.id) {
+          this.isActiveFol = true;
+        }
+        return following;
+      });
+
       // NOTE:roomがend_userとcurrent_user間で作られているかを判定する
       let room = db
         .collection("users")
@@ -170,24 +185,16 @@ export default {
           });
         });
     },
-    // FIXME:isFolを与える部分がおかしくなってる
-    // TODO:createFollowのthis.updateFollowers()の後のisFOLの記述が必要かどうか確かめる。
     async createFollow(end_user) {
       const vm = { id: this.currentUser.id };
       try {
         await axios.post(`/end_users/${this.end_user.id}/relationships`, vm);
         await this.updateFollowers();
-        this.followers = this.followers.map(follower => {
-          follower.isFol =
-            follower.following_id === vm.id &&
-            follower.follower_id === parseInt(`${this.end_user.id}`);
-          this.isFol = true;
-          return follower;
-        });
       } catch (err) {
         alert(err);
       }
     },
+    // FIXME:isFolの記述が必要かどうか確認後、要らなければ削除
     async destroyFollow(end_user) {
       const vm = { id: this.currentUser.id };
       const ps = end_user.passive_relationships.map(fol => {
