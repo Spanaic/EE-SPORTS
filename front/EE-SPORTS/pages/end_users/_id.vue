@@ -58,6 +58,10 @@
                   >メッセージ</nuxt-link>
                 </button>
               </v-list-item-subtitle>
+
+              <!-- <v-list-item-subtitle>
+              <button v-if=""></button>
+              </v-list-item-subtitle>-->
             </v-list-item-content>
           </v-list-item>
         </v-col>
@@ -174,17 +178,19 @@ export default {
         }
         return follower;
       });
+      // NOTE:roomがend_userとcurrent_user間で作られているかを判定する
       let room = db
         .collection("users")
-        .doc(`${this.currentUser.id}` + `${this.end_user.id}`);
-      console.log("room", room);
-      console.log(
-        "`${this.currentUser.id}` + `${this.end_user.id}`",
-        `${this.currentUser.id}` + `${this.end_user.id}`
-      );
-      if (room) {
-        this.roomExist = true;
-      }
+        .get()
+        .then(querySnapshot => {
+          querySnapshot.docs.forEach(doc => {
+            let number_1 = `${this.currentUser.id}` + `${this.end_user.id}`;
+            let number_2 = `${this.end_user.id}` + `${this.currentUser.id}`;
+            if (doc.id === number_1 || doc.id === number_2) {
+              this.roomExist = true;
+            }
+          });
+        });
     },
     // FIXME:isFolを与える部分がおかしくなってる
     // TODO:createFollowのthis.updateFollowers()の後のisFOLの記述が必要かどうか確かめる。

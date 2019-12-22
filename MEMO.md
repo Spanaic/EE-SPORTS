@@ -2974,3 +2974,72 @@ remove：削除（ファイル）
 3. add()を使用する時は自動でidを付与させたい時に使う.
   * update処理や複数のidをコレクション検索(レコード)の条件として設定したい時に便利。
     * なぜならwhereなどの処理で検索させると複合的な検索ができないため。Nosqlは全部同じなのかな？
+
+---
+
+## `【firestoreのデータを参照、取得する方法】`
+
+[firestoreを使うときに理解しておきたいいろんなクラスを整理する](https://qiita.com/muijp/items/86a4573fdce800221b72)
+
+1. docSnapshot
+2. querySnapshot
+3. queryDocSnapshot
+
+### `firestoreのカスタムid(unique id)やデータ(data)を取得する方法`
+
+[firestoreでaddせずにdocumentのunique idを使用する方法[備忘録]](https://qiita.com/hiko1129/items/9de868bec465d725f90b)
+
+1. `doc(unique id).id`で取得できる
+
+```javascript
+      let room = db
+        .collection("users")
+        .doc(`${this.end_user.id}` + `${this.currentUser.id}`)
+        .id
+```
+
+2. .get()まで記述すると、promiseが返ってきてpending状態になる。
+  1. この状態で`.id`を付けても`undefined`となってしまいidは取得できない。
+
+```javascript
+      let room = db
+        .collection("users")
+        .doc(`${this.end_user.id}` + `${this.currentUser.id}`);
+        .get();
+```
+
+3. doc内のデータを取得する場合は.then(query or doc Snapshot)を受け取る。
+4. `Snapshot.data()`でdoc内のdataを参照,取得出来るようになる。
+
+```javascript
+      let room = db
+        .collection("users")
+        .doc(`${this.end_user.id}` + `${this.currentUser.id}`);
+        .get()
+        .then(querySnapshot => {
+          console.log("querySnapshot", querySnapshot.data());
+        });
+```
+
+### `unique idを取得して、idが存在するかしないかの真偽値を出す方法`
+
+```javascript
+   let room = db
+        .collection("users") //collectionに対してgetでpromiseを返すようにさせる
+        .get()
+        .then(querySnapshot => {
+          console.log(querySnapshot);
+          querySnapshot.docs.forEach(doc => { //返ってきたsnapshotのdocsArrayを回す
+            let number_1 = `${this.currentUser.id}` + `${this.end_user.id}`; //わかりやすく処理をまとめる
+            let number_2 = `${this.end_user.id}` + `${this.currentUser.id}`;
+            if (doc.id === number_1 || doc.id === number_2) { // ifで条件分岐をする時は ||毎に`===`などの条件式をどちらにも記述する
+              this.roomExist = true;
+              console.log("this.roomExist", this.roomExist);
+            }
+          });
+        });
+    },
+```
+
+
+
