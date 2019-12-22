@@ -3041,5 +3041,9 @@ remove：削除（ファイル）
     },
 ```
 
+---
 
+## `【firestoreでwhereなどを使って特定条件下のコレクションやドキュメントを取得する方法】`
+
+[【Next.js】Firestoreから任意のデータを取得して描画する](https://nekorokkekun.hatenablog.com/entry/2019/09/25/114448)
 
