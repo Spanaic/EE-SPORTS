@@ -3046,4 +3046,21 @@ remove：削除（ファイル）
 ## `【firestoreでwhereなどを使って特定条件下のコレクションやドキュメントを取得する方法】`
 
 [【Next.js】Firestoreから任意のデータを取得して描画する](https://nekorokkekun.hatenablog.com/entry/2019/09/25/114448)
+[Cloud Firestore で単純なクエリと複合クエリを実行する](https://firebase.google.com/docs/firestore/query-data/queries?hl=ja)
 
+1. クエリ演算子
+where() メソッドは、`フィルタリングするフィールド、比較演算、値`の 3 つのパラメータを受け入れます。比較は、<、<=、==、>、>=、array-contains のいずれかになります。iOS、Android、Java では、比較演算子はメソッド名で明示的に指定されます。
+
+```javascript
+          let docRef3 = db
+            .collection("users")
+            .where("chat_room_id", "==", number_1)
+            .get()
+            .then(res => {
+              console.log("res", res);
+            });
+          console.log("docRef3", docRef3);
+```
+
+2. 雰囲気としては上記の記述（第三引数に変数を渡しているが上手く機能せずwhere出来てない...）
+3. *ドキュメントのカスタムIDはdocのフィールドにも持たせると値の取得がかなり楽になる*

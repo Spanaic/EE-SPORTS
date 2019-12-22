@@ -53,12 +53,7 @@
               <v-list-item-subtitle>
                 <button v-if="roomExist === false" @click="chatRoomCreate">メッセージ</button>
                 <button v-else>
-                  <!-- TODO: to以下を変数に格納して、roomを見つけ出してから変数にidを格納する。 -->
-                  <nuxt-link :to="`/chat/${chatId}`">
-                    メッセージ
-                    {{chatId}}
-                  </nuxt-link>
-                  <!-- :to="`/end_users/${this.$route.params.id}/chat/${this.currentUser.id}`" -->
+                  <nuxt-link :to="`/chat/${chatId}`">メッセージ</nuxt-link>
                 </button>
               </v-list-item-subtitle>
             </v-list-item-content>
@@ -119,12 +114,9 @@ export default {
       followers: [],
       follower: "",
       follow_list: [],
-      isFol: false,
-      roomExist: false,
-
-      // NOTE: chatroomへ飛ばすためのdata
-      // chatUrl: "",
-      chatId: "",
+      isFol: false, //followしているかどうか
+      roomExist: false, //roomが作成されているかどうか
+      chatId: "", //chatroomへ飛ばすためのdata
 
       // TODO:overlayを使用したモーダルを表示しないのなら削除する
       overlay: false
@@ -176,116 +168,6 @@ export default {
               console.log("doc.data().chat_room_id", doc.data().chat_room_id);
             }
           });
-
-          // NOTE:引っ張ってきたdoc.idの内、変数と一致した値だけを引っ張ってくる。=> 失敗！
-          //   querySnapshot.docs.map(doc => {
-          //     let number_1 = `${this.currentUser.id}` + `${this.end_user.id}`;
-          //     let number_2 = `${this.end_user.id}` + `${this.currentUser.id}`;
-          //     doc.id === number_1 || number_2;
-          //     return (this.chatId = doc.id.toString());
-          //   });
-
-          //   console.log("querySnapshot.docs.length", querySnapshot.docs.length);
-          //   console.log("querySnapshot.docs", querySnapshot.docs);
-          //   // this.chatId = querySnapshot.docs[0].id;
-          //   // this.chatUrl = `/chat/${doc.id}`;
-          //   console.log("this.chatId", this.chatId);
-          //   console.log("typeof this.chatId", typeof this.chatId);
-          // });
-
-          // let number_1 = `${this.currentUser.id}` + `${this.end_user.id}`;
-          // let number_2 = `${this.end_user.id}` + `${this.currentUser.id}`;
-          // let chatRoom = db
-          //   .collection("users")
-          //   .where("id", "==", `${number_1}`)
-          //   .get()
-          //   .then(query => {
-          //     console.log("query", query);
-          //   });
-          // let chatRoom2 = db
-          //   .collection("users")
-          //   .where("id", "==", `${number_2}`)
-          //   .get()
-          //   .then(query2 => {
-          //     console.log("query2", query2);
-          //   });
-          // let chatRoom3 = db
-          //   .collection("users")
-          //   .where("id", "==", "32")
-          //   .get()
-          //   .then(query3 => {
-          //     console.log("query3", query3);
-          //   });
-          // let chatRoom4 = db
-          //   .collection("users")
-          //   .get()
-          //   .then(query4 => {
-          //     console.log("query4", query4);
-          //   });
-
-          // NOTE:なんとかwhereでdocArrayを引っ張ってこれないか試している =>　失敗！
-          let number_1 = `${this.currentUser.id}` + `${this.end_user.id}`;
-          let number_2 = `${this.end_user.id}` + `${this.currentUser.id}`;
-
-          var docRef = db.collection("users").doc(number_1);
-          var docRef2 = db.collection("users").doc(number_2);
-
-          console.log("docRef", docRef.id);
-          console.log("docRef2", docRef2.id);
-          console.log("number_1", number_1);
-
-          let docRef3 = db
-            .collection("users")
-            .where("chat_room_id", "==", number_1)
-            .get()
-            .then(res => {
-              console.log("res", res);
-            });
-          console.log("docRef3", docRef3);
-
-          let docRef4 = db
-            .collection("users")
-            .where("chat_room_id", "==", number_2)
-            .get()
-            .then(res => {
-              console.log("res2", res);
-            });
-          console.log("docRef4", docRef4);
-
-          // .get()
-          // .then(doc => {
-          //   if (doc.exits) {
-          //     console.log("docRef3", doc);
-          //   }
-          // });
-
-          docRef
-            .get()
-            .then(doc => {
-              if (doc.exists) {
-                console.log("doc.data()", doc.data());
-              } else {
-                console.log("404");
-              }
-            })
-            .catch(error => {
-              console.log(`データを取得できませんでした (${error})`);
-            });
-          docRef2
-            .get()
-            .then(doc => {
-              if (doc.exists) {
-                console.log("doc.data()2", doc.data());
-              } else {
-                console.log("404");
-              }
-            })
-            .catch(error => {
-              console.log(`データを取得できませんでした (${error})`);
-            });
-
-          // console.log("chatRoom", chatRoom);
-          // console.log("chatRoom2", chatRoom2);
         });
     },
     // FIXME:isFolを与える部分がおかしくなってる
@@ -329,8 +211,11 @@ export default {
         .doc(`${this.currentUser.id}` + `${this.end_user.id}`)
         .set({
           user_id: this.end_user.id,
-          current_user_id: this.currentUser.id
+          current_user_id: this.currentUser.id,
+          chat_room_id: `${this.currentUser.id}` + `${this.end_user.id}`
         });
+      this.chatId = `${this.currentUser.id}` + `${this.end_user.id}`;
+      this.$router.push(`/chat/${this.chatId}`);
       this.updateFollowers();
     }
   }
