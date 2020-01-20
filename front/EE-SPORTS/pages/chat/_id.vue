@@ -135,7 +135,7 @@ export default {
   justify-content: center;
   align-items: center;
   bottom: 0;
-  height: 80px;
+  height: 50px;
   width: 100%;
   background: #f5f5f5;
   margin-bottom: 3em;
@@ -143,7 +143,7 @@ export default {
 .form textarea {
   border: 1px solid #ccc;
   border-radius: 2px;
-  height: 4em;
+  height: 2em;
   width: calc(100% - 6em);
   resize: none;
 }

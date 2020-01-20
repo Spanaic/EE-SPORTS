@@ -1,5 +1,15 @@
 import colors from 'vuetify/es5/util/colors'
 
+const environment = process.env.NODE_ENV || 'development';
+const envSet = require(`./env.${environment}.js`)
+
+module.exports = {
+  env: envSet
+}
+// console.log("envSet", envSet);
+// console.log("process.env.NODE_ENV", process.env.NODE_ENV)
+// console.log("environment", environment)
+
 require('dotenv').config();
 const { API_KEY } = process.env;
 const { AUTH_DOMAIN } = process.env;
@@ -21,8 +31,9 @@ export default {
     PROJECT_ID,
     STORAGE_BUCKET,
     MESSAGING_SENDER_ID,
-    APP_ID
+    APP_ID,
   },
+  // env: envSet,
   /*
   ** Headers of the page
   */

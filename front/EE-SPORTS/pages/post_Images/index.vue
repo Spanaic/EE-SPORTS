@@ -327,6 +327,8 @@ export default {
     }
   },
   async created() {
+
+
     try {
       const res = await axios.get(`${this.baseUrl}/post_images`);
       this.post_images = res.data.map(post_image => {
@@ -387,6 +389,7 @@ export default {
     );
   },
   async mounted() {
+    // console.log("process.env.apiBaseUrl", process.env.apiBaseUrl)
     if (this.$store.state.user.id !== 0) {
       await this.$store.dispatch("notificationsCheck", this.$store.state.user);
     }

@@ -216,6 +216,7 @@ export default {
     chatRoomCreate() {
       db.collection("users")
         .doc(`${this.currentUser.id}` + `${this.end_user.id}`)
+        // .doc(`${this.end_user.id}` + `${this.currentUser.id}`)
         .set({
           user_id: this.end_user.id,
           current_user_id: this.currentUser.id,

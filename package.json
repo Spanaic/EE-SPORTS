@@ -2,6 +2,7 @@
   "name": "insta",
   "private": true,
   "dependencies": {
+    "cross-env": "^6.0.3",
     "moment": "^2.24.0",
     "nl2br": "0.0.3",
     "vue-nl2br": "^0.1.2"

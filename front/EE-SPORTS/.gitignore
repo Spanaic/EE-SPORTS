@@ -89,3 +89,10 @@ sw.*
 # Vim swap files
 *.swp
 
+# 開発用の環境変数
+env.development.js
+
+# 本番用の環境変数
+env.production.js
+
+
