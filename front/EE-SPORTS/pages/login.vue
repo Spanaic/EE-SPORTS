@@ -58,8 +58,8 @@ export default {
     base_url: process.env.BASE_URL
   }),
   created() {
-    console.log("process.env.BASE_URL", process.env.BASE_URL);
-    console.log("process.env.API_KEY", process.env.API_KEY);
+    // console.log("process.env.BASE_URL", process.env.BASE_URL);
+    // console.log("process.env.API_KEY", process.env.API_KEY);
   },
   computed: {
     emailErrors() {

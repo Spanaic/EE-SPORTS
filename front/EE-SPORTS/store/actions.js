@@ -58,7 +58,7 @@ const actions = {
                 }
                 console.log("end_user", end_user)
                 console.log("axios", axios)
-                console.log("process.env.BASE_URL", process.env.BASE_URL)
+                // console.log("process.env.BASE_URL", process.env.BASE_URL)
                 axios.post("/end_users", { end_user })
                     .then(user => {
                         commit("setUser", user.data)
