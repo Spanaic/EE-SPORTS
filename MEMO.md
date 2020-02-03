@@ -459,7 +459,7 @@ services:
     <!-- bashはターミナルの言語  -->
     volumes:
       - .:/myapi
-      - /myapi/temp/
+      - /myapi/temp/ #左辺が無い時は、マウントを外している。
     ports:
       - "3001:3001"
     depends_on:

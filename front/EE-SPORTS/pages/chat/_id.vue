@@ -59,14 +59,21 @@ export default {
     }
   },
   created() {
-    console.log(
-      "this.currentUser.profile_image_name",
-      this.currentUser.profile_image_name
-    );
+    // console.log(
+    //   "this.currentUser.profile_image_name",
+    //   this.currentUser.profile_image_name
+    // );
+    // console.log("this.$route.params.userId", this.$route.params.userId);
+    // console.log(
+    //   "this.$route.params.currentUserId",
+    //   this.$route.params.currentUserId
+    // );
+    // console.log("this.$route.params.id", this.$route.params.id);
     const ref = db
       .collection("users")
       .doc(
-        `${this.$route.params.userId}` + `${this.$route.params.currentUserId}`
+        // `${this.$route.params.userId}` + `${this.$route.params.currentUserId}`
+        `${this.$route.params.id}`
       )
       .collection("messages")
       .orderBy("date");
@@ -97,8 +104,9 @@ export default {
       if (this.input) {
         db.collection("users")
           .doc(
-            `${this.$route.params.userId}` +
-              `${this.$route.params.currentUserId}`
+            // `${this.$route.params.userId}` +
+            //   `${this.$route.params.currentUserId}`
+            `${this.$route.params.id}`
           )
           .collection("messages")
           .add({

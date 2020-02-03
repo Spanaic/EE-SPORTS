@@ -51,9 +51,12 @@ class PostImagesController < ApplicationController
         #FIXME:current_userを取得する必要あり
         # @post_image.user = current_user
         if @post_image.update(post_params)
+            post_image_json = @post_image.to_json(include: [:post_comments, :favorites, :end_user, :hashtags, :notifications])
+            render :json => post_image_json
             # redirect_to post_image_path(@post_image.id)
         else
-            # render :edit
+            puts @post_image.errors.full_messages
+            render :json => @post_images
         end
     end
 
