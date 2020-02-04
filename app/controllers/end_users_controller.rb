@@ -46,8 +46,10 @@ class EndUsersController < ApplicationController
         file_name = params[:end_user][:profile_image_name]
         output_path = Rails.root.join('public/end_users', file_name)
 
-        File.open(output_path, 'w+b') do |fp|
-            fp.write  uploaded_file.read
+        if !uploaded_file
+            File.open(output_path, 'w+b') do |fp|
+                fp.write  uploaded_file.read
+            end
         end
 
         end_user = EndUser.find(params[:id])

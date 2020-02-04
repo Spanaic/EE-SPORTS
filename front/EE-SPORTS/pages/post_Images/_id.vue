@@ -41,13 +41,10 @@
             <v-list>
               <v-list-item v-for="(item, i) in items" :key="i">
                 <!--NOTE: 編集モーダル -->
-                <!-- <template v-slot:activator="{ on }"> -->
-                <v-list-item-title v-if="item.title === '編集'" @click.stop="openEditPage">
-                  <!-- <v-btn color="primary" dark v-on="on">{{ item.title }}</v-btn> -->
-                  {{ item.title }}
-                </v-list-item-title>
-                <!-- <v-list-item-title v-if="item.title === '編集'" @click="editImage">{{ item.title }}</v-list-item-title> -->
-                <!-- </template> -->
+                <v-list-item-title
+                  v-if="item.title === '編集'"
+                  @click.stop="openEditPage"
+                >{{ item.title }}</v-list-item-title>
                 <v-list-item-title v-if="item.title === '削除'" @click="deleteImage">{{ item.title }}</v-list-item-title>
               </v-list-item>
               <!--NOTE: モーダルの中身 -->
@@ -84,8 +81,6 @@
               </v-dialog>
             </v-list>
           </v-menu>
-
-          <!-- <button v-if="post_image.end_user.id === $store.state.user.id" @click="deleteImage">削除</button> -->
         </v-toolbar>
 
         <v-img
@@ -96,25 +91,6 @@
         >
           <v-card-title></v-card-title>
         </v-img>
-
-        <!--FIXME: 削除予定 -->
-        <!-- <v-card-title>
-          <v-spacer></v-spacer>
-
-          <v-menu offset-y>
-            <template v-slot:activator="{ on }">
-              <v-btn v-on="on" dark icon v-if="$store.state.user.id === post_image.end_user_id">
-                <v-icon>mdi-dots-vertical</v-icon>
-              </v-btn>
-            </template>
-
-            <v-list>
-              <v-list-item @click="deletePostImage(post_image)">
-                <v-list-item-title>削除</v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-        </v-card-title>-->
 
         <v-overlay :absolute="absolute" :value="overlay">
           <v-btn icon @click="overlay = false">
@@ -315,124 +291,28 @@ export default {
     }
   },
   async created() {
-    console.log("this.$route", this.$route);
     this.post_image = this.raw_post_image;
-    // console.log("this.$store.state.user.id", this.$store.state.user.id);
-
     // NOTE:いいね機能レンダリング
     if (this.$store.state.user !== 0) {
-      console.log("this.user", this.user);
       let current_user_id = this.$store.state.user.id;
-      console.log("this.post_image", this.post_image);
       this.post_image.favorites.map(fav => {
-        console.log("fav", fav);
-        console.log(
-          "fav.end_user_id === current_user_id",
-          fav.end_user_id === current_user_id
-        );
-        console.log("typeOf fav.end_user_id", typeof fav.end_user_id);
-        console.log("fav.end_user_id", fav.end_user_id);
-        console.log("typeof current_user_id", typeof current_user_id);
-        console.log("current_user_id", current_user_id);
-        console.log("this.user_id", this.user_id);
         if (fav.end_user_id === current_user_id) {
           this.post_image.isFav = true;
-          console.log("this.post_image.isFav", this.post_image.isFav);
           return true;
         } else {
           this.post_image.isFav = false;
           return false;
         }
       });
-      console.log("this.post_image", this.post_image);
-      console.log(
-        "this.post_image.isFav !== true || undefined",
-        this.post_image.isFav === true
-      );
     }
 
     // NOTE:caption内のハッシュタグを削除する処理
-    // FIXME:関数化してページ内の表示では関数、モーダル内はthis.で呼び出すようにする
-    // this.post_image.caption = this.post_image.caption.replace(
-    //   /[#＃][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー._-]+/gm,
-    //   ""
-    // );
     this.replaceHashtags();
-    console.log("this.replaceHashtags", this.replaceHashtags);
-
-    console.log("this.post_image.caption", this.post_image.caption);
-
     this.post_image.hashtags.map(hashtag => {
       hashtag.hashname.replace(/[#＃]/gm, "");
     });
     this.post_image.isActive = true;
     this.post_image.showBtn = false;
-
-    // TODO:このまま処理に問題がなければ削除予定
-    // watchしなくても("this.$store.state.user")からcurrentUserを取得出来ている可能性あり()
-    // currentUserの取得をwatchしなくても最初から取れている場合、値のセットをcreatedのみにしたほうが処理が被らなくて良さそう。
-
-    // const unwatch = this.$store.watch(
-    //   state => state.user,
-    //   async (newUser, oldUser) => {
-    //     if (newUser.id) {
-    //       try {
-    //         const res = await axios.get(
-    //           `${this.baseUrl}/post_images/${this.$route.params.id}`
-    //         );
-    //         let current_user_id = this.$store.state.user.id;
-    //         // let current_user_id = this.user.id;
-    //         console.log("this.$store.stae.user.id", this.$store.state.user.id);
-    //         this.post_image = res.data;
-
-    //         // this.post_image.favorites.each(fav => {
-    //         //   if (fav.end_user_id === current_user_id) {
-    //         //     res.data.isFav = true;
-    //         //     // return true;
-    //         //   } else {
-    //         //     // return
-    //         //     res.data.isFav = false;
-    //         //   }
-    //         // });
-
-    //         this.post_image.favorites.map(fav => {
-    //           // console.log("fav", fav);
-    //           // console.log(
-    //           //   "fav.end_user_id === current_user_id",
-    //           //   fav.end_user_id === current_user_id
-    //           // );
-    //           // console.log("typeOf fav.end_user_id", typeof fav.end_user_id);
-    //           // console.log("fav.end_user_id", fav.end_user_id);
-    //           // console.log("typeof current_user_id", typeof current_user_id);
-    //           // console.log("current_user_id", current_user_id);
-    //           // console.log("this.user_id", this.user.id);
-    //           if (fav.end_user_id === current_user_id) {
-    //             this.post_image.isFav = true;
-    //             // console.log("this.post_image.isFav", this.post_image.isFav);
-    //             return true;
-    //           } else {
-    //             this.post_image.isFav = false;
-    //             return false;
-    //           }
-    //         });
-
-    //         this.post_image.caption = this.post_image.caption.replace(
-    //           /[#＃][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー._-]+/gm,
-    //           ""
-    //         );
-    //         console.log("this.post_image.caption", this.post_image.caption);
-
-    //         this.post_image.hashtags.map(hashtag => {
-    //           hashtag.hashname.replace(/[#＃]/gm, "");
-    //         });
-    //         this.post_image.isActive = true;
-    //         this.post_image.showBtn = false;
-    //       } catch (err) {
-    //         console.log("err", err);
-    //       }
-    //     }
-    //   }
-    // );
   },
   async asyncData({ params }) {
     try {
@@ -470,12 +350,6 @@ export default {
       this.post_image.isFav = this.post_image.favorites.some(
         fav => fav.end_user_id === favorite.end_user_id
       );
-      // TODO:関数が上手く機能すれば削除予定
-      // this.post_image.caption = this.post_image.caption.replace(
-      //   /[#＃][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー._-]+/gm,
-      //   ""
-      // );
-      // console.log("this.post_image.caption", this.post_image.caption);
       this.replaceHashtags();
 
       this.post_image.hashtags.map(hashtag => {
@@ -532,15 +406,6 @@ export default {
         alert(error);
       }
     },
-    //TODO:削除予定
-    // async deletePostImage(post_image) {
-    //   const res = await axios.delete(
-    //     `/post_images/${post_image.id}`,
-    //     post_image.id
-    //   );
-    //   this.post_image = res.data;
-    //   this.$router.push("/post_Images");
-    // },
     //TODO:続きを読むを実装するなら使用する、しないなら削除
     // showComments(post_image) {
     //   post_image.isActive = false;
@@ -562,14 +427,6 @@ export default {
         console.log("delete err", err);
       }
     },
-
-    // FIXME:編集用モーダルが上手くいけば削除
-    editImage() {
-      this.$router.push(`/post_Images/${this.$route.params.id}/edit`);
-      console.log("this.$route.params.id", this.$route.params.id);
-      console.log("edit");
-    },
-
     // NOTE:編集ページ用のdialogを開く
     openEditPage() {
       this.edit_dialog = true;
@@ -583,7 +440,6 @@ export default {
           `/post_images/${this.$route.params.id}`,
           this.post_image
         );
-        // this.$router.push(`/post_Images/${this.$route.params.id}`);
         this.updatePostImages();
         this.edit_dialog = false;
       } catch (err) {
@@ -601,10 +457,6 @@ export default {
       return this.caption_nohashtags;
     }
   }
-  // TODO:fetchでuserをsetしなくてもrouter.jsでセットされるため、必要なし。
-  // async fetch({ store }) {
-  //   await store.dispatch("authCheck");
-  // }
 };
 </script>
 

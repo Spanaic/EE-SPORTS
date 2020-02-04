@@ -47,13 +47,9 @@ class PostImagesController < ApplicationController
 
     def update
         @post_image = PostImage.find(params[:id])
-        # @post_image = EndUser.find(params[:end_user_id])
-        #FIXME:current_userを取得する必要あり
-        # @post_image.user = current_user
         if @post_image.update(post_params)
             post_image_json = @post_image.to_json(include: [:post_comments, :favorites, :end_user, :hashtags, :notifications])
             render :json => post_image_json
-            # redirect_to post_image_path(@post_image.id)
         else
             puts @post_image.errors.full_messages
             render :json => @post_images
@@ -63,8 +59,6 @@ class PostImagesController < ApplicationController
     def destroy
         post_image = PostImage.find(params[:id])
         post_image.destroy
-        # json = post_image.to_json
-        # render :json => json
     end
 
     def hashtag

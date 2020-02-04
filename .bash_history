@@ -243,3 +243,5 @@ bundle install
 rails routes
 rails c
 exit
+rails c
+exit

@@ -22,12 +22,12 @@
               <nuxt-link :to="`/end_users/${post_image.end_user.id}`">
                 <v-list-item>
                   <v-list-item-avatar>
-                    <!-- プロフィール画像の表示 -->
+                    <!--NOTE: プロフィール画像の表示 -->
                     <v-img
                       v-if="post_image.end_user.profile_image_name"
                       :src="`${baseUrl}/end_users/${post_image.end_user.profile_image_name}`"
                     ></v-img>
-                    <!-- プロフィール画像未設定のno_imageの条件分岐 -->
+                    <!--NOTE: プロフィール画像未設定のno_imageの条件分岐 -->
                     <v-img v-else :src="`${baseUrl}/no_image.jpg`"></v-img>
                   </v-list-item-avatar>
                   <v-list-item-content>
@@ -82,7 +82,7 @@
 
                 <v-btn class="btnNone" color="orange" text></v-btn>
 
-                <!-- お気に入り機能ボタン -->
+                <!--NOTE: お気に入り機能ボタン -->
                 <template v-if="post_image.isFav !== true || undefined">
                   <v-btn icon @click="createFavorite(post_image)">
                     <v-icon>mdi-thumb-up-outline</v-icon>
@@ -94,7 +94,7 @@
                   </v-btn>
                 </template>
 
-                <!-- コメント入力のダイアログ -->
+                <!--NOTE: コメント入力のダイアログ -->
                 <v-row justify="center">
                   <v-dialog v-model="dialog" persistent max-width="600px">
                     <template v-slot:activator="{ on }">
@@ -327,8 +327,6 @@ export default {
     }
   },
   async created() {
-
-
     try {
       const res = await axios.get(`${this.baseUrl}/post_images`);
       this.post_images = res.data.map(post_image => {
@@ -389,7 +387,6 @@ export default {
     );
   },
   async mounted() {
-    // console.log("process.env.apiBaseUrl", process.env.apiBaseUrl)
     if (this.$store.state.user.id !== 0) {
       await this.$store.dispatch("notificationsCheck", this.$store.state.user);
     }
@@ -496,9 +493,6 @@ export default {
       this.$router.push("/post_Images");
     }
   }
-  // async fetch({ store }) {
-  //   await store.dispatch("authCheck");
-  // }
 };
 </script>
 

@@ -252,3 +252,18 @@ Relationship.al
 Relationship.all
 Relationship.all.count
 exit
+a = Notification.all
+b = Notification.last
+b.delete
+c = Notification.last
+c.delete
+d = Notificaiton.last
+d = Notification.last
+d.delete
+f = Notification.al
+f = Notification.all
+f.delete_all
+e = Notification
+e = Notification.all
+e.count
+exit
